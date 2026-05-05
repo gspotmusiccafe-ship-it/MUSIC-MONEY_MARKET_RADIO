@@ -43,7 +43,9 @@
 
     <script>
         const audio = document.getElementById('radio-source');
-        const CSV_URL = 'YOUR_GOOGLE_SHEET_CSV_URL_HERE'; // Point this to your Drizzle/CSV export
+        // YOUR CUSTOM GOOGLE SHEET EXPORT LINK
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/1HnxRpDhWQzjsJulrNh-bARNHY-VvdkZB47gJ66KwHhk/export?format=csv&gid=1294219443';
+        
         let inventory = [];
         let currentTrackIndex = 0;
 
@@ -51,16 +53,24 @@
             try {
                 const response = await fetch(CSV_URL);
                 const data = await response.text();
-                // Simple CSV parser: assumes columns are Name, AudioURL, ArtURL
                 const rows = data.split('\n').slice(1); 
+                
                 inventory = rows.map(row => {
-                    const [name, audio, art] = row.split(',');
-                    return { name: name.trim(), audio: audio.trim(), art: art.trim() };
-                });
+                    const columns = row.split(',');
+                    // MAPPING: C=Art (Index 2), D=Title (Index 3), F=URL (Index 5)
+                    const art = columns[2]?.trim();
+                    const name = columns[3]?.trim();
+                    const rawAudio = columns[5]?.trim();
+
+                    // FIX FOR RELATIVE PATHS (/cloud/uploads/...)
+                    const audioUrl = rawAudio.startsWith('http') ? rawAudio : `https://aititrade-radio-97.firebaseapp.com${rawAudio}`;
+
+                    return { name, audio: audioUrl, art };
+                }).filter(item => item.name && item.audio); // Only keep valid rows
+
                 if (inventory.length > 0) setupTrack(0);
             } catch (e) {
-                console.log("Sheet Sync Offline. Using Local Backup.");
-                // Emergency Fallback to Superfly
+                console.log("Sync Error. Using backup.");
                 inventory = [{
                     name: "SUPERFLY",
                     audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media",
