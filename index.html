@@ -7,13 +7,17 @@
         body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
         #vending-machine { border: 4px solid #f0f; width: 380px; margin: 0 auto; padding: 20px; box-shadow: 0 0 20px #f0f; background: #050505; }
         .ticker { font-size: 20px; background: #111; padding: 10px; border: 1px solid #0ff; margin-bottom: 20px; color: #0f0; min-height: 30px; }
-        .art-display { width: 100%; height: 300px; background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc'); background-size: cover; background-position: center; border: 2px solid #333; margin-bottom: 15px; }
+        .art-display { 
+            width: 100%; height: 380px; 
+            background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN\'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5'); 
+            background-size: cover; background-position: center; border: 2px solid #333; margin-bottom: 15px; 
+        }
         .display-screen { background: #111; border: 2px solid #333; padding: 15px; margin-bottom: 15px; }
-        .control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         button { cursor: pointer; font-weight: bold; text-transform: uppercase; border: 2px solid; transition: 0.2s; }
         .play-btn { background: #0ff; color: #000; border-color: #0ff; padding: 15px; width: 100%; font-size: 18px; margin-bottom: 10px; }
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .action-btn { background: #222; color: #f0f; border-color: #f0f; padding: 10px; font-size: 12px; }
-        #buy-btn { background: #0f0; color: #000; border-color: #0f0; padding: 20px; margin-top: 15px; width: 100%; font-size: 20px; box-shadow: 0 0 10px #0f0; }
+        #buy-btn { background: #0f0; color: #000; border-color: #0f0; padding: 20px; margin-top: 15px; width: 100%; font-size: 22px; box-shadow: 0 0 15px #0f0; }
         button:hover { filter: brightness(1.2); transform: scale(1.02); }
         audio { display: none; }
     </style>
@@ -21,95 +25,48 @@
 <body>
     <h1>97.7 THE FLAME</h1>
     <div id="vending-machine">
-        <div class="ticker" id="price-ticker">SUPERFLY: LOADING...</div>
+        <div class="ticker" id="price-ticker">CAN'T FOLLOW THROUGH: $211.00</div>
         
         <div class="art-display"></div>
 
         <div class="display-screen">
-            <p id="status">READY TO VEND</p>
-            <button class="play-btn" onclick="togglePlay()">▶ PLAY / PAUSE</button>
-            <div class="control-grid">
-                <button class="action-btn" onclick="alert('Added to Favorites!')">❤️ LIKE</button>
-                <button class="action-btn" onclick="alert('Link Copied to Clipboard!')">🔗 SHARE</button>
+            <p id="status">G. SMOOTH - CAN'T FOLLOW THROUGH</p>
+            <button class="play-btn" onclick="togglePlay()">▶ VEND AUDIO</button>
+            <div class="action-grid">
+                <button class="action-btn" onclick="alert('Liked!')">❤️ LIKE</button>
+                <button class="action-btn" onclick="alert('Link Copied!')">🔗 SHARE</button>
             </div>
         </div>
 
-        <button id="buy-btn" onclick="window.location.href='YOUR_PAYMENT_LINK_HERE'">
+        <button id="buy-btn" onclick="window.location.href='YOUR_PAYMENT_LINK'">
             RAPID BUY @ MARKET PRICE
         </button>
     </div>
 
-    <audio id="radio-source" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293"></audio>
+    <audio id="radio-source" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054"></audio>
 
     <script>
         const audio = document.getElementById('radio-source');
-        // YOUR CUSTOM GOOGLE SHEET EXPORT LINK
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/1HnxRpDhWQzjsJulrNh-bARNHY-VvdkZB47gJ66KwHhk/export?format=csv&gid=1294219443';
-        
-        let inventory = [];
-        let currentTrackIndex = 0;
-
-        async function loadInventory() {
-            try {
-                const response = await fetch(CSV_URL);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1); 
-                
-                inventory = rows.map(row => {
-                    const columns = row.split(',');
-                    // MAPPING: C=Art (Index 2), D=Title (Index 3), F=URL (Index 5)
-                    const art = columns[2]?.trim();
-                    const name = columns[3]?.trim();
-                    const rawAudio = columns[5]?.trim();
-
-                    // FIX FOR RELATIVE PATHS (/cloud/uploads/...)
-                    const audioUrl = rawAudio.startsWith('http') ? rawAudio : `https://aititrade-radio-97.firebaseapp.com${rawAudio}`;
-
-                    return { name, audio: audioUrl, art };
-                }).filter(item => item.name && item.audio); // Only keep valid rows
-
-                if (inventory.length > 0) setupTrack(0);
-            } catch (e) {
-                console.log("Sync Error. Using backup.");
-                inventory = [{
-                    name: "SUPERFLY",
-                    audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media",
-                    art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media"
-                }];
-                setupTrack(0);
-            }
-        }
-
-        function setupTrack(index) {
-            const track = inventory[index];
-            audio.src = track.audio;
-            document.querySelector('.art-display').style.backgroundImage = `url('${track.art}')`;
-            document.getElementById('status').innerText = `READY: ${track.name}`;
-            updateTicker(track.name);
-        }
-
         function togglePlay() {
             if (audio.paused) { 
                 audio.play(); 
-                document.getElementById('status').innerText = `VENDING: ${inventory[currentTrackIndex].name}`; 
+                document.getElementById('status').innerText = "NOW VENDING: CAN'T FOLLOW THROUGH"; 
             } else { 
                 audio.pause(); 
                 document.getElementById('status').innerText = "PAUSED"; 
             }
         }
 
-        async function updateTicker(songName) {
+        async function getPrice() {
             try {
                 const response = await fetch('https://aitify-oscillator.onrender.com/api/market-data');
                 const data = await response.json();
-                const market = data.find(s => s.name.toUpperCase() === songName.toUpperCase());
-                document.getElementById('price-ticker').innerText = `${songName} MARKET: $${market ? market.price : '2.22'}`;
-            } catch (e) { 
-                document.getElementById('price-ticker').innerText = `${songName} MARKET: $2.22`;
-            }
+                const song = data.find(s => s.name.toUpperCase().includes("FOLLOW") || s.name.toUpperCase().includes("AITIFY"));
+                if(song) document.getElementById('price-ticker').innerText = `MARKET PRICE: $${song.price}`;
+            } catch (e) { console.log("Ticker sync..."); }
         }
-
-        loadInventory();
+        setInterval(getPrice, 5000);
+        getPrice();
     </script>
 </body>
 </html>
