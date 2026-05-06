@@ -2,56 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>THE MAESTRO TERMINAL // AITIFY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MUSIC MONEY MARKET // RADIO</title>
     <style>
         body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; }
         .ticker-bar { width: 100%; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; overflow: hidden; font-weight: bold; }
-        .marquee { display: inline-block; white-space: nowrap; animation: move 25s linear infinite; color: #0f0; }
+        .marquee { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; color: #0f0; }
         @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        #podium { border: 2px solid #0ff; max-width: 450px; margin: 20px auto; padding: 20px; background: rgba(5,5,5,0.95); box-shadow: 0 0 30px #0ff; }
-        .clef-visual { width: 100%; height: 400px; background-size: cover; background-position: center; border: 1px solid #333; position: relative; }
-        .movement-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px; font-size: 0.8rem; color: #f0f; }
-        .baton-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { padding: 18px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; border-radius: 4px; }
-        .conduct { background: #0f0; color: #000; box-shadow: 0 0 10px #0f0; }
-        .next-move { background: #f0f; color: #fff; }
+        #terminal { border: 2px solid #0ff; max-width: 450px; margin: 20px auto; padding: 15px; background: rgba(5,5,5,0.9); box-shadow: 0 0 20px #0ff; }
+        .art-box { width: 100%; height: 400px; background-size: cover; background-position: center; border: 1px solid #333; position: relative; }
+        .track-info { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px; font-size: 0.8rem; color: #f0f; box-sizing: border-box; }
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn { padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .buy { background: #0f0; color: #000; }
+        .skip { background: #f0f; color: #fff; }
     </style>
 </head>
 <body>
     <div class="ticker-bar">
-        <div class="marquee" id="live-ticker">$MMC SYMPHONY ▲ 1.45% | CURRENT UNIT: 1 MAESTRO | TREBLE MOVEMENT: SUPERFLY ▲ $5.25 | MARKET OPEN</div>
+        <div class="marquee">$MMC (Music Money) ▲ $0.000100 | AITITRADE INDEX ▲ 1.45% | MARKET OPEN</div>
     </div>
 
-    <div id="podium">
-        <div class="clef-visual" id="art-frame">
-            <div class="movement-label" id="track-name">INITIALIZING SYMPHONY...</div>
+    <div id="terminal">
+        <div class="art-box" id="cover">
+            <div class="track-info" id="status">INITIALIZING FEED...</div>
         </div>
-        <div class="baton-controls">
-            <button class="btn conduct" onclick="enter()">ACQUIRE MAESTROS</button>
-            <button class="btn next-move" onclick="skip()">NEXT MOVEMENT ⏭</button>
+        <div class="controls">
+            <button class="btn buy" onclick="buy()">BUY STOCK</button>
+            <button class="btn skip" onclick="next()">SKIP ASSET</button>
         </div>
     </div>
 
-    <audio id="orchestra-source" onended="skip()"></audio>
+    <audio id="player" onended="next()"></audio>
 
     <script>
-        const movements = [
+        const inventory = [
             { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" },
-            { name: "I GOT WHAT YOU NEED", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media" }
+            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media" }
         ];
-        let idx = 0;
-        const player = document.getElementById('orchestra-source');
+        let i = 0;
+        const player = document.getElementById('player');
         
-        function loadMovement(n) {
-            idx = n; const m = movements[idx];
-            player.src = m.audio;
-            document.getElementById('art-frame').style.backgroundImage = `url('${m.art}')`;
-            document.getElementById('track-name').innerText = `CONDUCTING: ${m.name}`;
-            player.play().catch(() => console.log("Maestro, tap to begin."));
+        function load() {
+            const a = inventory[i];
+            player.src = a.audio;
+            document.getElementById('cover').style.backgroundImage = `url('${a.art}')`;
+            document.getElementById('status').innerText = `NOW STREAMING: ${a.name}`;
+            player.play().catch(e => console.log("Tap to start Radio"));
         }
-        function skip() { idx = (idx + 1) % movements.length; loadMovement(idx); }
-        function enter() { window.location.href = "https://cash.app/$AITITRADEBROKERAGE"; }
-        window.onload = () => loadMovement(0);
+        function next() { i = (i + 1) % inventory.length; load(); }
+        function buy() { window.location.href = "https://cash.app/$AITITRADEBROKERAGE"; }
+        window.onload = load;
     </script>
 </body>
 </html>
