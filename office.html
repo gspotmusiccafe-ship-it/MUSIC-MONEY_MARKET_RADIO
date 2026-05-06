@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AITITRADE BACK OFFICE</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .card { border: 1px solid #0f0; padding: 15px; background: #111; text-align: center; }
+        .val { font-size: 2rem; display: block; color: #0ff; }
+        table { width: 100%; margin-top: 30px; border-collapse: collapse; }
+        th, td { border: 1px solid #333; padding: 10px; text-align: left; }
+        .tier-tag { color: #f0f; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>BANKER'S VIEW: SETTLEMENT DESK</h1>
+    
+    <div class="grid">
+        <div class="card"><span class="val">$522.00</span> PAYOUT BUDGET</div>
+        <div class="card"><span class="val">$478.00</span> SURPLUS BANK</div>
+        <div class="card"><span class="val">115</span> QUEUE SLOTS</div>
+        <div class="card"><span class="val">45-60D</span> GROWTH CYCLE</div>
+    </div>
 
+    <h3>ACTIVE MARKET VOLUME (BY TIER)</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ASSET NAME</th>
+                <th>TIER</th>
+                <th>ENTRY BLOCK</th>
+                <th>SETTLEMENT TARGET</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>SUPERFLY</td><td class="tier-tag">$50.25</td><td>10 Shares</td><td>$100.00</td><td>GAINING STEAM</td></tr>
+            <tr><td>ZODIAC SIGN</td><td class="tier-tag">$40.25</td><td>10 Shares</td><td>$80.00</td><td>GAINING STEAM</td></tr>
+            <tr><td>SCENE BY SCENE</td><td class="tier-tag">$30.25</td><td>10 Shares</td><td>$60.00</td><td>GAINING STEAM</td></tr>
+        </tbody>
+    </table>
+</body>
+</html>
