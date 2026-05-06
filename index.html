@@ -2,32 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONGSHARE MARKET - GLOBAL EXCHANGE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AITIFY MUSIC GROUP - THE EXCHANGE</title>
     <style>
-        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow-x: hidden; }
-        .ticker-wrap { background: #111; border-bottom: 2px solid #0ff; padding: 10px; color: #0f0; }
-        #stock-terminal { border: 2px solid #0ff; max-width: 420px; margin: 20px auto; padding: 15px; background: rgba(5,5,5,0.95); box-shadow: 0 0 20px #0ff; }
-        .ticker { font-size: 1.4rem; background: #111; padding: 12px; margin-bottom: 8px; font-weight: bold; border: 1px solid #333; }
-        .gain { color: #0f0; text-shadow: 0 0 8px #0f0; }
-        .trade-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .exec-btn { padding: 18px; font-size: 1.1rem; font-weight: bold; cursor: pointer; border: none; text-transform: uppercase; }
-        #buy-btn { background: #0f0; color: #000; box-shadow: 0 0 10px #0f0; }
-        #sell-btn { background: #f00; color: #000; box-shadow: 0 0 10px #f00; }
-        .asset-view { width: 100%; height: 320px; background-size: cover; background-position: center; border: 1px solid #333; margin: 10px 0; background-color: #111; }
+        body { 
+            background-color: #000; 
+            background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 0; overflow-x: hidden;
+        }
+        .global-ticker { width: 100%; background: #111; border-bottom: 2px solid #0ff; color: #0f0; padding: 10px 0; font-size: 0.9rem; font-weight: bold; }
+        #stock-terminal { border: 2px solid #0ff; max-width: 450px; width: 92%; margin: 15px auto; padding: 15px; background: rgba(5, 5, 5, 0.98); box-shadow: 0 0 30px #0ff; box-sizing: border-box; }
+        .ticker { font-size: 1.5rem; background: #000; padding: 12px; border: 1px solid #0ff; margin-bottom: 10px; font-weight: bold; color: #0f0; text-shadow: 0 0 8px #0f0; }
+        .trade-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .exec-btn { border: none; padding: 18px; font-size: 1.2rem; font-weight: 900; cursor: pointer; text-transform: uppercase; }
+        #buy-btn { background: #0f0; color: #000; box-shadow: 0 0 15px #0f0; }
+        #sell-btn { background: #f00; color: #000; box-shadow: 0 0 15px #f00; }
+        .asset-view { width: 100%; height: 400px; background-size: cover; background-position: center; border: 1px solid #333; margin-bottom: 10px; position: relative; }
+        .asset-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.85); padding: 8px; font-weight: bold; color: #f0f; font-size: 0.7rem; border-top: 1px solid #333; box-sizing: border-box; }
+        .asset-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; border-top: 1px solid #333; scrollbar-width: none; }
+        .select-card { min-width: 85px; height: 85px; border: 2px solid #333; background-size: cover; cursor: pointer; flex-shrink: 0; }
+        .select-card.active { border: 2px solid #0ff; box-shadow: 0 0 10px #0ff; }
+        .audio-monitor { background: #111; padding: 10px; border: 1px solid #333; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; align-items: center; margin-top: 10px; }
+        .control-btn { background: #0ff; color: #000; border: none; padding: 10px 5px; font-size: 0.7rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="ticker-wrap">AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | SONGSHARE MARKET OPEN</div>
+    <div class="global-ticker">AITITRADE GLOBAL INDEX ▲ 1.45% | SHOWTOWN VOLUME ▲ 2.8% | SONGSHARE MARKET OPEN</div>
 
     <div id="stock-terminal">
-        <div class="ticker gain" id="market-oscillator">LINKING EXCHANGE...</div>
+        <div class="ticker" id="market-oscillator">LINKING EXCHANGE...</div>
         <div class="trade-panel">
             <button class="exec-btn" id="buy-btn" onclick="executeTrade('BUY')">BUY STOCK</button>
             <button class="exec-btn" id="sell-btn" onclick="executeTrade('SELL')">SELL/TRADE</button>
         </div>
-        <div class="asset-view" id="asset-art"></div>
-        <div id="asset-label" style="font-size: 0.8rem; margin-top: 5px; color: #f0f;">INITIALIZING...</div>
+        <div class="asset-view" id="asset-art">
+            <div class="asset-label" id="asset-label">SONGSATIONS: INITIALIZING...</div>
+        </div>
+        <div class="audio-monitor">
+            <span id="audio-status" style="font-size: 0.6rem; color:#0f0;">MONITOR ACTIVE</span>
+            <button class="control-btn" onclick="toggleAudio()">▶ PLAY/PAUSE</button>
+            <button class="control-btn" onclick="nextAsset()" style="background:#f0f; color:#fff;">SKIP ASSET ⏭</button>
+        </div>
+        <div class="asset-scroller" id="scroller"></div>
     </div>
 
     <audio id="radio-source"></audio>
@@ -35,31 +52,45 @@
     <script>
         const _F = 0.25; const MIN = 10;
         const inventory = [
-            { name: "SUPERFLY", tier: 5, art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
-            { name: "ZODIAC SIGN", tier: 4, art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" },
-            { name: "SCENE BY SCENE", tier: 3, art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" }
+            { name: "SUPERFLY", tier: 5, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
+            { name: "I GOT WHAT YOU NEED", tier: 2, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" },
+            { name: "ZODIAC SIGN", tier: 4, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" },
+            { name: "SCENE BY SCENE", tier: 3, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" }
         ];
 
         let index = 0;
-        function loadAsset() {
-            const a = inventory[index];
+        const audio = document.getElementById('radio-source');
+
+        function loadAsset(i) {
+            index = i; const a = inventory[i];
+            audio.src = a.audio;
             document.getElementById('asset-art').style.backgroundImage = `url("${a.art}")`;
-            document.getElementById('asset-label').innerText = `TIER ${a.tier} ASSET: ${a.name}`;
+            document.getElementById('asset-label').innerText = `SONGSATIONS: ${a.name}`;
             document.getElementById('market-oscillator').innerText = `${a.name} ▲ $${(a.tier + _F).toFixed(2)}`;
+            document.querySelectorAll('.select-card').forEach((c, idx) => c.classList.toggle('active', idx === i));
+            audio.play().catch(() => console.log("Play blocked"));
+        }
+
+        function renderScroller() {
+            document.getElementById('scroller').innerHTML = inventory.map((item, i) => 
+                `<div class="select-card" id="card-${i}" style="background-image: url('${item.art}')" onclick="loadAsset(${i})"></div>`
+            ).join('');
         }
 
         function executeTrade(type) {
             const a = inventory[index];
             if(type === 'BUY') {
                 const total = (a.tier * MIN) + _F;
-                alert(`CONFIRM TIER ${a.tier} ENTRY\nTotal: $${total.toFixed(2)}`);
+                alert(`CONFIRM TIER ${a.tier} ENTRY\n10 Share Block\nTotal Execution: $${total.toFixed(2)}`);
                 window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${total.toFixed(2)}`;
             } else {
-                alert(`SETTLEMENT QUEUE ACTIVE\nStatus: Gaining Steam (45-60 Days)`);
+                alert(`SETTLEMENT QUEUE ACTIVE\nAsset: ${a.name}\nStatus: Gaining Steam (45-60 Days)`);
             }
         }
 
-        window.onload = loadAsset;
+        function nextAsset() { index = (index + 1) % inventory.length; loadAsset(index); }
+        function toggleAudio() { audio.paused ? audio.play() : audio.pause(); }
+        window.onload = () => { renderScroller(); loadAsset(0); };
     </script>
 </body>
 </html>
