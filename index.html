@@ -2,110 +2,143 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AITIFY COMMAND CENTER // TERMINAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AITIFY PRO // SUSTAINABLE EXCHANGE</title>
     <style>
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; text-transform: uppercase; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
-        
-        /* High-End Header */
-        header { display: flex; justify-content: space-between; padding: 15px; background: var(--panel); border-bottom: 2px solid #333; font-weight: bold; letter-spacing: 2px; }
-        .market-status { color: white; }
+        * { box-sizing: border-box; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; text-transform: uppercase; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
-        /* Main Workspace */
-        main { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Watchlist Ticker */
-        #watchlist { width: 280px; border-right: 1px solid #333; padding: 10px; overflow-y: auto; background: #080808; }
-        .ticker-item { border-bottom: 1px solid #222; padding: 8px 0; font-size: 0.75rem; }
+        header { display: flex; justify-content: space-between; padding: 10px; background: var(--panel); border-bottom: 2px solid #333; font-size: 0.8rem; }
 
-        /* 4-Across Trading Portals */
-        #grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; overflow-y: auto; }
-        .portal { background: #151515; border: 1px solid #222; padding: 12px; position: relative; text-align: center; }
-        .portal:hover { border-color: var(--gold); }
+        .dashboard { display: flex; flex: 1; overflow: hidden; }
+
+        /* Left Sidebar: Watchlist */
+        #watchlist { width: 220px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 10px; }
+        .ticker { font-size: 0.7rem; padding: 8px 0; border-bottom: 1px solid #222; }
+
+        /* Middle: Market Analytics & Grid */
+        #market-center { flex: 2; overflow-y: auto; padding: 15px; border-right: 1px solid #333; }
+        .analytics-box { width: 100%; height: 120px; background: #111; border: 1px solid #444; margin-bottom: 15px; padding: 10px; position: relative; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+        /* Right Side: Radio & Global Control */
+        #radio-control { width: 320px; padding: 15px; background: #0a0a0a; overflow-y: auto; }
+        .radio-deck { background: #1a1a1a; padding: 20px; border: 2px solid var(--gold); margin-bottom: 20px; text-align: center; }
         
-        /* MP3 Visual Area */
-        .art-box { width: 100%; aspect-ratio: 1; background: #222; margin-bottom: 10px; border: 1px solid #333; position: relative; }
-        .roi-tag { position: absolute; top: 0; right: 0; background: var(--gold); color: #000; padding: 2px 8px; font-weight: bold; font-size: 0.8rem; }
-        
-        /* The Bouncing Feed */
-        .oscillator { color: white; font-size: 1.1rem; margin: 12px 0; font-weight: 900; }
-        
-        /* Interaction */
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; font-family: inherit; font-size: 0.7rem; }
-        button.priority { border-color: var(--gold); color: var(--gold); }
-        button:active { background: var(--neon); color: black; }
+        .portal { background: #151515; border: 1px solid #333; padding: 10px; text-align: center; position: relative; }
+        .oscillator { font-size: 1.2rem; color: white; margin: 5px 0; font-weight: bold; }
+        .cap-tag { font-size: 0.6rem; color: var(--gold); margin-top: 5px; }
+
+        button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 8px; cursor: pointer; font-size: 0.65rem; font-family: inherit; width: 100%; }
+        button.prio { border-color: var(--gold); color: var(--gold); margin-top: 5px; }
+
+        /* Mobile View Adjustment */
+        @media (max-width: 900px) {
+            .dashboard { flex-direction: column; overflow-y: auto; }
+            #watchlist, #radio-control { width: 100%; height: auto; border-bottom: 1px solid #333; }
+            .grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
 <header>
-    <div>AITIFY // GLOBAL EXCHANGE</div>
-    <div class="market-status">SYSTEM STATUS: <span id="status-text">MONITORING FEED...</span></div>
-    <div id="radio-feed" style="color: var(--gold);">97.7 THE FLAME // LIVE</div>
+    <div>AITIFY // RAPID EXCHANGE</div>
+    <div id="sys-msg">STATUS: MONITORING 115-SETTLEMENT QUEUE</div>
+    <div style="color:var(--gold)">97.7 THE FLAME // LIVE</div>
 </header>
 
-<main>
-    <div id="watchlist">
-        <div style="color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 5px; margin-bottom: 10px;">ASSET WATCHLIST</div>
+<div class="dashboard">
+    <aside id="watchlist">
+        <div style="color: var(--gold); border-bottom: 1px solid var(--gold); margin-bottom: 10px;">WATCHLIST</div>
+        <div id="ticker-inject"></div>
+    </aside>
+
+    <section id="market-center">
+        <div class="analytics-box">
+            <div style="font-size: 0.7rem; color: #888;">MOVING AVERAGES // GAINS & LOSSES</div>
+            <div id="graph-line" style="width: 100%; height: 50px; border-bottom: 1px dashed var(--neon); margin-top: 20px;"></div>
+        </div>
+        <div class="grid" id="portal-inject"></div>
+    </section>
+
+    <aside id="radio-control">
+        <div class="radio-deck">
+            <div style="font-size: 0.6rem; color: var(--gold); margin-bottom: 10px;">97.7 THE FLAME // NOW PLAYING</div>
+            <div id="radio-song" style="font-size: 0.9rem; margin-bottom: 15px;">INITIALIZING STREAM...</div>
+            <div class="oscillator" id="radio-osc">$0.00</div>
+            <div style="display:flex; gap:10px; justify-content:center;">
+                <button style="width:40px;">▶</button>
+                <button style="width:40px;">⏸</button>
+            </div>
         </div>
 
-    <div id="grid">
+        <div style="color: var(--gold); margin-bottom: 10px;">QUICK TRADE // P2P</div>
+        <div class="portal" style="border-color: var(--gold);">
+            <div id="radio-roi" style="font-size: 1.5rem; color: var(--gold);">--% ROI</div>
+            <div class="cap-tag">MAX PAYOUT LIMIT: $10.00</div>
+            <button onclick="alert('ORDER REGISTERED')">EXECUTE TRADE</button>
+            <button class="prio" onclick="alert('FIFO PRIORITY ACTIVE')">TAKE DISCOUNT</button>
         </div>
-</main>
+    </aside>
+</div>
 
 <script>
-    // Hidden Data Structure
-    const assets = [
-        { id: "A01", name: "MARIE: SCENE BY SCENE", roi: "15%", buy: "1.00" },
-        { id: "A02", name: "CAN'T FOLLOW THROUGH", roi: "35%", buy: "5.00" },
-        { id: "A03", name: "MARIE: QUEEN BEE", roi: "50%", buy: "10.00" },
-        { id: "A04", name: "SMOOTH: GOT WHAT YOU NEED", roi: "85%", buy: "20.00" },
-        { id: "A05", name: "SMOOTH: PLAYGROUND", roi: "94%", buy: "50.00" }
-        // System handles the rest of the 101...
+    // Sustainable Portfolio ($1-$5 entries, $10 Max Payout)
+    const portfolio = [
+        { id: "A01", name: "MARIE: SCENE BY SCENE", roi: 15, entry: 1.00 },
+        { id: "A02", name: "CAN'T FOLLOW THROUGH", roi: 35, entry: 5.00 },
+        { id: "A03", name: "MARIE: QUEEN BEE", roi: 50, entry: 5.00 },
+        { id: "A04", name: "SMOOTH: GOT WHAT YOU NEED", roi: 85, entry: 5.00 },
+        { id: "A05", name: "SMOOTH: PLAYGROUND", roi: 100, entry: 5.00 }
     ];
 
-    const grid = document.getElementById('grid');
-    const watchlist = document.getElementById('watchlist');
+    const tickerBox = document.getElementById('ticker-inject');
+    const portalBox = document.getElementById('portal-inject');
 
-    assets.forEach(asset => {
-        // Create the Watchlist entry
-        const item = document.createElement('div');
-        item.className = 'ticker-item';
-        item.innerHTML = `<span>${asset.id}</span> | <span>${asset.name}</span><br><span style="color:white">YIELD: ${asset.roi}</span>`;
-        watchlist.appendChild(item);
-
-        // Create the Portal
-        const portal = document.createElement('div');
-        portal.className = 'portal';
-        portal.innerHTML = `
-            <div class="art-box"><div class="roi-tag">${asset.roi} ROI</div></div>
-            <div style="font-size: 0.65rem; height: 20px; overflow: hidden;">${asset.name}</div>
-            <div class="oscillator" id="osc-${asset.id}">$0.00</div>
-            <div class="controls">
-                <button onclick="sysNotify('${asset.id}', 'REG')">EXECUTE $${asset.buy}</button>
-                <button class="priority" onclick="sysNotify('${asset.id}', 'PRIO')">DISCOUNT</button>
+    portfolio.forEach(asset => {
+        // Build Watchlist
+        tickerBox.innerHTML += `<div class="ticker">${asset.id} | ${asset.name}<br><span style="color:white">YIELD: ${asset.roi}%</span></div>`;
+        
+        // Build Portals
+        portalBox.innerHTML += `
+            <div class="portal">
+                <div style="font-size: 0.6rem; margin-bottom: 5px;">${asset.name}</div>
+                <div class="oscillator" id="osc-${asset.id}">$0.00</div>
+                <div style="font-size: 0.6rem; color:var(--neon)">ENTRY: $${asset.entry.toFixed(2)}</div>
+                <div class="cap-tag">MAX PAYOUT: $${(asset.entry + (asset.entry * (asset.roi/100))).toFixed(2)}</div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:5px; margin-top:10px;">
+                    <button onclick="sysAlert('ORDER')">BUY</button>
+                    <button class="prio" onclick="sysAlert('FIFO')">FIFO</button>
+                </div>
             </div>
         `;
-        grid.appendChild(portal);
-
-        // Start the Market Breath (The Oscillator)
-        setInterval(() => {
-            const val = (Math.random()).toFixed(2);
-            document.getElementById(`osc-${asset.id}`).innerText = `$${val}`;
-        }, 1200 + (Math.random() * 1000));
     });
 
-    // Hidden Alert System - "The Who and The What"
-    function sysNotify(assetId, type) {
-        document.getElementById('status-text').innerText = `ALERT: ${type} ORDER RECEIVED // ASSET ${assetId}`;
-        setTimeout(() => {
-            document.getElementById('status-text').innerText = "MONITORING FEED...";
-        }, 3000);
-        
-        // Backend handles the math/FIFO/Settlement silently
-    }
-</script>
+    // Market Breath Oscillator
+    setInterval(() => {
+        portfolio.forEach(a => {
+            const osc = document.getElementById(`osc-${a.id}`);
+            if(osc) osc.innerText = `$${(Math.random()).toFixed(2)}`;
+        });
+        document.getElementById('radio-osc').innerText = `$${(Math.random()).toFixed(2)}`;
+    }, 1200);
 
+    function sysAlert(type) {
+        const msg = document.getElementById('sys-alert');
+        document.getElementById('sys-msg').innerText = `ALERT: ${type} REGISTERED // QUEUE UPDATED`;
+        setTimeout(() => { document.getElementById('sys-msg').innerText = "STATUS: MONITORING 115-SETTLEMENT QUEUE"; }, 3000);
+    }
+
+    // Radio Sync Logic
+    function updateRadio(name, roi) {
+        document.getElementById('radio-song').innerText = name;
+        document.getElementById('radio-roi').innerText = roi + "% ROI";
+    }
+
+    // Set initial radio state
+    updateRadio(portfolio[0].name, portfolio[0].roi);
+</script>
 </body>
 </html>
