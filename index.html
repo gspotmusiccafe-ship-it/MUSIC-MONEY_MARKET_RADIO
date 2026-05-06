@@ -1,40 +1,63 @@
 <script>
-    // IN-HOUSE BANKING RULES (45-60 DAY GROWTH CYCLE)
+    // IN-HOUSE BANKING RULES (5-TIER BUY-IN)
     const _B = 522.00; 
     const _Q = 115;    
-    const _R = 2.0;    // 100% ROI
+    const _R = 2.0;    // 100% ROI Target
     const _F = 0.25;   // Brokerage Fee
     const MIN_SHARES = 10;
-    const SHARE_PRICE = 5.00; // Updated to $5 per share entry
 
-    // ... (Inventory remains mapped correctly)
+    const inventory = [
+        { name: "SUPERFLY", tier: 5, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
+        { name: "ZODIAC SIGN", tier: 4, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" },
+        { name: "SCENE BY SCENE", tier: 3, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" },
+        { name: "I GOT WHAT YOU NEED", tier: 2, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" },
+        { name: "CAN'T FOLLOW THROUGH", tier: 1, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" }
+    ];
+
+    let index = 0;
+    let currentPrice = 1.00;
+    const ticker = document.getElementById('market-oscillator');
+
+    function loadAsset(i) {
+        index = i;
+        const a = inventory[i];
+        currentPrice = a.tier; // Lock current price to the specific Tier ($1-$5)
+        
+        document.getElementById('radio-source').src = a.audio;
+        document.getElementById('asset-art').style.backgroundImage = `url("${a.art}")`;
+        document.getElementById('asset-label').innerText = `TIER ${a.tier} ASSET: ${a.name}`;
+        
+        // Update Ticker Immediately
+        ticker.innerHTML = `${a.name.split(' ')[0]} ENTRY ▲ $${(currentPrice + _F).toFixed(2)}`;
+        
+        document.querySelectorAll('.select-card').forEach(c => c.classList.remove('active'));
+        document.getElementById(`card-${i}`).classList.add('active');
+        document.getElementById('radio-source').play();
+    }
 
     function startEngine() {
         setInterval(() => {
-            let last = currentPrice;
-            // Market Logic: Slow, steady climb to reflect 45-60 day maturity
-            const steadyGrowth = (Math.random() * 0.015) - 0.002; 
-            currentPrice += (currentPrice * steadyGrowth);
+            const a = inventory[index];
+            // Slow, STEAM-GAINING growth logic
+            const drift = (Math.random() * 0.01); 
+            let displayPrice = a.tier + drift;
             
-            if (currentPrice < 5.00) currentPrice = 5.05;
-
-            oscillator.innerHTML = `${inventory[index].name.split(' ')[0]} ▲ $${(currentPrice + _F).toFixed(2)}`;
-            oscillator.className = `ticker gain`; // Biased to stay Green for growth
-        }, 8000); // 8-second interval slows the visual "vibe" to Long-Term
+            ticker.innerHTML = `${a.name.split(' ')[0]} GAINING ▲ $${(displayPrice + _F).toFixed(2)}`;
+            ticker.className = `ticker gain`;
+        }, 10000); // 10 second updates to keep the "Long Term" feel
     }
 
     function executeTrade(type) {
-        // Logic: $5.00 x 10 shares = $50.00 Entry + Fee
-        const entryBlock = (SHARE_PRICE * MIN_SHARES);
-        const totalWithFee = entryBlock + _F;
-        const payoutTarget = entryBlock * _R;
+        const a = inventory[index];
+        const entryBlock = a.tier * MIN_SHARES;
+        const totalCost = entryBlock + _F;
+        const payout = entryBlock * _R;
 
         if(type === 'BUY') {
-            alert(`LONG-TERM GROWTH ENTRY\nBlock: 10 Shares @ $5.00\nPrincipal: $${entryBlock.toFixed(2)}\nTotal w/ Fee: $${totalWithFee.toFixed(2)}`);
-            window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${totalWithFee.toFixed(2)}`;
+            alert(`CONFIRM TIER ${a.tier} ENTRY\n10 Shares @ $${a.tier.toFixed(2)}\nPrincipal: $${entryBlock.toFixed(2)}\nTotal Execution: $${totalCost.toFixed(2)}`);
+            window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${totalCost.toFixed(2)}`;
         } else {
-            // Reflecting the 45-60 day window
-            alert(`SETTLEMENT STATUS: ACTIVE\n\nPosition: 10 Share Growth Block\nCycle: 45-60 Day Maturity\nTarget Payout: $${payoutTarget.toFixed(2)}\n\nLedger is gaining steam. Notification sent at 100% gains.`);
+            alert(`SETTLEMENT QUEUE ACTIVE\n\nAsset: ${a.name}\nPrincipal: $${entryBlock.toFixed(2)}\nProjected Payout: $${payout.toFixed(2)}\n\nCycle: 45-60 Day Growth\nStatus: Gaining Steam...`);
         }
     }
 </script>
