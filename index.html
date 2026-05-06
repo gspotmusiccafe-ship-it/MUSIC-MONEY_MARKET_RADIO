@@ -1,70 +1,111 @@
-<script>
-    // IN-HOUSE SETTLEMENT CONSTANTS (SECURE)
-    const _B = 522.00; 
-    const _Q = 115;    
-    const _R = 2.0;    
-    const _F = 0.25;   
-
-    const inventory = [
-        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
-        { name: "I GOT WHAT YOU NEED", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" },
-        { name: "ZODIAC SIGN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" },
-        { name: "SCENE BY SCENE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" }
-    ];
-
-    let index = 0;
-    let currentPrice = 1.00;
-    const audio = document.getElementById('radio-source');
-    const oscillator = document.getElementById('market-oscillator');
-    const scroller = document.getElementById('scroller');
-
-    function renderScroller() {
-        scroller.innerHTML = inventory.map((item, i) => `
-            <div class="select-card" id="card-${i}" style="background-image: url('${item.art}')" onclick="loadAsset(${i})"></div>
-        `).join('');
-    }
-
-    function loadAsset(i) {
-        index = i;
-        const a = inventory[i];
-        audio.src = a.audio;
-        document.getElementById('asset-art').style.backgroundImage = `url("${a.art}")`;
-        document.getElementById('asset-label').innerText = `STOCK: ${a.name}`;
-        document.querySelectorAll('.select-card').forEach(c => c.classList.remove('active'));
-        const activeCard = document.getElementById(`card-${i}`);
-        if(activeCard) activeCard.classList.add('active');
-        
-        // Resetting for new asset hold period
-        currentPrice = Math.floor(Math.random() * 3) + 1; 
-        audio.play().catch(e => console.log("Interacted needed"));
-    }
-
-    // SLOW GROWTH TICKER (5 Second Interval)
-    function startEngine() {
-        setInterval(() => {
-            let last = currentPrice;
-            // Bias toward slow doubling
-            const change = (Math.random() * 0.03) - 0.01; 
-            currentPrice += (currentPrice * change);
-            if (currentPrice < 1.00) currentPrice = 1.01;
-
-            oscillator.innerHTML = `${inventory[index].name.split(' ')[0]} ${currentPrice > last ? '▲' : '▼'} $${(currentPrice + _F).toFixed(2)}`;
-            oscillator.className = `ticker ${currentPrice > last ? 'gain' : 'loss'}`;
-        }, 5000); 
-    }
-
-    function executeTrade(type) {
-        if(type === 'BUY') {
-            window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${(currentPrice + _F).toFixed(2)}`;
-        } else {
-            // SETTLEMENT STATUS NOTIFICATION
-            const maturity = Math.floor(Math.random() * 40) + 60; // Simulated maturity %
-            alert(`LEDGER STATUS: ASSET IDENTIFIED\n\nYour position is currently in the GROWTH QUEUE.\n\nMaturity: ${maturity}%\nROI Target: 100% of Principal\n\nNotification will be sent via Cash App tag when you are UP FOR SETTLEMENT.`);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SONGSHARE MARKET - GLOBAL EXCHANGE</title>
+    <style>
+        body { 
+            background-color: #000; 
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 0; overflow-x: hidden; 
         }
-    }
+        .global-ticker { width: 100%; background: #111; border-bottom: 2px solid #0ff; color: #0f0; padding: 10px 0; font-size: 0.9rem; white-space: nowrap; overflow: hidden; box-sizing: border-box; }
+        .ticker-wrap { display: inline-block; animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        #stock-terminal { border: 2px solid #0ff; max-width: 420px; width: 95%; margin: 20px auto; padding: 15px; background: rgba(5, 5, 5, 0.95); box-shadow: 0 0 30px rgba(0, 255, 255, 0.3); box-sizing: border-box; position: relative; backdrop-filter: blur(5px); }
+        .ticker { font-size: 1.4rem; background: #111; padding: 12px; border: 1px solid #333; margin-bottom: 8px; font-weight: bold; min-height: 40px; }
+        .gain { color: #0f0; text-shadow: 0 0 8px #0f0; }
+        .loss { color: #f00; text-shadow: 0 0 8px #f00; }
+        .trade-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .exec-btn { border: none; padding: 18px; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        #buy-action { background: #0f0; color: #000; box-shadow: 0 0 15px #0f0; }
+        #sell-action { background: #f00; color: #000; box-shadow: 0 0 15px #f00; }
+        .asset-view { width: 100%; height: 320px; background-size: cover; background-position: center; border: 1px solid #333; margin-bottom: 10px; background-color: #111; position: relative; }
+        .asset-overlay { position: absolute; bottom: 0; width: 100%; background: rgba(0, 0, 0, 0.8); padding: 8px; font-size: 0.75rem; color: #f0f; border-top: 1px solid #333; box-sizing: border-box; }
+        .asset-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 10px 5px; scroll-behavior: smooth; border-top: 1px solid #333; }
+        .select-card { min-width: 80px; height: 80px; border: 2px solid #333; background-size: cover; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
+        .select-card.active { border: 2px solid #0ff !important; box-shadow: 0 0 15px #0ff; transform: scale(1.05); }
+        .audio-monitor { background: #111; padding: 10px; border: 1px solid #333; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; align-items: center; margin-top: 10px; }
+        .control-btn { background: #0ff; color: #000; border: none; padding: 10px 5px; font-size: 0.8rem; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        #next-btn { background: #f0f; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="global-ticker">
+        <div class="ticker-wrap">
+            AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | J. MARIE STOCK ▲ $10.42 | SONGSHARE MARKET OPEN
+        </div>
+    </div>
 
-    function nextAsset() { index = (index + 1) % inventory.length; loadAsset(index); }
-    function toggleAudio() { audio.paused ? audio.play() : audio.pause(); }
-    audio.onended = nextAsset;
-    window.onload = () => { renderScroller(); loadAsset(0); startEngine(); };
-</script>
+    <div id="stock-terminal">
+        <div class="ticker" id="market-oscillator">LINKING EXCHANGE...</div>
+        <div class="trade-panel">
+            <button class="exec-btn" id="buy-action" onclick="executeTrade('BUY')">BUY STOCK</button>
+            <button class="exec-btn" id="sell-action" onclick="executeTrade('SELL')">SELL/TRADE</button>
+        </div>
+        <div class="asset-view" id="asset-art">
+            <div class="asset-overlay" id="asset-label">INITIALIZING...</div>
+        </div>
+        <div class="audio-monitor">
+            <span id="audio-status" style="font-size: 0.6rem;">MONITOR ACTIVE</span>
+            <button class="control-btn" onclick="toggleAudio()">▶ PLAY/PAUSE</button>
+            <button class="control-btn" id="next-btn" onclick="nextAsset()">SKIP ASSET ⏭</button>
+        </div>
+        <div class="asset-scroller" id="scroller"></div>
+    </div>
+
+    <audio id="radio-source"></audio>
+
+    <script>
+        const _B = 522.00; const _Q = 115; const _R = 2.0; const _F = 0.25;
+        const inventory = [
+            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
+            { name: "I GOT WHAT YOU NEED", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" },
+            { name: "ZODIAC SIGN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" },
+            { name: "SCENE BY SCENE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" }
+        ];
+
+        let index = 0; let currentPrice = 1.00;
+        const audio = document.getElementById('radio-source');
+        const oscillator = document.getElementById('market-oscillator');
+        const scroller = document.getElementById('scroller');
+
+        function renderScroller() { scroller.innerHTML = inventory.map((item, i) => `<div class="select-card" id="card-${i}" style="background-image: url('${item.art}')" onclick="loadAsset(${i})"></div>`).join(''); }
+
+        function loadAsset(i) {
+            index = i; const a = inventory[i]; audio.src = a.audio;
+            document.getElementById('asset-art').style.backgroundImage = `url("${a.art}")`;
+            document.getElementById('asset-label').innerText = `STOCK: ${a.name}`;
+            document.querySelectorAll('.select-card').forEach(c => c.classList.remove('active'));
+            const activeCard = document.getElementById(`card-${i}`);
+            if(activeCard) activeCard.classList.add('active');
+            currentPrice = Math.floor(Math.random() * 3) + 1;
+            audio.play().catch(e => console.log("User interaction required"));
+        }
+
+        function startEngine() {
+            setInterval(() => {
+                let last = currentPrice; const change = (Math.random() * 0.03) - 0.01;
+                currentPrice += (currentPrice * change);
+                if (currentPrice < 1.00) currentPrice = 1.01;
+                oscillator.innerHTML = `${inventory[index].name.split(' ')[0]} ${currentPrice > last ? '▲' : '▼'} $${(currentPrice + _F).toFixed(2)}`;
+                oscillator.className = `ticker ${currentPrice > last ? 'gain' : 'loss'}`;
+            }, 5000);
+        }
+
+        function executeTrade(type) {
+            if(type === 'BUY') { window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${(currentPrice + _F).toFixed(2)}`; }
+            else { const maturity = Math.floor(Math.random() * 40) + 60; alert(`LEDGER STATUS: ASSET IDENTIFIED\n\nYour position is currently in the GROWTH QUEUE.\n\nMaturity: ${maturity}%\nROI Target: 100% of Principal\n\nNotification will be sent via Cash App tag when you are UP FOR SETTLEMENT.`); }
+        }
+
+        function nextAsset() { index = (index + 1) % inventory.length; loadAsset(index); }
+        function toggleAudio() { audio.paused ? audio.play() : audio.pause(); }
+        audio.onended = nextAsset;
+        window.onload = () => { renderScroller(); loadAsset(0); startEngine(); };
+    </script>
+</body>
+</html>
