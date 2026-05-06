@@ -2,71 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MUSIC-MONEY MARKET RADIO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>97.7 THE FLAME - VENDING MACHINE</title>
     <style>
-        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 20px; }
-        #vending-machine { border: 4px solid #f0f; width: 380px; margin: 0 auto; padding: 20px; box-shadow: 0 0 20px #f0f; background: #050505; }
-        .ticker { font-size: 20px; background: #111; padding: 10px; border: 1px solid #0ff; margin-bottom: 20px; color: #0f0; min-height: 30px; }
-        .art-display { 
-            width: 100%; height: 380px; 
-            background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN\'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5'); 
-            background-size: cover; background-position: center; border: 2px solid #333; margin-bottom: 15px; 
+        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 10px; overflow-x: hidden; }
+        #vending-machine { 
+            border: 4px solid #f0f; 
+            max-width: 420px; 
+            width: 95%; 
+            margin: 10px auto; 
+            padding: 15px; 
+            box-shadow: 0 0 20px #f0f; 
+            background: #050505; 
+            position: relative; 
+            box-sizing: border-box;
         }
+        .ticker { font-size: 1.2rem; background: #111; padding: 10px; border: 1px solid #0ff; margin-bottom: 15px; color: #0f0; min-height: 30px; font-weight: bold; overflow: hidden; white-space: nowrap; }
+        .art-display { width: 100%; height: 380px; background-size: cover; background-position: center; border: 2px solid #333; margin-bottom: 15px; transition: 0.5s; }
         .display-screen { background: #111; border: 2px solid #333; padding: 15px; margin-bottom: 15px; }
-        button { cursor: pointer; font-weight: bold; text-transform: uppercase; border: 2px solid; transition: 0.2s; }
-        .play-btn { background: #0ff; color: #000; border-color: #0ff; padding: 15px; width: 100%; font-size: 18px; margin-bottom: 10px; }
+        button { cursor: pointer; font-weight: bold; text-transform: uppercase; border: 2px solid; transition: 0.2s; outline: none; }
+        .play-btn { background: #0ff; color: #000; border-color: #0ff; padding: 18px; width: 100%; font-size: 1.2rem; margin-bottom: 10px; }
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .action-btn { background: #222; color: #f0f; border-color: #f0f; padding: 10px; font-size: 12px; }
-        #buy-btn { background: #0f0; color: #000; border-color: #0f0; padding: 20px; margin-top: 15px; width: 100%; font-size: 22px; box-shadow: 0 0 15px #0f0; }
-        button:hover { filter: brightness(1.2); transform: scale(1.02); }
-        audio { display: none; }
+        .action-btn { background: #222; color: #f0f; border-color: #f0f; padding: 12px; font-size: 0.8rem; }
+        #buy-btn { background: #0f0; color: #000; border-color: #0f0; padding: 20px; margin-top: 15px; width: 100%; font-size: 1.5rem; box-shadow: 0 0 15px #0f0; }
+        
+        /* ANALYTICS OVERLAY */
+        #analytics-overlay { 
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 100; padding: 30px; box-sizing: border-box; 
+            text-align: left; color: #f0f; border: 2px solid #0ff;
+        }
+        .stat-line { border-bottom: 1px solid #333; padding: 10px 0; display: flex; justify-content: space-between; }
     </style>
 </head>
 <body>
-    <h1>97.7 THE FLAME</h1>
+    <h1 style="font-size: 1.5rem; margin: 10px 0;">97.7 THE FLAME</h1>
+    
     <div id="vending-machine">
-        <div class="ticker" id="price-ticker">CAN'T FOLLOW THROUGH: $211.00</div>
-        
-        <div class="art-display"></div>
+        <div id="analytics-overlay" onclick="this.style.display='none'">
+            <h2 style="color:#0ff">MARKET DATA</h2>
+            <div class="stat-line"><span>LIKES:</span> <span id="stat-likes">2,841</span></div>
+            <div class="stat-line"><span>SHARES:</span> <span id="stat-shares">1,102</span></div>
+            <div class="stat-line"><span>VENDS:</span> <span id="stat-bought">319</span></div>
+            <div class="stat-line"><span>LAST PRICE:</span> <span id="stat-last-price">$4.22</span></div>
+            <p style="text-align:center; margin-top:40px; color:#666">[TAP TO CLOSE]</p>
+        </div>
+
+        <div class="ticker" id="price-ticker">INITIALIZING MARKET...</div>
+        <div class="art-display" id="main-art"></div>
 
         <div class="display-screen">
-            <p id="status">G. SMOOTH - CAN'T FOLLOW THROUGH</p>
+            <p id="status" style="font-size: 0.9rem; color: #0ff;">VENDING SYSTEM ONLINE</p>
             <button class="play-btn" onclick="togglePlay()">▶ VEND AUDIO</button>
             <div class="action-grid">
-                <button class="action-btn" onclick="alert('Liked!')">❤️ LIKE</button>
-                <button class="action-btn" onclick="alert('Link Copied!')">🔗 SHARE</button>
+                <button class="action-btn" onclick="showAnalytics()">📊 ANALYTICS</button>
+                <button class="action-btn" onclick="socialShare()">🔗 SHARE</button>
             </div>
         </div>
 
         <button id="buy-btn" onclick="window.location.href='YOUR_PAYMENT_LINK'">
-            RAPID BUY @ MARKET PRICE
+            RAPID BUY @ MARKET
         </button>
     </div>
 
-    <audio id="radio-source" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054"></audio>
+    <audio id="radio-source"></audio>
 
     <script>
+        const songs = [
+            { name: "CAN'T FOLLOW THROUGH", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" },
+            { name: "YOUR BODY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20(Official%20Audio)-G.%20SMOOTH.mp3?alt=media&token=d8d7ff01-116d-40ae-b70d-3603773cb865", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20IMG.png?alt=media&token=0cefdc1d-15ef-4ed0-9014-eb7ce1625e4b" }
+        ];
+
+        let index = 0;
         const audio = document.getElementById('radio-source');
+        const ticker = document.getElementById('price-ticker');
+        const art = document.getElementById('main-art');
+
+        function loadSong(i) {
+            const s = songs[i];
+            audio.src = s.audio;
+            art.style.backgroundImage = `url('${s.art}')`;
+            document.getElementById('status').innerText = `G. SMOOTH - ${s.name}`;
+        }
+
         function togglePlay() {
-            if (audio.paused) { 
-                audio.play(); 
-                document.getElementById('status').innerText = "NOW VENDING: CAN'T FOLLOW THROUGH"; 
-            } else { 
-                audio.pause(); 
-                document.getElementById('status').innerText = "PAUSED"; 
+            audio.paused ? audio.play() : audio.pause();
+        }
+
+        // AUTO-ROTATE LOGIC
+        audio.onended = () => {
+            index = (index + 1) % songs.length;
+            loadSong(index);
+            audio.play();
+        };
+
+        // KINETIC PRICE LOGIC ($1.00 - $10.00)
+        setInterval(() => {
+            const price = (Math.random() * (10.00 - 1.00) + 1.00).toFixed(2);
+            ticker.innerText = `${songs[index].name}: $${price}`;
+            document.getElementById('stat-last-price').innerText = `$${price}`;
+        }, 4000);
+
+        function socialShare() {
+            const text = `Vending now on 97.7 THE FLAME: ${songs[index].name}`;
+            if (navigator.share) {
+                navigator.share({ title: 'AITIFY RADIO', text: text, url: window.location.href });
+            } else {
+                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`);
             }
         }
 
-        async function getPrice() {
-            try {
-                const response = await fetch('https://aitify-oscillator.onrender.com/api/market-data');
-                const data = await response.json();
-                const song = data.find(s => s.name.toUpperCase().includes("FOLLOW") || s.name.toUpperCase().includes("AITIFY"));
-                if(song) document.getElementById('price-ticker').innerText = `MARKET PRICE: $${song.price}`;
-            } catch (e) { console.log("Ticker sync..."); }
+        function showAnalytics() {
+            document.getElementById('analytics-overlay').style.display = 'block';
         }
-        setInterval(getPrice, 5000);
-        getPrice();
+
+        loadSong(0);
     </script>
 </body>
 </html>
