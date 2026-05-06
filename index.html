@@ -9,19 +9,19 @@
         #stock-terminal { border: 2px solid #0ff; max-width: 400px; width: 98%; margin: 5px auto; padding: 10px; background: #050505; box-shadow: 0 0 15px #0ff; box-sizing: border-box; }
         
         /* STOCK TICKER ACTION */
-        .ticker { font-size: 1.4rem; background: #111; padding: 12px; border: 1px solid #333; margin-bottom: 8px; font-weight: bold; }
+        .ticker { font-size: 1.4rem; background: #111; padding: 12px; border: 1px solid #333; margin-bottom: 8px; font-weight: bold; min-height: 40px; display: flex; align-items: center; justify-content: center; }
         .gain { color: #0f0; text-shadow: 0 0 8px #0f0; }
         .loss { color: #f00; text-shadow: 0 0 8px #f00; }
 
         /* EXECUTION PANEL */
         .trade-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-        .exec-btn { border: none; padding: 18px; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .exec-btn { border: none; padding: 18px; font-size: 1.2rem; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.2s; outline: none; }
         #buy-action { background: #0f0; color: #000; box-shadow: 0 0 15px #0f0; }
         #sell-action { background: #f00; color: #000; box-shadow: 0 0 15px #f00; }
         .exec-btn:active { transform: scale(0.95); filter: brightness(1.5); }
         
-        .asset-view { width: 100%; height: 320px; background-size: cover; background-position: center; border: 1px solid #333; margin-bottom: 10px; background-color: #111; position: relative; }
-        .asset-overlay { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.7); padding: 5px; font-size: 0.7rem; color: #f0f; border-top: 1px solid #333; }
+        .asset-view { width: 100%; height: 340px; background-size: cover; background-position: center; border: 1px solid #333; margin-bottom: 10px; background-color: #111; position: relative; }
+        .asset-overlay { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 8px; font-size: 0.75rem; color: #f0f; border-top: 1px solid #333; box-sizing: border-box; }
         
         .audio-monitor { background: #111; padding: 10px; border: 1px solid #333; display: flex; align-items: center; justify-content: space-between; }
         .play-btn { background: #0ff; color: #000; border: none; padding: 10px 20px; font-size: 0.9rem; font-weight: bold; cursor: pointer; }
@@ -29,19 +29,19 @@
 </head>
 <body>
     <div id="stock-terminal">
-        <div class="ticker" id="market-oscillator">CONNECTING TO EXCHANGE...</div>
+        <div class="ticker" id="market-oscillator">INITIALIZING EXCHANGE...</div>
 
         <div class="trade-panel">
-            <button class="exec-btn" id="buy-action" onclick="window.location.href='https://cash.app/$GSpotMusic'">BUY STOCK</button>
-            <button class="exec-btn" id="sell-action" onclick="alert('SELL ORDER PLACED')">SELL/TRADE</button>
+            <button class="exec-btn" id="buy-action" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY STOCK</button>
+            <button class="exec-btn" id="sell-action" onclick="alert('SELL ORDER ROUTED TO DARK POOL')">SELL/TRADE</button>
         </div>
 
         <div class="asset-view" id="asset-art">
-            <div class="asset-overlay" id="asset-label">ASSET: INITIALIZING...</div>
+            <div class="asset-overlay" id="asset-label">ASSET: SYNCING...</div>
         </div>
 
         <div class="audio-monitor">
-            <span id="audio-status" style="font-size: 0.8rem;">MONITORING STREAM...</span>
+            <span id="audio-status" style="font-size: 0.8rem; letter-spacing: 1px;">MONITORING STREAM...</span>
             <button class="play-btn" onclick="toggleAudio()">▶ AUDIO VEND</button>
         </div>
     </div>
@@ -49,32 +49,57 @@
     <audio id="radio-source"></audio>
 
     <script>
-        const stockAssets = [
+        const assets = [
             { 
-                symbol: "CAN'T FOLLOW THROUGH", 
+                name: "CAN'T FOLLOW THROUGH", 
                 audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054", 
                 art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" 
             },
             { 
-                symbol: "YOUR BODY", 
+                name: "YOUR BODY", 
                 audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20(Official%20Audio)-G.%20SMOOTH.mp3?alt=media&token=d8d7ff01-116d-40ae-b70d-3603773cb865", 
                 art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20IMG.png?alt=media&token=0cefdc1d-15ef-4ed0-9014-eb7ce1625e4b" 
             }
         ];
 
-        let currentIndex = 0;
-        let lastValue = 5.00;
+        let index = 0;
+        let currentPrice = 1.00; // OPENING PRICE
+        let lastPrice = 1.00;
         const audio = document.getElementById('radio-source');
         const oscillator = document.getElementById('market-oscillator');
         const artFrame = document.getElementById('asset-art');
         const label = document.getElementById('asset-label');
 
+        function runGrowthMarket() {
+            setInterval(() => {
+                lastPrice = currentPrice;
+                
+                // MARKET DYNAMICS: Growth-biased random walk
+                const movement = Math.random();
+                const volatility = (Math.random() * 0.04); // Up to 4% swing per cycle
+
+                if (movement > 0.45) {
+                    currentPrice += (currentPrice * volatility); // GAIN (Slightly higher probability)
+                } else {
+                    currentPrice -= (currentPrice * (volatility * 0.85)); // SMALLER LOSS
+                }
+
+                // THE $1.00 FLOOR (SKY IS THE LIMIT CEILING)
+                if (currentPrice < 1.00) currentPrice = 1.01;
+
+                const trend = currentPrice > lastPrice ? "▲ GAIN" : "▼ LOSS";
+                const trendClass = currentPrice > lastPrice ? "gain" : "loss";
+                
+                oscillator.innerHTML = `${assets[index].name.split(' ')[0]} ${trend} $${currentPrice.toFixed(2)}`;
+                oscillator.className = `ticker ${trendClass}`;
+            }, 3000);
+        }
+
         function loadAsset(i) {
-            const a = stockAssets[i];
+            const a = assets[i];
             audio.src = a.audio;
-            // Force reload for first image
             artFrame.style.backgroundImage = `url('${a.art}')`;
-            label.innerText = `TRADING ASSET: ${a.symbol}`;
+            label.innerText = `TRADING ASSET: ${a.name}`;
         }
 
         function toggleAudio() {
@@ -83,24 +108,15 @@
         }
 
         audio.onended = () => {
-            currentIndex = (currentIndex + 1) % stockAssets.length;
-            loadAsset(currentIndex);
+            index = (index + 1) % assets.length;
+            loadAsset(index);
             audio.play();
         };
 
-        // KINETIC STOCK MARKET LOGIC
-        setInterval(() => {
-            const newValue = (Math.random() * (10.00 - 1.00) + 1.00).toFixed(2);
-            const trend = newValue > lastValue ? "▲ GAIN" : "▼ LOSS";
-            const trendClass = newValue > lastValue ? "gain" : "loss";
-            
-            oscillator.innerHTML = `${stockAssets[currentIndex].symbol.split(' ')[0]} ${trend} $${newValue}`;
-            oscillator.className = `ticker ${trendClass}`;
-            lastValue = newValue;
-        }, 3000);
-
-        // Immediate load
-        window.onload = () => loadAsset(0);
+        window.onload = () => {
+            loadAsset(0);
+            runGrowthMarket();
+        };
     </script>
 </body>
 </html>
