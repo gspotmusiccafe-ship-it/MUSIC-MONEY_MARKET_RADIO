@@ -2,95 +2,56 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AITITRADE // BROKERAGE SETTLEMENT DESK</title>
+    <title>THE MAESTRO TERMINAL // AITIFY</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 20px; overflow-x: hidden; }
-        .desk-header { border-bottom: 2px solid #0f0; padding-bottom: 10px; margin-bottom: 20px; display: flex; justify-content: space-between; font-weight: bold; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .stat-card { border: 1px solid #0f0; padding: 15px; background: #111; text-align: center; box-shadow: 0 0 15px rgba(0,255,0,0.2); }
-        .val { font-size: 2rem; display: block; color: #0ff; font-weight: bold; text-shadow: 0 0 10px #0ff; }
-        .label { font-size: 0.7rem; color: #888; text-transform: uppercase; margin-top: 5px; }
-        table { width: 100%; margin-top: 30px; border-collapse: collapse; background: #050505; font-size: 0.9rem; }
-        th { background: #0f0; color: #000; padding: 12px; text-transform: uppercase; text-align: left; }
-        td { border-bottom: 1px solid #222; padding: 15px; color: #0ff; }
-        .status-pulse { color: #0f0; font-weight: bold; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; }
+        .ticker-bar { width: 100%; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; overflow: hidden; font-weight: bold; }
+        .marquee { display: inline-block; white-space: nowrap; animation: move 25s linear infinite; color: #0f0; }
+        @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        #podium { border: 2px solid #0ff; max-width: 450px; margin: 20px auto; padding: 20px; background: rgba(5,5,5,0.95); box-shadow: 0 0 30px #0ff; }
+        .clef-visual { width: 100%; height: 400px; background-size: cover; background-position: center; border: 1px solid #333; position: relative; }
+        .movement-label { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px; font-size: 0.8rem; color: #f0f; }
+        .baton-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn { padding: 18px; border: none; font-weight: 900; cursor: pointer; text-transform: uppercase; border-radius: 4px; }
+        .conduct { background: #0f0; color: #000; box-shadow: 0 0 10px #0f0; }
+        .next-move { background: #f0f; color: #fff; }
     </style>
 </head>
 <body>
-    <div class="desk-header">
-        <span>ID: G-SMOOTH-OFFICE-001</span>
-        <span id="live-clock">00:00:00 AM</span>
+    <div class="ticker-bar">
+        <div class="marquee" id="live-ticker">$MMC SYMPHONY ▲ 1.45% | CURRENT UNIT: 1 MAESTRO | TREBLE MOVEMENT: SUPERFLY ▲ $5.25 | MARKET OPEN</div>
     </div>
 
-    <div class="grid">
-        <div class="stat-card"><span class="val" id="total-vol">$0.00</span><div class="label">Total Market Vol</div></div>
-        <div class="stat-card"><span class="val" id="trader-count">0</span><div class="label">Active Settlement Slots</div></div>
-        <div class="stat-card"><span class="val" id="surplus">$522.00</span><div class="label">Liquidity Reserve</div></div>
-        <div class="stat-card"><span class="val">100% ROI</span><div class="label">Target Maturity</div></div>
+    <div id="podium">
+        <div class="clef-visual" id="art-frame">
+            <div class="movement-label" id="track-name">INITIALIZING SYMPHONY...</div>
+        </div>
+        <div class="baton-controls">
+            <button class="btn conduct" onclick="enter()">ACQUIRE MAESTROS</button>
+            <button class="btn next-move" onclick="skip()">NEXT MOVEMENT ⏭</button>
+        </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>TIMESTAMP</th>
-                <th>ASSET</th>
-                <th>TIER</th>
-                <th>ENTRY</th>
-                <th>SETTLEMENT STATUS</th>
-            </tr>
-        </thead>
-        <tbody id="ledger-rows">
-            <tr><td colspan="5" style="text-align:center;">SYNCING WITH GOOGLE CLOUD...</td></tr>
-        </tbody>
-    </table>
+    <audio id="orchestra-source" onended="skip()"></audio>
 
     <script>
-        const SHEET_ID = '19lFD6I1f3WBZyVIMTOTdDy_3ssDztJsW4mQPM2H_dLM';
-        const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json`;
-
-        async function syncBrokerageDesk() {
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                const json = JSON.parse(text.substr(47).slice(0, -2));
-                const rows = json.table.rows;
-
-                let html = '';
-                let totalVolume = 0;
-
-                rows.reverse().forEach(row => {
-                    const data = row.c;
-                    if (!data || !data[1]) return; // Skip empty rows
-
-                    const timestamp = data[0] ? data[0].f : '---';
-                    const asset = data[1] ? data[1].v : '---';
-                    const tier = data[2] ? data[2].v : '---';
-                    const principal = data[3] ? data[3].v : 0;
-                    const status = data[4] ? data[4].v : 'PENDING';
-
-                    totalVolume += parseFloat(principal);
-
-                    html += `<tr>
-                        <td>${timestamp}</td>
-                        <td>${asset}</td>
-                        <td>Tier ${tier}</td>
-                        <td style="color:#0f0;">$${parseFloat(principal).toFixed(2)}</td>
-                        <td class="status-pulse">${status}</td>
-                    </tr>`;
-                });
-
-                document.getElementById('ledger-rows').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">NO TRADES RECORDED</td></tr>';
-                document.getElementById('total-vol').innerText = `$${totalVolume.toFixed(2)}`;
-                document.getElementById('trader-count').innerText = rows.filter(r => r.c && r.c[1]).length;
-            } catch (err) {
-                console.log("Re-establishing connection...");
-            }
+        const movements = [
+            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" },
+            { name: "I GOT WHAT YOU NEED", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media" }
+        ];
+        let idx = 0;
+        const player = document.getElementById('orchestra-source');
+        
+        function loadMovement(n) {
+            idx = n; const m = movements[idx];
+            player.src = m.audio;
+            document.getElementById('art-frame').style.backgroundImage = `url('${m.art}')`;
+            document.getElementById('track-name').innerText = `CONDUCTING: ${m.name}`;
+            player.play().catch(() => console.log("Maestro, tap to begin."));
         }
-
-        setInterval(syncBrokerageDesk, 5000);
-        setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString(); }, 1000);
-        window.onload = syncBrokerageDesk;
+        function skip() { idx = (idx + 1) % movements.length; loadMovement(idx); }
+        function enter() { window.location.href = "https://cash.app/$AITITRADEBROKERAGE"; }
+        window.onload = () => loadMovement(0);
     </script>
 </body>
 </html>
