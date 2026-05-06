@@ -11,7 +11,11 @@
             background-size: 50px 50px;
             color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; padding: 0; overflow-x: hidden;
         }
-        .global-ticker { width: 100%; background: #111; border-bottom: 2px solid #0ff; color: #0f0; padding: 10px 0; font-size: 0.85rem; font-weight: bold; white-space: nowrap; }
+        /* ROLLING TICKER ANIMATION */
+        .global-ticker-wrap { width: 100%; overflow: hidden; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; }
+        .global-ticker { display: inline-block; white-space: nowrap; font-size: 0.85rem; font-weight: bold; color: #0f0; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
         #stock-terminal { border: 2px solid #0ff; max-width: 450px; width: 92%; margin: 15px auto; padding: 15px; background: rgba(5, 5, 5, 0.98); box-shadow: 0 0 30px #0ff; box-sizing: border-box; }
         .ticker { font-size: 1.5rem; background: #000; padding: 12px; border: 1px solid #0ff; margin-bottom: 10px; font-weight: bold; transition: color 0.3s ease; }
         .gain { color: #0f0; text-shadow: 0 0 8px #0f0; }
@@ -30,7 +34,9 @@
     </style>
 </head>
 <body>
-    <div class="global-ticker" id="global-index">LOADING MARKET DATA...</div>
+    <div class="global-ticker-wrap">
+        <div class="global-ticker" id="global-index">AITITRADE GLOBAL INDEX ▲ 1.45% | $MMC (Music Money) ▲ $0.000100 | SHOWTOWN VOLUME ▲ 2.8% | MARKET OPEN</div>
+    </div>
 
     <div id="stock-terminal">
         <div class="ticker gain" id="market-oscillator">LINKING EXCHANGE...</div>
@@ -65,7 +71,6 @@
         const audio = document.getElementById('radio-source');
         const oscillator = document.getElementById('market-oscillator');
 
-        // AUTO-ROTATION ENGINE
         audio.onended = () => { nextAsset(); };
 
         function startEngine() {
@@ -79,8 +84,8 @@
 
                 const mmcPrice = (LIQUIDITY_BNB / 1000000) + ((Math.random() * 0.0005) - 0.0002);
                 document.getElementById('global-index').innerText = 
-                    `AITITRADE GLOBAL INDEX ▲ 1.45% | $MMC (Music Money) ▲ $${mmcPrice.toFixed(6)} | MARKET OPEN`;
-            }, 3000);
+                    `AITITRADE GLOBAL INDEX ▲ 1.45% | $MMC (Music Money) ▲ $${mmcPrice.toFixed(6)} | SHOWTOWN VOLUME ▲ 2.8% | MARKET OPEN`;
+            }, 2500);
         }
 
         function loadAsset(i) {
@@ -90,7 +95,7 @@
             document.getElementById('asset-label').innerText = `SONGSATIONS: ${a.name}`;
             oscillator.innerText = `${a.name} ▲ $${(a.tier + _F).toFixed(2)}`;
             document.querySelectorAll('.select-card').forEach((c, idx) => c.classList.toggle('active', idx === i));
-            audio.play().catch(() => console.log("Tap to start radio"));
+            audio.play().catch(() => console.log("User must interact"));
         }
 
         function renderScroller() {
@@ -103,7 +108,7 @@
             const a = inventory[index];
             if(type === 'BUY') {
                 const total = (a.tier * MIN) + _F;
-                alert(`CONFIRM TIER ${a.tier} ENTRY\n10 Share Block\nTotal Execution: $${total.toFixed(2)}`);
+                alert(`CONFIRM TIER ${a.tier} ENTRY\n10 Shares @ $${a.tier}.00\nTotal Execution: $${total.toFixed(2)}`);
                 window.location.href = `https://cash.app/$AITITRADEBROKERAGE?amount=${total.toFixed(2)}`;
             } else {
                 alert(`GROWTH QUEUE ACTIVE\nAsset: ${a.name}\nStatus: Gaining Steam (45-60 Days)`);
@@ -112,7 +117,6 @@
 
         function nextAsset() { index = (index + 1) % inventory.length; loadAsset(index); }
         function toggleAudio() { audio.paused ? audio.play() : audio.pause(); }
-        
         window.onload = () => { renderScroller(); loadAsset(0); startEngine(); };
     </script>
 </body>
