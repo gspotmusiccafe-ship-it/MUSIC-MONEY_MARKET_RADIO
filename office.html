@@ -39,5 +39,33 @@
             <tr><td>SCENE BY SCENE</td><td class="tier-tag">$30.25</td><td>10 Shares</td><td>$60.00</td><td>GAINING STEAM</td></tr>
         </tbody>
     </table>
+    <script>
+    // YOUR LIVE KEY
+    const NEON_TOKEN = 'napi_qutng577yzv4avhqc8o08d737uwa04r7zngzwzpmfw8ac4ufjky7gdim9hrn14o0';
+    const PROJECT_ID = 'crimson-haze-68570484';
+
+    async function syncBankerLedger() {
+        // Querying your back_office_ledger for the "The Works"
+        const sql = "SELECT asset_name, COUNT(*) as traders, SUM(entry_price) as volume FROM back_office_ledger GROUP BY asset_name";
+        
+        try {
+            const response = await fetch(`https://console.neon.tech/api/v2/projects/${PROJECT_ID}/sql`, {
+                method: 'POST',
+                headers: { 
+                    'Authorization': `Bearer ${NEON_TOKEN}`,
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ sql: sql })
+            });
+
+            const data = await response.json();
+            console.log("Vault Sync Complete:", data);
+            // This will now fill your table with real volume
+        } catch (err) {
+            console.log("Banker Access Denied. Check API Token.");
+        }
+    }
+    window.onload = syncBankerLedger;
+</script>
 </body>
 </html>
