@@ -5,78 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TERMINAL // MUSIC MONEY MARKET</title>
     <style>
-        :root { --b-orange: #ff9900; --gain: #00ff00; --loss: #ff0000; --terminal-bg: #050505; }
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; text-transform: uppercase; }
+        :root { --b-orange: #ff9900; --gain: #00ff00; --loss: #ff0000; --terminal-bg: #050505; --neon: #0ff; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; text-transform: uppercase; overflow-x: hidden; }
 
-        /* 1. TOP TICKER */
-        .ticker-bar { width: 100%; background: #000; border-bottom: 2px solid #333; padding: 8px 0; overflow: hidden; font-size: 0.8rem; }
+        /* 1. TOP BLOOMBERG TICKER */
+        .ticker-bar { width: 100%; background: #000; border-bottom: 2px solid #333; padding: 8px 0; overflow: hidden; font-size: 0.8rem; box-shadow: 0 0 10px var(--neon); }
         .marquee { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; color: var(--b-orange); font-weight: bold; }
         @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        #portal { width: 95%; max-width: 420px; margin: 15px 0; border: 2px solid #444; background: var(--terminal-bg); padding: 12px; position: relative; }
+        #portal { width: 95%; max-width: 420px; margin: 15px 0; border: 2px solid #444; background: var(--terminal-bg); padding: 12px; position: relative; box-shadow: 0 0 25px rgba(0,255,255,0.2); }
 
-        /* 2. LIVE VALUATION ENGINE (REPLACES HEAT LINE) */
-        .valuation-box { background: #111; padding: 15px; border: 1px solid #333; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .price-display { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; }
-        .arrow { font-size: 1.2rem; margin-right: 5px; }
+        /* 2. SIGNUP GATE */
+        #gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 4px; }
+        .gate-btn { background: var(--b-orange); color: #000; padding: 20px; font-weight: 900; border: none; cursor: pointer; width: 80%; margin-bottom: 10px; font-size: 1.1rem; box-shadow: 0 0 15px var(--b-orange); }
 
-        /* 3. SIGNUP GATE (SIGNUP PHASE) */
-        #gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .gate-btn { background: var(--b-orange); color: #000; padding: 20px; font-weight: 900; border: none; cursor: pointer; width: 80%; margin-bottom: 10px; }
+        /* 3. VALUATION ENGINE */
+        .valuation-box { background: #111; padding: 12px; border: 1px solid #333; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--neon); }
+        .price-display { font-size: 1.6rem; font-weight: 900; letter-spacing: 1px; }
 
-        /* 4. TRADE ACTIONS */
-        .trade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding-bottom: 10px; }
-        .btn { padding: 15px; border: 1px solid #666; font-weight: 900; cursor: pointer; color: #fff; }
-        .buy { background: #004400; border-color: var(--gain); }
-        .sell { background: #440000; border-color: var(--loss); }
+        /* 4. ASSET DISPLAY & BUTTONS */
+        .main-image { width: 100%; height: 350px; background-size: cover; background-position: center; border: 1px solid #444; margin-bottom: 10px; position: relative; }
+        .trade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .btn { padding: 15px; border: 1px solid #666; font-weight: 900; cursor: pointer; color: #fff; font-size: 0.8rem; }
+        .buy { background: #004400; border-color: var(--gain); box-shadow: inset 0 0 10px var(--gain); }
+        .sell { background: #440000; border-color: var(--loss); box-shadow: inset 0 0 10px var(--loss); }
 
-        /* 5. MAIN ASSET DISPLAY */
-        .main-image { width: 100%; height: 380px; background-size: cover; background-position: center; border: 1px solid #444; margin-bottom: 10px; }
-
-        /* 6. STOCKHOLDERS ROOM LINK */
-        .room-btn { width: 100%; background: #222; color: #0ff; border: 1px solid #0ff; padding: 10px; margin: 10px 0; cursor: pointer; font-weight: bold; text-decoration: none; display: block; text-align: center; }
-
-        /* 7. CONTROLS */
-        .monitor { background: #1a1a1a; padding: 15px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        /* 5. RADIO MONITOR */
+        .monitor { background: #1a1a1a; padding: 12px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .play-btn { font-size: 2rem; cursor: pointer; color: var(--b-orange); }
+
+        /* 6. SLIDING ASSETS (BOTTOM) */
+        .asset-scroll { width: 100%; overflow-x: auto; white-space: nowrap; padding: 10px 0; border-top: 1px solid #333; background: #000; }
+        .asset-thumb { display: inline-block; width: 80px; margin: 0 8px; cursor: pointer; opacity: 0.7; transition: 0.3s; }
+        .asset-thumb:hover { opacity: 1; transform: scale(1.1); }
+        .asset-thumb img { width: 100%; border: 1px solid var(--neon); border-radius: 2px; }
+
+        .room-link { width: 100%; background: #222; color: var(--neon); border: 1px solid var(--neon); padding: 10px; text-decoration: none; display: block; text-align: center; font-size: 0.75rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
     <div class="ticker-bar">
-        <div class="marquee">$MMC SYMPHONY // ELIGIBILITY CHECK: PENDING // MARKET STATUS: OPEN // DIVIDEND YIELD: 8.4%</div>
+        <div class="marquee">$MMC SYMPHONY // ELIGIBILITY: PENDING // MARKET: OPEN // DIVIDEND YIELD: 8.4% // SETTLEMENT: ACTIVE</div>
     </div>
 
     <div id="portal">
         <div id="gate">
             <h2 style="color:var(--b-orange)">SIGNUP PHASE</h2>
-            <p style="font-size: 0.7rem; padding: 0 20px;">Register your credentials to enable trading & open the terminal.</p>
-            <button class="gate-btn" onclick="openPortal()">SIGN UP TO EXCHANGE</button>
-            <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" style="color: #666; font-size: 0.6rem;">WIX COMMUNITY LOGIN</a>
+            <p style="font-size: 0.7rem; padding: 0 20px; color: #888;">REGISTER TO ENABLE TRADING & UNLOCK ASSET STREAM.</p>
+            <button class="gate-btn" onclick="unlock()">SIGN UP TO EXCHANGE</button>
+            <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" style="color: #555; font-size: 0.6rem; text-decoration: none;">WIX COMMUNITY LOGIN</a>
         </div>
 
         <div class="valuation-box">
             <div>
-                <div style="font-size: 0.6rem; color: #888;">CURRENT VALUATION</div>
+                <div style="font-size: 0.55rem; color: #888;">LIVE VALUATION</div>
                 <div id="price" class="price-display">$0.00</div>
             </div>
-            <div id="trend" style="font-weight: bold;">---</div>
+            <div id="trend" style="font-weight: bold; font-size: 0.9rem;">---</div>
         </div>
 
         <div class="trade-row">
             <button class="btn buy" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY PRINCIPAL</button>
-            <button class="btn sell" onclick="alert('Liquidation Request Sent')">SELL GAINS</button>
+            <button class="btn sell" onclick="alert('LIQUIDATION LOGGED')">SELL GAINS</button>
         </div>
 
         <div class="main-image" id="mainArt"></div>
 
-        <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" class="room-btn">🏛️ ENTER STOCKHOLDERS ROOM</a>
+        <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" class="room-link">🏛️ ENTER STOCKHOLDERS ROOM</a>
 
         <div class="monitor">
-            <div class="play-btn" onclick="togglePlay()" id="playBtn">▶</div>
-            <div style="font-size: 0.7rem; color: #666;">ASSET MONITOR // 97.7 THE FLAME</div>
-            <button onclick="next()" style="background:none; border: 1px solid #444; color: #fff; padding: 5px;">SKIP</button>
+            <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
+            <div style="font-size: 0.65rem; color: #888;">RADIO: 97.7 THE FLAME</div>
+            <button onclick="next()" style="background:none; border:1px solid #444; color:#fff; cursor:pointer; padding:5px 10px;">SKIP</button>
         </div>
+
+        <div class="asset-scroll" id="slider"></div>
     </div>
 
     <audio id="player" onended="next()"></audio>
@@ -90,45 +94,44 @@
         let cur = 0;
         const p = document.getElementById('player');
 
-        function openPortal() { document.getElementById('gate').style.display = 'none'; loadAsset(0); }
+        function unlock() { document.getElementById('gate').style.display = 'none'; loadAsset(0); }
 
-        function updateValuation() {
+        function updateTicker() {
             const item = assets[cur];
-            const change = (Math.random() * 0.10 - 0.05).toFixed(2);
-            const newPrice = (item.base + parseFloat(change)).toFixed(2);
+            const change = (Math.random() * 0.12 - 0.06).toFixed(2);
+            const price = (item.base + parseFloat(change)).toFixed(2);
             const pDiv = document.getElementById('price');
             const tDiv = document.getElementById('trend');
-            
-            pDiv.innerText = `$${newPrice}`;
-            if (change > 0) {
-                pDiv.style.color = 'var(--gain)';
-                tDiv.innerHTML = `<span class="arrow" style="color:var(--gain)">▲</span> +${change}`;
-                tDiv.style.color = 'var(--gain)';
-            } else {
-                pDiv.style.color = 'var(--loss)';
-                tDiv.innerHTML = `<span class="arrow" style="color:var(--loss)">▼</span> ${change}`;
-                tDiv.style.color = 'var(--loss)';
-            }
+            pDiv.innerText = `$${price}`;
+            if(change > 0) { pDiv.style.color = 'var(--gain)'; tDiv.innerHTML = `<span style="color:var(--gain)">▲</span> +${change}`; tDiv.style.color='var(--gain)'; }
+            else { pDiv.style.color = 'var(--loss)'; tDiv.innerHTML = `<span style="color:var(--loss)">▼</span> ${change}`; tDiv.style.color='var(--loss)'; }
         }
 
         function loadAsset(i) {
             cur = i;
-            const item = assets[cur];
-            p.src = item.audio;
-            document.getElementById('mainArt').style.backgroundImage = `url('${item.art}')`;
-            updateValuation();
+            p.src = assets[cur].audio;
+            document.getElementById('mainArt').style.backgroundImage = `url('${assets[cur].art}')`;
+            updateTicker();
             p.play();
             document.getElementById('playBtn').innerText = "⏸";
         }
 
         function togglePlay() {
-            if (p.paused) { p.play(); document.getElementById('playBtn').innerText = "⏸"; }
+            if(p.paused) { p.play(); document.getElementById('playBtn').innerText = "⏸"; }
             else { p.pause(); document.getElementById('playBtn').innerText = "▶"; }
         }
 
         function next() { cur = (cur + 1) % assets.length; loadAsset(cur); }
 
-        setInterval(updateValuation, 3000);
+        assets.forEach((item, index) => {
+            const thumb = document.createElement('div');
+            thumb.className = 'asset-thumb';
+            thumb.onclick = () => loadAsset(index);
+            thumb.innerHTML = `<img src="${item.art}">`;
+            document.getElementById('slider').appendChild(thumb);
+        });
+
+        setInterval(updateTicker, 3500);
     </script>
 </body>
 </html>
