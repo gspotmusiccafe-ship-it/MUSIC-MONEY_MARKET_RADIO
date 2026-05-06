@@ -3,82 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MUSIC MONEY MARKET // PORTAL</title>
+    <title>TERMINAL // MUSIC MONEY MARKET</title>
     <style>
-        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; }
-        
-        /* 1. TICKER AT THE VERY TOP */
-        .ticker-bar { width: 100%; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; box-shadow: 0 0 15px #0ff; }
-        .marquee { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; color: #0f0; font-weight: 900; }
+        :root { --bloomberg-orange: #ff9900; --bloomberg-blue: #2b78e4; --gain: #00ff00; --loss: #ff0000; }
+        body { background: #000; color: #fff; font-family: 'Arial Narrow', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; overflow-x: hidden; text-transform: uppercase; }
+
+        /* 1. BLOOMBERG GLOBAL TICKER */
+        .ticker-bar { width: 100%; background: #000; border-bottom: 2px solid #333; padding: 5px 0; font-size: 0.85rem; overflow: hidden; }
+        .marquee { display: inline-block; white-space: nowrap; animation: move 25s linear infinite; color: var(--bloomberg-orange); font-weight: bold; }
+        .m-gain { color: var(--gain); } .m-loss { color: var(--loss); }
         @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
-        /* THE NEON ENCAPSULATED PORTAL */
-        #portal { width: 95%; max-width: 420px; margin: 15px 0; border: 3px solid #0ff; background: #050505; box-shadow: 0 0 30px #0ff; border-radius: 12px; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        /* NEON PORTAL ENCAPSULATION */
+        #portal { width: 95%; max-width: 420px; margin: 15px 0; border: 2px solid #444; background: #0a0a0a; box-shadow: 0 0 20px rgba(0,255,255,0.1); padding: 10px; border-radius: 4px; }
 
-        /* 2. TOP OF PORTAL: SONG NAME & OSCILLATOR */
-        .oscillator-box { width: 100%; text-align: center; padding: 10px 0; border-bottom: 1px solid #333; }
-        .song-trading { font-size: 1.2rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px #0ff; margin-bottom: 5px; }
-        .oscillator { height: 30px; width: 80%; margin: 0 auto; background: repeating-linear-gradient(90deg, #f00, #f00 2px, #0f0 2px, #0f0 4px); animation: pulse 0.5s infinite alternate; border: 1px solid #555; }
-        @keyframes pulse { from { opacity: 0.6; } to { opacity: 1; } }
+        /* 2. TOP: ASSET NAME & TBI OSCILLATOR */
+        .header-section { border-bottom: 2px solid #444; padding-bottom: 10px; margin-bottom: 10px; }
+        .asset-id { color: var(--bloomberg-blue); font-size: 1.4rem; font-weight: 900; letter-spacing: 1px; }
+        .oscillator-container { height: 20px; background: #111; margin-top: 8px; border: 1px solid #333; position: relative; overflow: hidden; }
+        .oscillator-bar { height: 100%; width: 50%; background: linear-gradient(90deg, transparent, var(--gain), transparent); position: absolute; animation: sweep 1.5s infinite linear; }
+        @keyframes sweep { 0% { left: -50%; } 100% { left: 100%; } }
 
-        /* 3. BUY GREEN / RED SELL BUTTONS */
-        .trade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; padding: 15px 0; }
-        .btn-trade { padding: 15px; border: none; font-weight: 900; text-transform: uppercase; border-radius: 4px; cursor: pointer; }
-        .buy-btn { background: #0f0; color: #000; box-shadow: 0 0 15px #0f0; }
-        .sell-btn { background: #f00; color: #fff; box-shadow: 0 0 15px #f00; }
+        /* 3. TRADE ACTIONS */
+        .trade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 0; }
+        .btn { padding: 12px; border: 1px solid #666; font-weight: 900; cursor: pointer; color: #fff; font-size: 0.9rem; }
+        .buy { background: #004400; border-color: var(--gain); box-shadow: inset 0 0 10px var(--gain); }
+        .sell { background: #440000; border-color: var(--loss); box-shadow: inset 0 0 10px var(--loss); }
 
-        /* 4. THE IMAGE */
-        .main-image { width: 100%; height: 350px; background-size: cover; background-position: center; border: 1px solid #333; box-shadow: inset 0 0 40px #000; }
+        /* 4. MAIN VISUAL */
+        .main-image { width: 100%; height: 380px; background-size: cover; background-position: center; border: 1px solid #444; filter: contrast(1.1) brightness(0.9); }
 
-        /* 5. SONG TITLE SONGSATION */
-        .title-display { padding: 15px 0; font-size: 0.9rem; font-weight: bold; color: #f0f; text-transform: uppercase; }
+        /* 5. DIVIDEND MONITOR (NEW) */
+        .dividend-box { background: #111; border: 1px solid #333; margin: 10px 0; padding: 10px; display: flex; justify-content: space-between; font-size: 0.75rem; }
+        .div-val { color: var(--gain); font-weight: bold; }
 
-        /* 6. RADIO MONITOR CONTROLS */
-        .monitor-row { width: 100%; display: flex; justify-content: space-around; align-items: center; background: #111; padding: 10px 0; border: 1px solid #333; margin-bottom: 10px; }
-        .play-pause { font-size: 2rem; cursor: pointer; color: #0f0; }
-        .skip-asset { background: #444; color: #fff; padding: 10px 20px; border: 1px solid #0ff; cursor: pointer; font-weight: 900; }
+        /* 6. MONITOR CONTROLS */
+        .monitor { background: #1a1a1a; padding: 15px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+        .play-btn { font-size: 2.2rem; cursor: pointer; color: var(--bloomberg-orange); }
+        .skip-btn { background: var(--bloomberg-blue); border: none; padding: 10px 15px; color: #fff; font-weight: bold; cursor: pointer; }
 
-        /* 7. SLIDING ALBUM COVERS */
-        .album-slider { width: 100%; overflow-x: auto; white-space: nowrap; padding: 15px 0; border-top: 1px solid #333; }
-        .slide-card { display: inline-block; width: 80px; margin: 0 8px; cursor: pointer; transition: 0.3s; }
-        .slide-card img { width: 100%; border: 1px solid #0ff; border-radius: 4px; }
+        /* 7. ASSET LIST (BOTTOM SCROLL) */
+        .asset-scroll { width: 100%; overflow-x: auto; white-space: nowrap; padding: 15px 0; border-top: 1px solid #444; }
+        .asset-card { display: inline-block; width: 85px; margin: 0 10px; border: 1px solid #333; transition: 0.2s; }
+        .asset-card img { width: 100%; display: block; }
+        .asset-card:hover { border-color: var(--bloomberg-orange); transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <div class="ticker-bar">
-        <div class="marquee">$MMC SYMPHONY ▲ $0.000125 | MARKET: OPEN | DIVIDEND YIELD: ACTIVE | HOLD PRINCIPAL - PAY GAINS</div>
+        <div class="marquee">
+            $MMC INDX <span class="m-gain">▲ 1.42%</span> | SUPERFLY <span class="m-gain">▲ $5.20</span> | ROXY BROWN <span class="m-loss">▼ $2.15</span> | DIVIDEND YIELD <span class="m-gain">8.4%</span> | SETTLEMENT: ACTIVE | MARKET: OPEN
+        </div>
     </div>
 
     <div id="portal">
-        <div class="oscillator-box">
-            <div class="song-trading" id="topName">TRADING: ---</div>
-            <div class="oscillator"></div>
+        <div class="header-section">
+            <div class="asset-id" id="topTicker">ASSET: ---</div>
+            <div class="oscillator-container"><div class="oscillator-bar"></div></div>
         </div>
 
         <div class="trade-row">
-            <button class="buy-btn btn-trade" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY STOCK</button>
-            <button class="sell-btn btn-trade" onclick="alert('Trade Request Logged in Ledger')">SELL/TRADE</button>
+            <button class="btn buy" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY PRINCIPAL</button>
+            <button class="btn sell" onclick="alert('Trade Request Logged')">LIQUIDATE GAINS</button>
         </div>
 
         <div class="main-image" id="mainArt"></div>
 
-        <div class="title-display" id="titleFull">SONGSATION: ---</div>
-
-        <div class="monitor-row">
-            <div class="play-pause" id="playBtn" onclick="togglePlay()">▶</div>
-            <button class="skip-asset" onclick="next()">SKIP ASSET</button>
+        <div class="dividend-box">
+            <span>QUARTERLY DIVIDEND: <span class="div-val" id="divVal">$0.85 / UNIT</span></span>
+            <span>STATUS: <span class="div-val">PAYABLE</span></span>
         </div>
 
-        <div class="album-slider" id="slider"></div>
+        <div class="monitor">
+            <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
+            <div style="font-size: 0.7rem; color: #888;">RADIO MONITOR // 97.7 THE FLAME</div>
+            <button class="skip-btn" onclick="next()">NEXT ASSET</button>
+        </div>
+
+        <div class="asset-scroll" id="slider"></div>
     </div>
 
     <audio id="player" onended="next()"></audio>
 
     <script>
         const assets = [
-            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
-            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" }
+            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", div: "$1.12" },
+            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", div: "$0.45" }
         ];
 
         let cur = 0;
@@ -90,8 +101,8 @@
             const item = assets[cur];
             p.src = item.audio;
             document.getElementById('mainArt').style.backgroundImage = `url('${item.art}')`;
-            document.getElementById('topName').innerText = `TRADING: ${item.name}`;
-            document.getElementById('titleFull').innerText = `SONGSATION: ${item.name}`;
+            document.getElementById('topTicker').innerText = `ASSET: ${item.name}`;
+            document.getElementById('divVal').innerText = `${item.div} / UNIT`;
             p.play();
             playBtn.innerText = "⏸";
         }
@@ -105,7 +116,7 @@
 
         assets.forEach((item, index) => {
             const card = document.createElement('div');
-            card.className = 'slide-card';
+            card.className = 'asset-card';
             card.onclick = () => loadAsset(index);
             card.innerHTML = `<img src="${item.art}">`;
             document.getElementById('slider').appendChild(card);
