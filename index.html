@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MUSIC MONEY MARKET // RADIO</title>
+    <title>THE MUSIC MONEY MARKET // FULL PORTAL</title>
     <style>
         body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; }
         .ticker-bar { width: 100%; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; overflow: hidden; font-weight: bold; }
@@ -16,12 +16,15 @@
         .btn { padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .buy { background: #0f0; color: #000; }
         .skip { background: #f0f; color: #fff; }
+        .office-link { display: block; margin-top: 20px; color: #0ff; text-decoration: none; font-size: 0.9rem; border: 1px solid #0ff; padding: 10px; width: fit-content; margin-inline: auto; }
+        .office-link:hover { background: #0ff; color: #000; }
     </style>
 </head>
 <body>
     <div class="ticker-bar">
         <div class="marquee">$MMC (Music Money) ▲ $0.000100 | AITITRADE INDEX ▲ 1.45% | MARKET OPEN</div>
     </div>
+
     <div id="terminal">
         <div class="art-box" id="cover">
             <div class="track-info" id="status">INITIALIZING FEED...</div>
@@ -31,7 +34,11 @@
             <button class="btn skip" onclick="next()">SKIP ASSET</button>
         </div>
     </div>
+
+    <a href="office.html" class="office-link">🏛️ ENTER SETTLEMENT DESK</a>
+
     <audio id="player" onended="next()"></audio>
+
     <script>
         const inventory = [
             { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
