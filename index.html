@@ -22,7 +22,6 @@
     <div class="ticker-bar">
         <div class="marquee">$MMC (Music Money) ▲ $0.000100 | AITITRADE INDEX ▲ 1.45% | MARKET OPEN</div>
     </div>
-
     <div id="terminal">
         <div class="art-box" id="cover">
             <div class="track-info" id="status">INITIALIZING FEED...</div>
@@ -32,17 +31,14 @@
             <button class="btn skip" onclick="next()">SKIP ASSET</button>
         </div>
     </div>
-
     <audio id="player" onended="next()"></audio>
-
     <script>
         const inventory = [
-            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" },
-            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media" }
+            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
+            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" }
         ];
         let i = 0;
         const player = document.getElementById('player');
-        
         function load() {
             const a = inventory[i];
             player.src = a.audio;
