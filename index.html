@@ -3,26 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MUSIC MONEY MARKET // FULL PORTAL</title>
+    <title>THE MUSIC MONEY MARKET // RADIO</title>
     <style>
-        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; }
+        body { background: #000; color: #0ff; font-family: 'Courier New', monospace; text-align: center; margin: 0; overflow-x: hidden; }
+        
+        /* TOP IMAGE TICKER / GAINS & LOSSES */
         .ticker-bar { width: 100%; background: #111; border-bottom: 2px solid #0ff; padding: 10px 0; overflow: hidden; font-weight: bold; }
         .marquee { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; color: #0f0; }
         @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* MAIN RADIO TERMINAL */
         #terminal { border: 2px solid #0ff; max-width: 450px; margin: 20px auto; padding: 15px; background: rgba(5,5,5,0.9); box-shadow: 0 0 20px #0ff; }
         .art-box { width: 100%; height: 400px; background-size: cover; background-position: center; border: 1px solid #333; position: relative; }
         .track-info { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 10px; font-size: 0.8rem; color: #f0f; box-sizing: border-box; }
+        
+        /* CONTROLS */
         .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .btn { padding: 15px; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .buy { background: #0f0; color: #000; }
         .skip { background: #f0f; color: #fff; }
-        .office-link { display: block; margin-top: 20px; color: #0ff; text-decoration: none; font-size: 0.9rem; border: 1px solid #0ff; padding: 10px; width: fit-content; margin-inline: auto; }
-        .office-link:hover { background: #0ff; color: #000; }
+
+        /* BOTTOM SCROLLING ASSETS */
+        .asset-scroll { width: 100%; overflow-x: auto; white-space: nowrap; padding: 20px; background: #111; border-top: 2px solid #0ff; margin-top: 20px; }
+        .asset-card { display: inline-block; width: 100px; margin-right: 15px; cursor: pointer; transition: transform 0.2s; }
+        .asset-card img { width: 100%; border: 1px solid #0ff; }
+        .asset-card:hover { transform: scale(1.1); }
     </style>
 </head>
 <body>
     <div class="ticker-bar">
-        <div class="marquee">$MMC (Music Money) ▲ $0.000100 | AITITRADE INDEX ▲ 1.45% | MARKET OPEN</div>
+        <div class="marquee">$MMC (Music Money) ▲ $0.000100 | SUPERFLY ▲ $5.20 | ROXY BROWN ▼ $2.15 | MARKET OPEN</div>
     </div>
 
     <div id="terminal">
@@ -35,7 +45,8 @@
         </div>
     </div>
 
-    <a href="office.html" class="office-link">🏛️ ENTER SETTLEMENT DESK</a>
+    <div class="asset-scroll" id="assetList">
+        </div>
 
     <audio id="player" onended="next()"></audio>
 
@@ -44,17 +55,31 @@
             { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" },
             { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" }
         ];
+
         let i = 0;
         const player = document.getElementById('player');
+        const assetList = document.getElementById('assetList');
+
         function load() {
             const a = inventory[i];
             player.src = a.audio;
             document.getElementById('cover').style.backgroundImage = `url('${a.art}')`;
             document.getElementById('status').innerText = `NOW STREAMING: ${a.name}`;
-            player.play().catch(e => console.log("Tap to start Radio"));
+            player.play().catch(e => console.log("User interaction required"));
         }
+
         function next() { i = (i + 1) % inventory.length; load(); }
         function buy() { window.location.href = "https://cash.app/$AITITRADEBROKERAGE"; }
+
+        // RENDER BOTTOM SCROLLING ASSETS
+        inventory.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'asset-card';
+            card.onclick = () => { i = index; load(); };
+            card.innerHTML = `<img src="${item.art}" alt="${item.name}"><p style="font-size:0.6rem;">${item.name}</p>`;
+            assetList.appendChild(card);
+        });
+
         window.onload = load;
     </script>
 </body>
