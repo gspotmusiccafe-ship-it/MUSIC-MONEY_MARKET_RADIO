@@ -50,7 +50,7 @@
 <body>
     <div class="global-ticker">
         <div class="ticker-wrap">
-            AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | J. MARIE STOCK ▲ $10.42 | G. SMOOTH INDEX ▼ $1.02 | BTC ▲ $64,211 | SONGSHARE MARKET OPEN
+            AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | J. MARIE STOCK ▲ $10.42 | SONGSHARE MARKET OPEN
         </div>
     </div>
 
@@ -78,29 +78,30 @@
     <audio id="radio-source"></audio>
 
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/1HnxRpDhWQzjsJulrNh-bARNHY-VvdkZB47gJ66KwHhk/export?format=csv&gid=1294219443';
-        let inventory = [];
+        // HARDCODED DIRECT FIREBASE LINKS TO BYPASS GOOGLE SHEET BLOCKS
+        const inventory = [
+            { 
+                name: "CAN'T FOLLOW THROUGH", 
+                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054", 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" 
+            },
+            { 
+                name: "I GOT WHAT YOU NEED", 
+                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" 
+            },
+            { 
+                name: "SCENE BY SCENE", 
+                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20IMG.png?alt=media&token=0cefdc1d-15ef-4ed0-9014-eb7ce1625e4b" 
+            }
+        ];
+
         let index = 0;
         let currentPrice = 1.00;
         const audio = document.getElementById('radio-source');
         const oscillator = document.getElementById('market-oscillator');
         const scroller = document.getElementById('scroller');
-
-        async function syncMarket() {
-            try {
-                const response = await fetch(CSV_URL);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
-                inventory = rows.map((row, i) => {
-                    const cols = row.split(',');
-                    return { id: i, name: cols[3]?.trim(), audio: cols[5]?.trim(), art: cols[6]?.trim() };
-                }).filter(item => item.name && item.audio && item.art);
-
-                renderScroller();
-                loadAsset(0);
-                startEngine();
-            } catch (e) { oscillator.innerText = "LEDGER SYNC ERROR"; }
-        }
 
         function renderScroller() {
             scroller.innerHTML = inventory.map((item, i) => `
@@ -122,13 +123,13 @@
             if(activeCard) activeCard.classList.add('active');
             
             currentPrice = Math.floor(Math.random() * 5) + 1;
-            if(!audio.paused) audio.play();
+            // Use a promise to handle modern browser auto-play restrictions
+            audio.play().catch(e => console.log("User must interact to play"));
         }
 
         function nextAsset() {
             index = (index + 1) % inventory.length;
             loadAsset(index);
-            audio.play();
         }
 
         function startEngine() {
@@ -145,7 +146,11 @@
         function toggleAudio() { audio.paused ? audio.play() : audio.pause(); }
         
         audio.onended = nextAsset;
-        window.onload = syncMarket;
+        window.onload = () => {
+            renderScroller();
+            loadAsset(0);
+            startEngine();
+        };
     </script>
 </body>
 </html>
