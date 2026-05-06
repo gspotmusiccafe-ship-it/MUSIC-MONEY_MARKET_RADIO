@@ -3,84 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERMINAL // MUSIC MONEY MARKET</title>
+    <title>AITIFY COMMAND CENTER // TERMINAL</title>
     <style>
-        :root { --b-orange: #ff9900; --gain: #00ff00; --loss: #ff0000; --terminal-bg: #050505; --neon: #0ff; }
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; text-transform: uppercase; overflow-x: hidden; }
+        :root { --b-orange: #ff9900; --gain: #00ff00; --loss: #ff0000; --neon: #0ff; --panel-bg: #0a0a0a; }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; text-transform: uppercase; }
 
-        /* 1. TOP BLOOMBERG TICKER */
-        .ticker-bar { width: 100%; background: #000; border-bottom: 2px solid #333; padding: 8px 0; overflow: hidden; font-size: 0.8rem; box-shadow: 0 0 10px var(--neon); }
-        .marquee { display: inline-block; white-space: nowrap; animation: move 20s linear infinite; color: var(--b-orange); font-weight: bold; }
-        @keyframes move { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* 1. TOP GLOBAL ANNOUNCER */
+        .top-ticker { width: 100%; background: #000; border-bottom: 2px solid var(--neon); padding: 10px 0; text-align: center; font-weight: 900; color: var(--neon); box-shadow: 0 0 15px rgba(0,255,255,0.3); z-index: 10; }
 
-        #portal { width: 95%; max-width: 420px; margin: 15px 0; border: 2px solid #444; background: var(--terminal-bg); padding: 12px; position: relative; box-shadow: 0 0 25px rgba(0,255,255,0.2); }
+        /* THE TRADING PORTAL GRID */
+        .portal-grid { display: grid; grid-template-columns: 260px 1fr 320px; flex-grow: 1; gap: 4px; background: #222; padding: 4px; height: calc(100vh - 42px); }
 
-        /* 2. SIGNUP GATE */
-        #gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; border-radius: 4px; }
-        .gate-btn { background: var(--b-orange); color: #000; padding: 20px; font-weight: 900; border: none; cursor: pointer; width: 80%; margin-bottom: 10px; font-size: 1.1rem; box-shadow: 0 0 15px var(--b-orange); }
+        /* LEFT SIDE: ASSET WATCHLIST */
+        .left-panel { background: var(--panel-bg); border: 1px solid #333; display: flex; flex-direction: column; overflow-y: auto; }
+        .panel-header { background: #1a1a1a; padding: 10px; font-size: 0.7rem; color: var(--b-orange); border-bottom: 1px solid #333; }
+        .watch-item { display: flex; justify-content: space-between; padding: 12px 8px; border-bottom: 1px solid #222; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
+        .watch-item:hover { background: #222; border-left: 3px solid var(--neon); }
 
-        /* 3. VALUATION ENGINE */
-        .valuation-box { background: #111; padding: 12px; border: 1px solid #333; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--neon); }
-        .price-display { font-size: 1.6rem; font-weight: 900; letter-spacing: 1px; }
+        /* CENTER: LIVE CHARTS & VALUATION */
+        .center-panel { background: #000; border: 1px solid #333; position: relative; display: flex; flex-direction: column; }
+        .valuation-box { padding: 20px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: flex-end; }
+        .price-main { font-size: 2.8rem; font-weight: 900; line-height: 1; }
+        .chart-area { flex-grow: 1; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); display: flex; flex-direction: column; justify-content: center; padding: 20px; }
+        .oscillator-line { width: 100%; height: 2px; background: var(--gain); box-shadow: 0 0 15px var(--gain); animation: flicker 0.1s infinite alternate; }
+        @keyframes flicker { from { opacity: 0.6; } to { opacity: 1; } }
 
-        /* 4. ASSET DISPLAY & BUTTONS */
-        .main-image { width: 100%; height: 350px; background-size: cover; background-position: center; border: 1px solid #444; margin-bottom: 10px; position: relative; }
-        .trade-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .btn { padding: 15px; border: 1px solid #666; font-weight: 900; cursor: pointer; color: #fff; font-size: 0.8rem; }
-        .buy { background: #004400; border-color: var(--gain); box-shadow: inset 0 0 10px var(--gain); }
-        .sell { background: #440000; border-color: var(--loss); box-shadow: inset 0 0 10px var(--loss); }
+        /* RIGHT SIDE: RADIO & ORDER ENTRY */
+        .right-panel { background: var(--panel-bg); border: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+        .main-art { width: 100%; height: 260px; background-size: cover; background-position: center; border: 2px solid var(--neon); box-shadow: 0 0 20px rgba(0,255,255,0.2); }
+        .order-entry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn { padding: 15px; border: 1px solid #555; font-weight: 900; cursor: pointer; color: #fff; font-size: 0.8rem; text-align: center; }
+        .buy { background: #004400; border-color: var(--gain); }
+        .sell { background: #440000; border-color: var(--loss); }
+        .radio-monitor { background: #111; border: 1px solid #333; padding: 15px; text-align: center; }
+        .play-btn { font-size: 2.5rem; color: var(--b-orange); cursor: pointer; display: inline-block; margin-bottom: 8px; }
 
-        /* 5. RADIO MONITOR */
-        .monitor { background: #1a1a1a; padding: 12px; border: 1px solid #333; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .play-btn { font-size: 2rem; cursor: pointer; color: var(--b-orange); }
-
-        /* 6. SLIDING ASSETS (BOTTOM) */
-        .asset-scroll { width: 100%; overflow-x: auto; white-space: nowrap; padding: 10px 0; border-top: 1px solid #333; background: #000; }
-        .asset-thumb { display: inline-block; width: 80px; margin: 0 8px; cursor: pointer; opacity: 0.7; transition: 0.3s; }
-        .asset-thumb:hover { opacity: 1; transform: scale(1.1); }
-        .asset-thumb img { width: 100%; border: 1px solid var(--neon); border-radius: 2px; }
-
-        .room-link { width: 100%; background: #222; color: var(--neon); border: 1px solid var(--neon); padding: 10px; text-decoration: none; display: block; text-align: center; font-size: 0.75rem; margin-bottom: 10px; }
+        /* SIGNUP GATE */
+        #gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .gate-btn { background: var(--b-orange); color: #000; padding: 25px; font-weight: 900; border: none; cursor: pointer; width: 70%; font-size: 1.2rem; box-shadow: 0 0 20px var(--b-orange); }
     </style>
 </head>
 <body>
 
-    <div class="ticker-bar">
-        <div class="marquee">$MMC SYMPHONY // ELIGIBILITY: PENDING // MARKET: OPEN // DIVIDEND YIELD: 8.4% // SETTLEMENT: ACTIVE</div>
-    </div>
+    <div class="top-ticker" id="topTag">AITIFY EXCHANGE // WAITING FOR FEED...</div>
 
-    <div id="portal">
-        <div id="gate">
-            <h2 style="color:var(--b-orange)">SIGNUP PHASE</h2>
-            <p style="font-size: 0.7rem; padding: 0 20px; color: #888;">REGISTER TO ENABLE TRADING & UNLOCK ASSET STREAM.</p>
-            <button class="gate-btn" onclick="unlock()">SIGN UP TO EXCHANGE</button>
-            <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" style="color: #555; font-size: 0.6rem; text-decoration: none;">WIX COMMUNITY LOGIN</a>
+    <div class="portal-grid">
+        <div class="left-panel">
+            <div class="panel-header">ASSET WATCHLIST // ROTATION</div>
+            <div id="watchlist"></div>
         </div>
 
-        <div class="valuation-box">
-            <div>
-                <div style="font-size: 0.55rem; color: #888;">LIVE VALUATION</div>
-                <div id="price" class="price-display">$0.00</div>
+        <div class="center-panel">
+            <div id="gate">
+                <h1 style="color:var(--b-orange)">SIGNUP PHASE</h1>
+                <p style="color:#666;">REGISTER ELIGIBILITY TO OPEN MARKET TERMINAL</p>
+                <button class="gate-btn" onclick="unlock()">SIGN UP TO EXCHANGE</button>
             </div>
-            <div id="trend" style="font-weight: bold; font-size: 0.9rem;">---</div>
+            <div class="valuation-box">
+                <div>
+                    <div style="font-size: 0.7rem; color: #888;">LIVE ASSET VALUATION</div>
+                    <div id="price" class="price-main">$0.00</div>
+                </div>
+                <div id="trend" style="font-size: 1.2rem; font-weight: 900;">---</div>
+            </div>
+            <div class="chart-area">
+                <div style="font-size: 0.6rem; color: var(--gain); margin-bottom: 5px;">TBI OSCILLATOR // ACTIVE FEED</div>
+                <div class="oscillator-line" id="oscLine"></div>
+            </div>
         </div>
 
-        <div class="trade-row">
-            <button class="btn buy" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY PRINCIPAL</button>
-            <button class="btn sell" onclick="alert('LIQUIDATION LOGGED')">SELL GAINS</button>
+        <div class="right-panel">
+            <div class="panel-header">ASSET MONITOR // ORDERS</div>
+            <div class="main-art" id="mainArt"></div>
+            <div class="order-entry">
+                <div class="btn buy" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY</div>
+                <div class="btn sell" onclick="alert('LIQUIDATION LOGGED')">SELL</div>
+            </div>
+            <div class="radio-monitor">
+                <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
+                <div style="font-size: 0.6rem; color: #666;">97.7 THE FLAME // LIVE STREAM</div>
+                <button onclick="next()" style="background:none; border: 1px solid #444; color: #fff; width: 100%; padding: 6px; margin-top: 10px; cursor: pointer;">SKIP ASSET</button>
+            </div>
+            <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" style="color: var(--neon); font-size: 0.6rem; text-decoration: none; border: 1px solid var(--neon); padding: 8px; text-align: center;">🏛️ STOCKHOLDERS ROOM</a>
         </div>
-
-        <div class="main-image" id="mainArt"></div>
-
-        <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" class="room-link">🏛️ ENTER STOCKHOLDERS ROOM</a>
-
-        <div class="monitor">
-            <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
-            <div style="font-size: 0.65rem; color: #888;">RADIO: 97.7 THE FLAME</div>
-            <button onclick="next()" style="background:none; border:1px solid #444; color:#fff; cursor:pointer; padding:5px 10px;">SKIP</button>
-        </div>
-
-        <div class="asset-scroll" id="slider"></div>
     </div>
 
     <audio id="player" onended="next()"></audio>
@@ -96,22 +101,36 @@
 
         function unlock() { document.getElementById('gate').style.display = 'none'; loadAsset(0); }
 
-        function updateTicker() {
+        function updateMetrics() {
             const item = assets[cur];
-            const change = (Math.random() * 0.12 - 0.06).toFixed(2);
+            const change = (Math.random() * 0.16 - 0.08).toFixed(2);
             const price = (item.base + parseFloat(change)).toFixed(2);
             const pDiv = document.getElementById('price');
             const tDiv = document.getElementById('trend');
+            const osc = document.getElementById('oscLine');
+            
             pDiv.innerText = `$${price}`;
-            if(change > 0) { pDiv.style.color = 'var(--gain)'; tDiv.innerHTML = `<span style="color:var(--gain)">▲</span> +${change}`; tDiv.style.color='var(--gain)'; }
-            else { pDiv.style.color = 'var(--loss)'; tDiv.innerHTML = `<span style="color:var(--loss)">▼</span> ${change}`; tDiv.style.color='var(--loss)'; }
+            if(change > 0) { 
+                pDiv.style.color = 'var(--gain)';
+                tDiv.innerHTML = `<span style="color:var(--gain)">▲</span> +${change}`;
+                tDiv.style.color = 'var(--gain)';
+                osc.style.background = 'var(--gain)';
+                osc.style.boxShadow = '0 0 15px var(--gain)';
+            } else { 
+                pDiv.style.color = 'var(--loss)';
+                tDiv.innerHTML = `<span style="color:var(--loss)">▼</span> ${change}`;
+                tDiv.style.color = 'var(--loss)';
+                osc.style.background = 'var(--loss)';
+                osc.style.boxShadow = '0 0 15px var(--loss)';
+            }
         }
 
         function loadAsset(i) {
             cur = i;
             p.src = assets[cur].audio;
             document.getElementById('mainArt').style.backgroundImage = `url('${assets[cur].art}')`;
-            updateTicker();
+            document.getElementById('topTag').innerText = `NOW STREAMING: ${assets[cur].name} // ASSET ID: 097${cur}`;
+            updateMetrics();
             p.play();
             document.getElementById('playBtn').innerText = "⏸";
         }
@@ -124,14 +143,5 @@
         function next() { cur = (cur + 1) % assets.length; loadAsset(cur); }
 
         assets.forEach((item, index) => {
-            const thumb = document.createElement('div');
-            thumb.className = 'asset-thumb';
-            thumb.onclick = () => loadAsset(index);
-            thumb.innerHTML = `<img src="${item.art}">`;
-            document.getElementById('slider').appendChild(thumb);
-        });
-
-        setInterval(updateTicker, 3500);
-    </script>
-</body>
-</html>
+            const div = document.createElement('div');
+            div.className = 'watch-item';
