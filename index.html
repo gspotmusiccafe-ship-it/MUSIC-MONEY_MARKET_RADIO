@@ -50,7 +50,7 @@
 <body>
     <div class="global-ticker">
         <div class="ticker-wrap">
-            AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | J. MARIE STOCK ▲ $10.42 | SONGSHARE MARKET OPEN
+            AITITRADE GLOBAL INDEX ▲ 1.45% | NASDAQ ▲ 0.12% | SONGSHARE MARKET OPEN | SUPERFLY STOCK LIVE
         </div>
     </div>
 
@@ -78,27 +78,26 @@
     <audio id="radio-source"></audio>
 
     <script>
-        // CORRECTED FIREBASE MAPPING
         const inventory = [
             { 
-                name: "CAN'T FOLLOW THROUGH", 
-                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=cb655faf-fddc-469f-96eb-047b044c8054", 
-                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/CAN'T%20FOLLOW%20THROUGH%20IMG.png?alt=media&token=4e52062e-be19-44f4-9197-3cd2c7379af5" 
-            },
-            { 
-                name: "YOUR BODY", 
-                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20(Official%20Audio)-G.%20SMOOTH.mp3?alt=media&token=d8d7ff01-116d-40ae-b70d-3603773cb865", 
-                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/YOUR%20BODY%20IMG.png?alt=media&token=0cefdc1d-15ef-4ed0-9014-eb7ce1625e4b" 
+                name: "SUPERFLY", 
+                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293", 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" 
             },
             { 
                 name: "I GOT WHAT YOU NEED", 
                 audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c", 
-                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20IMG.png?alt=media&token=2483a992-6f2f-4886-9051-4682c3c97805" 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147" 
+            },
+            { 
+                name: "ZODIAC SIGN", 
+                audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630", 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a" 
             },
             { 
                 name: "SCENE BY SCENE", 
                 audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a", 
-                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2623a992-6f2f-4886-9051-4682c3c97805" 
+                art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72" 
             }
         ];
 
@@ -129,7 +128,7 @@
             if(activeCard) activeCard.classList.add('active');
             
             currentPrice = Math.floor(Math.random() * 5) + 1;
-            audio.play().catch(e => console.log("User must interact to play"));
+            audio.play().catch(e => console.log("User interaction required"));
         }
 
         function nextAsset() {
