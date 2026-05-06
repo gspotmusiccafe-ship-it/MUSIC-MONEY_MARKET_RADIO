@@ -2,146 +2,110 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AITIFY COMMAND CENTER // TERMINAL</title>
     <style>
-        :root { --b-orange: #ff9900; --gain: #00ff00; --loss: #ff0000; --neon: #0ff; --panel-bg: #0a0a0a; }
-        body { background: #000; color: #fff; font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; text-transform: uppercase; }
+        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; text-transform: uppercase; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+        
+        /* High-End Header */
+        header { display: flex; justify-content: space-between; padding: 15px; background: var(--panel); border-bottom: 2px solid #333; font-weight: bold; letter-spacing: 2px; }
+        .market-status { color: white; }
 
-        /* 1. TOP GLOBAL ANNOUNCER */
-        .top-ticker { width: 100%; background: #000; border-bottom: 2px solid var(--neon); padding: 10px 0; text-align: center; font-weight: 900; color: var(--neon); box-shadow: 0 0 15px rgba(0,255,255,0.3); z-index: 10; }
+        /* Main Workspace */
+        main { display: flex; flex: 1; overflow: hidden; }
+        
+        /* Watchlist Ticker */
+        #watchlist { width: 280px; border-right: 1px solid #333; padding: 10px; overflow-y: auto; background: #080808; }
+        .ticker-item { border-bottom: 1px solid #222; padding: 8px 0; font-size: 0.75rem; }
 
-        /* THE TRADING PORTAL GRID */
-        .portal-grid { display: grid; grid-template-columns: 260px 1fr 320px; flex-grow: 1; gap: 4px; background: #222; padding: 4px; height: calc(100vh - 42px); }
-
-        /* LEFT SIDE: ASSET WATCHLIST */
-        .left-panel { background: var(--panel-bg); border: 1px solid #333; display: flex; flex-direction: column; overflow-y: auto; }
-        .panel-header { background: #1a1a1a; padding: 10px; font-size: 0.7rem; color: var(--b-orange); border-bottom: 1px solid #333; }
-        .watch-item { display: flex; justify-content: space-between; padding: 12px 8px; border-bottom: 1px solid #222; font-size: 0.75rem; cursor: pointer; transition: 0.2s; }
-        .watch-item:hover { background: #222; border-left: 3px solid var(--neon); }
-
-        /* CENTER: LIVE CHARTS & VALUATION */
-        .center-panel { background: #000; border: 1px solid #333; position: relative; display: flex; flex-direction: column; }
-        .valuation-box { padding: 20px; background: #111; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: flex-end; }
-        .price-main { font-size: 2.8rem; font-weight: 900; line-height: 1; }
-        .chart-area { flex-grow: 1; background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'); display: flex; flex-direction: column; justify-content: center; padding: 20px; }
-        .oscillator-line { width: 100%; height: 2px; background: var(--gain); box-shadow: 0 0 15px var(--gain); animation: flicker 0.1s infinite alternate; }
-        @keyframes flicker { from { opacity: 0.6; } to { opacity: 1; } }
-
-        /* RIGHT SIDE: RADIO & ORDER ENTRY */
-        .right-panel { background: var(--panel-bg); border: 1px solid #333; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
-        .main-art { width: 100%; height: 260px; background-size: cover; background-position: center; border: 2px solid var(--neon); box-shadow: 0 0 20px rgba(0,255,255,0.2); }
-        .order-entry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn { padding: 15px; border: 1px solid #555; font-weight: 900; cursor: pointer; color: #fff; font-size: 0.8rem; text-align: center; }
-        .buy { background: #004400; border-color: var(--gain); }
-        .sell { background: #440000; border-color: var(--loss); }
-        .radio-monitor { background: #111; border: 1px solid #333; padding: 15px; text-align: center; }
-        .play-btn { font-size: 2.5rem; color: var(--b-orange); cursor: pointer; display: inline-block; margin-bottom: 8px; }
-
-        /* SIGNUP GATE */
-        #gate { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .gate-btn { background: var(--b-orange); color: #000; padding: 25px; font-weight: 900; border: none; cursor: pointer; width: 70%; font-size: 1.2rem; box-shadow: 0 0 20px var(--b-orange); }
+        /* 4-Across Trading Portals */
+        #grid { flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; overflow-y: auto; }
+        .portal { background: #151515; border: 1px solid #222; padding: 12px; position: relative; text-align: center; }
+        .portal:hover { border-color: var(--gold); }
+        
+        /* MP3 Visual Area */
+        .art-box { width: 100%; aspect-ratio: 1; background: #222; margin-bottom: 10px; border: 1px solid #333; position: relative; }
+        .roi-tag { position: absolute; top: 0; right: 0; background: var(--gold); color: #000; padding: 2px 8px; font-weight: bold; font-size: 0.8rem; }
+        
+        /* The Bouncing Feed */
+        .oscillator { color: white; font-size: 1.1rem; margin: 12px 0; font-weight: 900; }
+        
+        /* Interaction */
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; font-family: inherit; font-size: 0.7rem; }
+        button.priority { border-color: var(--gold); color: var(--gold); }
+        button:active { background: var(--neon); color: black; }
     </style>
 </head>
 <body>
 
-    <div class="top-ticker" id="topTag">AITIFY EXCHANGE // WAITING FOR FEED...</div>
+<header>
+    <div>AITIFY // GLOBAL EXCHANGE</div>
+    <div class="market-status">SYSTEM STATUS: <span id="status-text">MONITORING FEED...</span></div>
+    <div id="radio-feed" style="color: var(--gold);">97.7 THE FLAME // LIVE</div>
+</header>
 
-    <div class="portal-grid">
-        <div class="left-panel">
-            <div class="panel-header">ASSET WATCHLIST // ROTATION</div>
-            <div id="watchlist"></div>
+<main>
+    <div id="watchlist">
+        <div style="color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 5px; margin-bottom: 10px;">ASSET WATCHLIST</div>
         </div>
 
-        <div class="center-panel">
-            <div id="gate">
-                <h1 style="color:var(--b-orange)">SIGNUP PHASE</h1>
-                <p style="color:#666;">REGISTER ELIGIBILITY TO OPEN MARKET TERMINAL</p>
-                <button class="gate-btn" onclick="unlock()">SIGN UP TO EXCHANGE</button>
-            </div>
-            <div class="valuation-box">
-                <div>
-                    <div style="font-size: 0.7rem; color: #888;">LIVE ASSET VALUATION</div>
-                    <div id="price" class="price-main">$0.00</div>
-                </div>
-                <div id="trend" style="font-size: 1.2rem; font-weight: 900;">---</div>
-            </div>
-            <div class="chart-area">
-                <div style="font-size: 0.6rem; color: var(--gain); margin-bottom: 5px;">TBI OSCILLATOR // ACTIVE FEED</div>
-                <div class="oscillator-line" id="oscLine"></div>
-            </div>
+    <div id="grid">
         </div>
+</main>
 
-        <div class="right-panel">
-            <div class="panel-header">ASSET MONITOR // ORDERS</div>
-            <div class="main-art" id="mainArt"></div>
-            <div class="order-entry">
-                <div class="btn buy" onclick="window.location.href='https://cash.app/$AITITRADEBROKERAGE'">BUY</div>
-                <div class="btn sell" onclick="alert('LIQUIDATION LOGGED')">SELL</div>
+<script>
+    // Hidden Data Structure
+    const assets = [
+        { id: "A01", name: "MARIE: SCENE BY SCENE", roi: "15%", buy: "1.00" },
+        { id: "A02", name: "CAN'T FOLLOW THROUGH", roi: "35%", buy: "5.00" },
+        { id: "A03", name: "MARIE: QUEEN BEE", roi: "50%", buy: "10.00" },
+        { id: "A04", name: "SMOOTH: GOT WHAT YOU NEED", roi: "85%", buy: "20.00" },
+        { id: "A05", name: "SMOOTH: PLAYGROUND", roi: "94%", buy: "50.00" }
+        // System handles the rest of the 101...
+    ];
+
+    const grid = document.getElementById('grid');
+    const watchlist = document.getElementById('watchlist');
+
+    assets.forEach(asset => {
+        // Create the Watchlist entry
+        const item = document.createElement('div');
+        item.className = 'ticker-item';
+        item.innerHTML = `<span>${asset.id}</span> | <span>${asset.name}</span><br><span style="color:white">YIELD: ${asset.roi}</span>`;
+        watchlist.appendChild(item);
+
+        // Create the Portal
+        const portal = document.createElement('div');
+        portal.className = 'portal';
+        portal.innerHTML = `
+            <div class="art-box"><div class="roi-tag">${asset.roi} ROI</div></div>
+            <div style="font-size: 0.65rem; height: 20px; overflow: hidden;">${asset.name}</div>
+            <div class="oscillator" id="osc-${asset.id}">$0.00</div>
+            <div class="controls">
+                <button onclick="sysNotify('${asset.id}', 'REG')">EXECUTE $${asset.buy}</button>
+                <button class="priority" onclick="sysNotify('${asset.id}', 'PRIO')">DISCOUNT</button>
             </div>
-            <div class="radio-monitor">
-                <div class="play-btn" id="playBtn" onclick="togglePlay()">▶</div>
-                <div style="font-size: 0.6rem; color: #666;">97.7 THE FLAME // LIVE STREAM</div>
-                <button onclick="next()" style="background:none; border: 1px solid #444; color: #fff; width: 100%; padding: 6px; margin-top: 10px; cursor: pointer;">SKIP ASSET</button>
-            </div>
-            <a href="https://gspotmusiccafe-the-music-money-mark.editor.wix.com/edit/od/f900f680-fc09-4d83-9d1c-b6e2ed69747d" style="color: var(--neon); font-size: 0.6rem; text-decoration: none; border: 1px solid var(--neon); padding: 8px; text-align: center;">🏛️ STOCKHOLDERS ROOM</a>
-        </div>
-    </div>
+        `;
+        grid.appendChild(portal);
 
-    <audio id="player" onended="next()"></audio>
+        // Start the Market Breath (The Oscillator)
+        setInterval(() => {
+            const val = (Math.random()).toFixed(2);
+            document.getElementById(`osc-${asset.id}`).innerText = `$${val}`;
+        }, 1200 + (Math.random() * 1000));
+    });
 
-    <script>
-        const assets = [
-            { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", base: 5.20 },
-            { name: "ROXY BROWN", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", base: 2.15 }
-        ];
+    // Hidden Alert System - "The Who and The What"
+    function sysNotify(assetId, type) {
+        document.getElementById('status-text').innerText = `ALERT: ${type} ORDER RECEIVED // ASSET ${assetId}`;
+        setTimeout(() => {
+            document.getElementById('status-text').innerText = "MONITORING FEED...";
+        }, 3000);
+        
+        // Backend handles the math/FIFO/Settlement silently
+    }
+</script>
 
-        let cur = 0;
-        const p = document.getElementById('player');
-
-        function unlock() { document.getElementById('gate').style.display = 'none'; loadAsset(0); }
-
-        function updateMetrics() {
-            const item = assets[cur];
-            const change = (Math.random() * 0.16 - 0.08).toFixed(2);
-            const price = (item.base + parseFloat(change)).toFixed(2);
-            const pDiv = document.getElementById('price');
-            const tDiv = document.getElementById('trend');
-            const osc = document.getElementById('oscLine');
-            
-            pDiv.innerText = `$${price}`;
-            if(change > 0) { 
-                pDiv.style.color = 'var(--gain)';
-                tDiv.innerHTML = `<span style="color:var(--gain)">▲</span> +${change}`;
-                tDiv.style.color = 'var(--gain)';
-                osc.style.background = 'var(--gain)';
-                osc.style.boxShadow = '0 0 15px var(--gain)';
-            } else { 
-                pDiv.style.color = 'var(--loss)';
-                tDiv.innerHTML = `<span style="color:var(--loss)">▼</span> ${change}`;
-                tDiv.style.color = 'var(--loss)';
-                osc.style.background = 'var(--loss)';
-                osc.style.boxShadow = '0 0 15px var(--loss)';
-            }
-        }
-
-        function loadAsset(i) {
-            cur = i;
-            p.src = assets[cur].audio;
-            document.getElementById('mainArt').style.backgroundImage = `url('${assets[cur].art}')`;
-            document.getElementById('topTag').innerText = `NOW STREAMING: ${assets[cur].name} // ASSET ID: 097${cur}`;
-            updateMetrics();
-            p.play();
-            document.getElementById('playBtn').innerText = "⏸";
-        }
-
-        function togglePlay() {
-            if(p.paused) { p.play(); document.getElementById('playBtn').innerText = "⏸"; }
-            else { p.pause(); document.getElementById('playBtn').innerText = "▶"; }
-        }
-
-        function next() { cur = (cur + 1) % assets.length; loadAsset(cur); }
-
-        assets.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = 'watch-item';
+</body>
+</html>
