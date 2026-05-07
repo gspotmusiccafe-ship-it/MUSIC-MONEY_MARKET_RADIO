@@ -1,82 +1,48 @@
-<script>
-    /* --- YOUR CORE DATA --- */
-    const assets = [
-        { name: "SCENE BY SCENE", base: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
-        { name: "SUPERFLY", base: 5.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" }
-    ];
-
-    let _Q_COUNT = 0; 
-    let currentIdx = 0;
-
-    function init() {
-        // THE SPORADIC BOUNCE: Bouncing 0-100% all over the place
-        // Fast enough to require focus, sporadic enough to be a "catch"
-        setInterval(sporadicBounce, 160); 
-        sync(0);
-    }
-
-    function sporadicBounce() {
-        const a = assets[currentIdx];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSIC MONEY MARKET // LIVE EXCHANGE</title>
+    <style>
+        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; --panel: #111; }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-transform: uppercase; overflow-x: hidden; }
         
-        // THE MATH: Base ($1 or $5) + (Random % * Base) = Up to 100% ROI
-        let randomFactor = Math.random(); 
-        let livePrice = (a.base + (randomFactor * a.base)).toFixed(2);
-        let currentROI = (randomFactor * 100).toFixed(0);
+        header { padding: 10px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 1000; }
+        .ticker-bar { background: #000; padding: 5px; border: 1px solid #222; margin-top: 5px; font-size: 0.65rem; display: flex; justify-content: space-between; }
 
-        // Update your display IDs
-        const osc = document.getElementById('main-osc');
-        osc.innerText = `$${livePrice}`;
+        .dashboard { display: flex; flex-direction: column; width: 100%; min-height: 100vh; }
+        #radio-desk { order: 1; padding: 15px; background: #0a0a0a; border-bottom: 3px solid #333; text-align: center; }
+        #market-core { order: 2; padding: 15px; flex: 1; }
         
-        const bounceDisplay = document.getElementById('price-change');
-        bounceDisplay.innerText = `BOUNCE: ${currentROI}%`;
-        
-        // Visual Feedback: Green when near that 100% ROI Catch
-        osc.style.color = randomFactor > 0.85 ? "var(--neon)" : "white";
-    }
-
-    // INVEST BUTTON: RIGGED FOR YOUR 5 GATEWAYS
-    function openInvest() {
-        const choice = prompt("SELECT GATEWAY: \n1. CASH APP \n2. PAYPAL \n3. STRIPE \n4. BNB \n5. BITCOIN");
-        // Logic will go here once you provide the URLs
-        alert("REDIRECTING TO SECURE GATEWAY...");
-    }
-
-    // LIQUIDATE BUTTON: THE "CATCH" MECHANIC
-    function processLiquidate() {
-        const flow = document.getElementById('order-flow');
-        const catchVal = document.getElementById('main-osc').innerText;
-        _Q_COUNT++;
-
-        const row = document.createElement('div');
-        row.className = 'trade-row';
-        row.innerHTML = `<span>Q:${_Q_COUNT}</span> <span>CATCH: ${catchVal}</span> <span>SETTLED</span>`;
-        
-        flow.prepend(row);
-        if(flow.children.length > 8) flow.removeChild(flow.lastChild);
-        
-        // Update the Queue in your stats
-        document.getElementById('queue-count').innerText = `${_Q_COUNT} / 115`;
-
-        // THE 1K SETTLEMENT
-        if (_Q_COUNT >= 115) {
-            _Q_COUNT = 0;
-            alert("MARKET CLOSED: $522 BUDGET EXHAUSTED. $478 SURPLUS CAPTURED.");
+        @media (min-width: 901px) {
+            .dashboard { flex-direction: row; height: calc(100vh - 80px); }
+            #radio-desk { width: 360px; border-right: 1px solid #333; }
         }
-    }
 
-    /* --- NAVIGATION --- */
-    function sync(idx) {
-        currentIdx = idx;
-        const a = assets[idx];
-        document.getElementById('radio-track').innerText = a.name;
-        document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
-        document.getElementById('main-audio-engine').src = a.audio;
-        document.getElementById('main-audio-engine').play().catch(() => {});
-    }
+        .oscillator-main { font-size: 4.5rem; color: white; margin: 5px 0; font-weight: 900; }
+        .roi-display { font-size: 1.2rem; color: var(--gold); margin-bottom: 10px; }
 
-    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
-    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
-    function playCurrent() { document.getElementById('main-audio-engine').play(); }
+        .gate-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .btn-main { padding: 20px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; text-transform: uppercase; }
+        .btn-invest { background: var(--neon); color: #000; box-shadow: 0 4px 0 #008a20; }
+        .btn-liquidate { background: var(--red); color: white; box-shadow: 0 4px 0 #8a0000; }
 
-    window.onload = init;
-</script>
+        #order-flow { height: 180px; background: #000; font-size: 0.65rem; padding: 10px; border: 1px solid #333; overflow: hidden; margin-top: 15px; }
+        .trade-row { display: flex; justify-content: space-between; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid #111; }
+        .market-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.6rem; padding: 10px; background: #111; border: 1px solid #222; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); margin: 0 auto 10px auto; background-size: cover; background-position: center; max-width: 250px; background-color: #222; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:bold;">MUSIC MONEY MARKET</div>
+        <div style="color:var(--gold); font-size:0.7rem;">97.7 THE FLAME</div>
+    </div>
+    <div class="ticker-bar">
+        <span>STATUS: <span id="status-text" style="color:var(--gold)">HUNTING</span></span>
+        <span id="price-change">BOUNCE: 0%</span>
+    </div>
