@@ -1,13 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE MUSIC MONEY MARKET // DEX TERMINAL</title>
+    <style>
+        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-transform: uppercase; }
+        body { display: flex; flex-direction: column; overflow-x: hidden; }
+
+        header { padding: 10px 15px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
+        .head-top { display: flex; justify-content: space-between; align-items: center; }
+        .ticker-bar { background: #000; padding: 5px 10px; border: 1px solid #222; margin-top: 5px; font-size: 0.7rem; display: flex; justify-content: space-between; }
+        
+        .dashboard { display: flex; flex: 1; width: 100%; overflow: hidden; }
+        #watchlist { width: 240px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 12px; }
+        #market-core { flex: 1; overflow-y: auto; padding: 12px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+        #radio-desk { width: 360px; padding: 15px; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; }
+
+        @media (max-width: 900px) {
+            .dashboard { flex-direction: column; overflow-y: auto; display: block; }
+            #watchlist, #market-core, #radio-desk { width: 100%; border-right: none; border-bottom: 2px solid #222; overflow: visible; display: block; position: relative; }
+            #radio-desk { order: -1; } 
+            #watchlist { order: 1; } 
+            #market-core { order: 2; }
+            .oscillator-main { font-size: 2.2rem !important; }
+        }
+
+        .chart-container { background: #000; border: 1px solid #333; height: 240px; position: relative; border-radius: 4px; overflow: hidden; margin-top: 5px; }
+        .market-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; background: #111; border: 1px solid #222; font-size: 0.65rem; }
+        
+        #order-flow { height: 120px; background: #080808; border: 1px solid #222; overflow: hidden; font-size: 0.55rem; padding: 8px; margin: 10px 0; }
+        .trade-row { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid #111; }
+
+        .asset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .data-card { background: #111; border: 1px solid #222; padding: 10px; text-align: center; font-size: 0.65rem; cursor: pointer; }
+
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); margin-bottom: 10px; background-size: cover; background-position: center; background-color: #222; max-width: 320px; margin-left: auto; margin-right: auto; }
+        .radio-controls { background: #151515; padding: 15px; border: 1px solid #333; text-align: center; border-radius: 4px; }
+        .oscillator-main { font-size: 2.5rem; color: white; margin: 5px 0; font-weight: 900; letter-spacing: -1px; }
+
+        .account-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem; }
+        .buy-sell-master { background: var(--cash); color: white; font-size: 0.9rem; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+        
+        .btn-row { display: flex; gap: 10px; margin-top: 12px; }
+        button.nav { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px; flex: 1; cursor: pointer; font-size: 1.1rem; }
+        
+        #init-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .gate-box { text-align:center; border: 2px solid var(--gold); padding: 30px; background: #0a0a0a; width: 100%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+<div id="init-overlay">
+    <div class="gate-box">
+        <h2 style="color:var(--gold); margin-top:0;">THE MUSIC MONEY MARKET</h2>
+        <p style="color:white; font-size:0.7rem; margin-bottom:25px;">$MMM TOKEN: PRE-MINT PHASE (100M)<br>SONGSHARE TRADING ACTIVE</p>
+        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn" onclick="startEngine()">OPEN TRADING ACCOUNT</a>
+        <p style="color:var(--neon); font-size:0.6rem; cursor:pointer;" onclick="startEngine()">ENTER TERMINAL AS GUEST</p>
+    </div>
+</div>
+
+<audio id="main-audio-engine" onended="nextAsset()"></audio>
+
+<header>
+    <div class="head-top">
+        <div style="font-weight:bold;">THE MUSIC MONEY MARKET</div>
+        <div style="color:var(--gold)">97.7 THE FLAME</div>
+    </div>
+    <div class="ticker-bar">
+        <span>TOKEN: $MMM (UPCOMING)</span>
+        <span>PRICE: <span id="coin-price" style="color:var(--gold)">$0.00001000</span></span>
+        <span id="price-change" style="color:var(--neon)">(+0.00%)</span>
+    </div>
+</header>
+
+<div class="dashboard">
+    <aside id="radio-desk">
+        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn">ADD TO PORTFOLIO</a>
+        <div class="album-art" id="art-frame"></div>
+        <div class="radio-controls">
+            <div id="radio-track" style="color:var(--gold); font-size: 0.8rem;">--</div>
+            <div class="oscillator-main" id="main-osc">$0.00</div>
+            <a href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-sell-master">BUY SONGSHARE VIA CASH APP</a>
+            <div class="btn-row">
+                <button class="nav" onclick="prevAsset()">⏮</button>
+                <button class="nav" onclick="playCurrent()">▶</button>
+                <button class="nav" onclick="nextAsset()">⏭</button>
+            </div>
+        </div>
+    </aside>
+
+    <aside id="watchlist">
+        <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:10px; padding-bottom:5px;">MARKET LEDGER</div>
+        <div id="list-target"></div>
+    </aside>
+
+    <section id="market-core">
+        <div class="market-stats">
+            <div>
+                <div style="color:var(--gold)">LIQUIDITY (BNB)</div>
+                <div>1.62 BNB ($1,042)</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="color:var(--gold)">MARKET CAP</div>
+                <div id="mkt-cap">$1,000.00</div>
+            </div>
+            <div>
+                <div style="color:var(--gold)">24H VOLUME</div>
+                <div id="vol-24h">$14,201</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="color:var(--gold)">BROKERAGE FEE</div>
+                <div style="color:var(--neon)">2.5% PER TRADE</div>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div id="volume-bars" style="position:absolute; bottom:0; width:100%; height:60px; display:flex; align-items:flex-end; gap:3px; padding:0 5px; opacity:0.5;"></div>
+            <svg width="100%" height="100%" viewBox="0 0 1000 300" preserveAspectRatio="none">
+                <path id="kinetic-line" d="" fill="none" stroke="var(--neon)" stroke-width="4" />
+                <circle id="pulse-head" r="8" fill="var(--neon)" />
+            </svg>
+        </div>
+        <div id="order-flow"></div>
+        <div id="asset-cards" class="asset-grid"></div>
+    </section>
+</div>
+
 <script>
     const assets = [
-        { id: "A01", name: "SCENE BY SCENE", buy: 1.11, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
-        { id: "A02", name: "SUPERFLY", buy: 5.02, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
+        { id: "A01", name: "SCENE BY SCENE", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
+        { id: "A02", name: "SUPERFLY", buy: 5.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
         { id: "A03", name: "I GOT WHAT YOU NEED", buy: 3.52, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c" },
         { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
     ];
 
     let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
-    let _Q_COUNT = 0; // TRACKS THE 115 INVESTORS
+    let _Q_COUNT = 0;
 
     function startEngine() {
         if (engineStarted) return;
@@ -30,34 +161,29 @@
         for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
         
         setInterval(updateLiquidChart, 40);
-        setInterval(updatePrices, 180); // SPEED UP TO SPORADIC 180ms
+        setInterval(updatePrices, 180); // 180ms SPORADIC SPEED
         setInterval(addTrade, 2000);
         sync(0);
     }
 
     function addTrade() {
         const flow = document.getElementById('order-flow');
-        _Q_COUNT++; // INCREMENT INVESTOR QUEUE
+        _Q_COUNT++;
         
         const side = Math.random() > 0.4 ? "BUY" : "SELL";
-        
-        // CATCH PRICE: The actual trade value caught in the bounce
         const a = assets[currentIdx];
         const catchVal = (a.buy + (Math.random() * a.buy)).toFixed(2);
         
         const row = document.createElement('div');
         row.className = 'trade-row';
         row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-        
-        // DISPLAY QUEUE NUMBER IN THE LEDGER
         row.innerHTML = `<span>Q:${_Q_COUNT} ${side}</span> <span>$${catchVal} <span style="color:#666; font-size:0.45rem;">SETTLED</span></span>`;
+        
         flow.prepend(row);
         if(flow.children.length > 5) flow.removeChild(flow.lastChild);
         
-        // RESET BLOCK AT 115
         if(_Q_COUNT >= 115) {
-            _Q_COUNT = 0;
-            console.log("BLOCK SETTLED: $522 PAID | $478 SURPLUS");
+            _Q_COUNT = 0; // RESET AT 115
         }
 
         document.querySelectorAll('.v-bar').forEach(b => {
@@ -83,31 +209,28 @@
     }
 
     function updatePrices() {
-        // TOP TICKER LOGIC
+        // COIN TICKER PRICE
         let base = 0.00001000;
         let fluc = (Math.random() * 0.0000005) - 0.0000002;
         let finalPrice = (base + fluc).toFixed(8);
         document.getElementById('coin-price').innerText = `$${finalPrice}`;
         document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
 
-        // THE SPORADIC BOUNCE (0% - 100% ROI)
+        // 100% ROI BOUNCE OSCILLATOR
         const a = assets[currentIdx];
-        let bounce = Math.random(); 
-        let livePrice = (a.buy + (bounce * a.buy)).toFixed(2);
-        let roi = (bounce * 100).toFixed(0);
+        let bounceFactor = Math.random(); 
+        let livePrice = (a.buy + (bounceFactor * a.buy)).toFixed(2);
+        let roi = (bounceFactor * 100).toFixed(0);
 
         document.getElementById('main-osc').innerText = `$${livePrice}`;
         document.getElementById('price-change').innerText = `(+${roi}%)`;
-        
-        // COLOR SHIFT ON STRONG OPPORTUNITY
-        document.getElementById('main-osc').style.color = bounce > 0.85 ? "var(--neon)" : "white";
+        document.getElementById('main-osc').style.color = bounceFactor > 0.85 ? "var(--neon)" : "white";
     }
 
     function sync(idx) {
         currentIdx = idx; const a = assets[idx];
         document.getElementById('radio-track').innerText = a.name;
         document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
-        // NO LONGER STATIC: Initial price set, but updatePrices() handles the bounce now
         const audio = document.getElementById('main-audio-engine');
         audio.src = a.audio; audio.play().catch(() => {});
     }
@@ -116,3 +239,5 @@
     function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
     function playCurrent() { document.getElementById('main-audio-engine').play(); }
 </script>
+</body>
+</html>
