@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AITIFY BROKERAGE | Market Desk</title>
+    <title>MUSIC MONEY MARKET BROKERAGE | Market Desk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -91,6 +91,50 @@
             </div>
         </div>
     </div>
+<script>
+        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycby5Ecd_jJ1HEAUnZPeiXsEcBqJXigrkmb3oY38ioc-4d_bQKyc8Qy_INL3hwMxLeg/exec';
 
+        async function fetchMarketData() {
+            try {
+                const response = await fetch(SHEETS_API_URL);
+                const data = await response.json();
+                updateTradingFloor(data);
+                updateTicker(data);
+            } catch (error) {
+                console.error("Brokerage Sync Error:", error);
+            }
+        }
+
+        function updateTradingFloor(assets) {
+            const tbody = document.getElementById('market-body');
+            if (!tbody) return;
+            tbody.innerHTML = ''; 
+            
+            assets.forEach(asset => {
+                const row = `
+                    <tr class="border-b border-gray-800">
+                        <td class="p-2 font-bold">${asset.name} (${asset.ticker})</td>
+                        <td>$${parseFloat(asset.price || 0).toFixed(2)}</td>
+                        <td class="${asset.roi >= 0 ? 'text-green-500' : 'text-red-500'}">${asset.roi}%</td>
+                        <td>${asset.volume || 0}</td>
+                        <td><button class="px-3 py-1 btn-buy rounded text-xs">BUY</button></td>
+                    </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function updateTicker(assets) {
+            const tickerContainer = document.querySelector('.ticker-move');
+            if (!tickerContainer) return;
+            let tickerHTML = '';
+            assets.forEach(asset => {
+                tickerHTML += `<span class="mx-8">$${asset.ticker} ${asset.roi}% ▲</span>`;
+            });
+            tickerContainer.innerHTML = tickerHTML;
+        }
+
+        setInterval(fetchMarketData, 30000);
+        fetchMarketData(); 
+    </script>
 </body>
 </html>
