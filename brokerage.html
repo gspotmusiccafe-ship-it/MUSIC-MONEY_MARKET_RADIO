@@ -21,9 +21,7 @@
 
     <div class="ticker-wrap p-2 mb-6">
         <div class="ticker-move text-sm font-bold uppercase">
-            <span>$SCENE 18.4% ▲</span> <span class="mx-8">$SUPERFLY 5.2% ▲</span> 
-            <span class="mx-8">$NEED 94.2% ▲</span> <span class="mx-8">$ZODIAC 50.0% ▲</span>
-            <span class="mx-8">GLOBAL VAULT: $124,500.00</span>
+            <span>INITIALIZING MARKET DATA...</span>
         </div>
     </div>
 
@@ -43,13 +41,6 @@
                         </tr>
                     </thead>
                     <tbody id="market-body">
-                        <tr class="border-b border-gray-800">
-                            <td class="p-2 font-bold">SCENE BY SCENE</td>
-                            <td>$1.00</td>
-                            <td class="text-green-500">18.4%</td>
-                            <td>412</td>
-                            <td><button class="px-3 py-1 btn-buy rounded text-xs">BUY</button></td>
-                        </tr>
                         </tbody>
                 </table>
             </div>
@@ -57,8 +48,7 @@
             <div class="panel p-4">
                 <h2 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2">MARKET ACTIVITY (LEDGER)</h2>
                 <div class="h-64 overflow-y-auto text-xs space-y-2" id="ledger-output">
-                    <p class="text-gray-500">[01:24:05] P2P TRADE: User_883 bought $SCENE at $1.00</p>
-                    <p class="text-gray-500">[01:23:12] SYSTEM: Block #12 Settled for $522.00</p>
+                    <p class="text-gray-500">[SYSTEM] Brokerage Terminal Connected to Central Bank...</p>
                 </div>
             </div>
         </div>
@@ -69,7 +59,7 @@
                 <div class="space-y-4">
                     <div>
                         <label class="block text-xs uppercase text-gray-400">Vault Balance</label>
-                        <div class="text-3xl font-bold text-white">$12,480.12</div>
+                        <div class="text-3xl font-bold text-white" id="vault-display">$0.00</div>
                     </div>
                     <hr class="border-gray-800">
                     <div class="flex flex-col gap-2">
@@ -82,32 +72,17 @@
             <div class="panel p-4 border-l-4 border-yellow-500">
                 <h2 class="text-lg font-bold mb-2">KINETIC CALCULATOR</h2>
                 <div class="flex flex-col gap-2">
-                    <input type="number" placeholder="Enter Buy-In Amount">
-                    <input type="number" placeholder="Current ROI %">
+                    <input type="number" id="calc-buyin" placeholder="Enter Buy-In Amount">
+                    <input type="number" id="calc-roi" placeholder="Current ROI %">
                     <div class="mt-2 text-sm">
-                        Projected Payout: <span class="text-white font-bold">$0.00</span>
+                        Projected Payout: <span class="text-white font-bold" id="calc-result">$0.00</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<script>
-        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycby5Ecd_jJ1HEAUnZPeiXsEcBqJXigrkmb3oY38ioc-4d_bQKyc8Qy_INL3hwMxLeg/exec';
 
-        async function fetchMarketData() {
-            try {
-                const response = await fetch(SHEETS_API_URL);
-                const data = await response.json();
-                updateTradingFloor(data);
-                updateTicker(data);
-            } catch (error) {
-                console.error("Brokerage Sync Error:", error);
-            }
-        }
-
-        function updateTradingFloor(assets) {
-            const tbody = document.getElementById('market-body');
-       <script>
+    <script>
         const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycby5Ecd_jJ1HEAUnZPeiXsEcBqJXigrkmb3oY38ioc-4d_bQKyc8Qy_INL3hwMxLeg/exec';
 
         async function fetchMarketData() {
@@ -116,7 +91,7 @@
                 const data = await response.json();
                 
                 if (!data || data.length === 0) {
-                    console.log("Waiting for data from Sheet ID: 19lFD6...dLM");
+                    console.log("No data found in the Sheet.");
                     return;
                 }
 
@@ -133,8 +108,7 @@
             tbody.innerHTML = ''; 
             
             assets.forEach(asset => {
-                // Formatting data from your Sheet columns
-                const name = asset.name || "Unknown Asset";
+                const name = asset.name || "Asset";
                 const ticker = asset.ticker || "???";
                 const price = asset.price ? parseFloat(asset.price).toFixed(2) : "0.00";
                 const roi = asset.roi || "0.0";
@@ -164,10 +138,17 @@
             tickerContainer.innerHTML = tickerHTML;
         }
 
+        // Kinetic Calculator Logic
+        document.addEventListener('input', () => {
+            const buyIn = parseFloat(document.getElementById('calc-buyin').value) || 0;
+            const roi = parseFloat(document.getElementById('calc-roi').value) || 0;
+            const result = buyIn + (buyIn * (roi / 100));
+            document.getElementById('calc-result').innerText = `$${result.toFixed(2)}`;
+        });
+
         // Auto-refresh every 30 seconds
         setInterval(fetchMarketData, 30000);
         fetchMarketData(); 
     </script>
 </body>
-</html>    
 </html>
