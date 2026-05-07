@@ -1,104 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MUSIC MONEY MARKET // LIVE TERMINAL</title>
-    <style>
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; }
-        * { box-sizing: border-box; }
-        
-        /* Force full height and prevent accidental scrolling */
-        html, body { height: 100%; margin: 0; padding: 0; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-transform: uppercase; overflow: hidden; }
-
-        body { display: flex; flex-direction: column; }
-
-        .ticker-wrap { background: #000; border-bottom: 1px solid #333; height: 35px; min-height: 35px; overflow: hidden; display: flex; align-items: center; }
-        .ticker-move { display: inline-block; white-space: nowrap; animation: ticker 25s linear infinite; color: var(--gold); font-size: 0.85rem; }
-        @keyframes ticker { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
-
-        header { display: flex; justify-content: space-between; padding: 12px; background: var(--panel); border-bottom: 2px solid #333; font-size: 0.8rem; font-weight: bold; min-height: 45px; }
-
-        /* THE FIX: Fixed-width sidebars with a flexible middle */
-        .dashboard { display: flex; flex: 1; width: 100%; overflow: hidden; }
-
-        /* LEFT SIDEBAR */
-        #watchlist { width: 280px; min-width: 280px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 15px; }
-        .watch-item { font-size: 0.75rem; padding: 12px 0; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
-        .watch-item:hover { background: #111; color: white; }
-
-        /* MIDDLE SECTION */
-        #market-core { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; min-width: 300px; }
-        .chart-container { background: #000; border: 1px solid #444; height: 220px; min-height: 220px; margin-bottom: 20px; position: relative; }
-        .asset-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
-        .data-card { background: #111; border: 1px solid #333; padding: 12px; text-align: center; }
-
-        /* RIGHT SIDEBAR */
-        #radio-desk { width: 360px; min-width: 360px; border-left: 1px solid #333; padding: 20px; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); margin-bottom: 15px; background: #222; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; }
-        
-        .radio-controls { background: #1a1a1a; padding: 15px; border: 1px solid #333; text-align: center; }
-        .oscillator-main { font-size: 2.2rem; color: white; margin: 10px 0; font-weight: 900; letter-spacing: -2px; }
-
-        .account-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 12px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 15px; font-size: 0.8rem; }
-        button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 10px; cursor: pointer; font-family: inherit; font-size: 0.7rem; }
-        button.prio { border-color: var(--gold); color: var(--gold); }
-    </style>
-</head>
-<body>
-
-<audio id="main-audio-engine" preload="auto"></audio>
-
-<div class="ticker-wrap">
-    <div class="ticker-move">
-        $SCENE-BY-SCENE +18.4% || $SUPERFLY +5.2% || $ZODIAC-SIGN +50.0% || $I-GOT-WHAT-YOU-NEED +94.2% || $AITIFY-RADIO 97.7 THE FLAME
-    </div>
-</div>
-
-<header>
-    <div>MUSIC MONEY MARKET // LIVE EXCHANGE</div>
-    <div id="sys-status">SYSTEM: MONITORING LIVE FEED...</div>
-    <div style="color:var(--gold)">97.7 THE FLAME // LIVE</div>
-</header>
-
-<div class="dashboard">
-    <aside id="watchlist">
-        <div style="color: var(--gold); border-bottom: 1px solid var(--gold); margin-bottom: 10px; font-size: 0.8rem;">ASSET WATCH</div>
-        <div id="list-target"></div>
-    </aside>
-
-    <section id="market-core">
-        <div class="chart-container">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path id="green-line" d="M0,80 L20,60 L40,85 L60,30 L80,50 L100,10" fill="none" stroke="var(--neon)" stroke-width="1.5" />
-            </svg>
-        </div>
-        <div class="asset-grid" id="asset-cards"></div>
-    </section>
-
-    <aside id="radio-desk">
-        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn">OPEN TRADING ACCOUNT</a>
-        <div class="album-art" id="art-frame"></div>
-        <div class="radio-controls">
-            <div id="radio-track" style="color:var(--gold); font-size:0.8rem; margin-bottom:5px;">INITIALIZING BROADCAST...</div>
-            <div id="radio-roi" style="font-size:0.7rem; color:#888;">--% PREDETERMINED ROI</div>
-            <div class="oscillator-main" id="main-osc">$0.00</div>
-            <div style="display:flex; justify-content:center; gap:10px; margin-bottom: 15px;">
-                <button onclick="prevAsset()" style="width: 50px;">⏮</button>
-                <button onclick="playCurrent()" style="width: 50px;">▶</button>
-                <button onclick="nextAsset()" style="width: 50px;">⏭</button>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
-                <button onclick="sysNotify('EXECUTE')">BUY / SELL</button>
-                <button class="prio" onclick="sysNotify('FIFO')">FIFO TRADE</button>
-            </div>
-        </div>
-    </aside>
-</div>
-
-<script>
-    const assets = [
-        { id: "A01", name: "SCENE BY SCENE", roi: 15, buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
-        { id: "A02", name: "SUPERFLY", roi: 35, buy: 5.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
-        { id: "A03", name: "WHAT YOU NEED", roi: 50, buy: 5.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c" },
-        { id: "A04", name: "ZODIAC SIGN", roi: 85, buy: 10.00, img: "
+const assets = [
+  {
+    id: "A01",
+    name: "SCENE BY SCENE",
+    roi: 18.4,
+    buy: 1.00,
+    img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72",
+    audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a"
+  },
+  {
+    id: "A02",
+    name: "SUPERFLY",
+    roi: 5.2,
+    buy: 5.00,
+    img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc",
+    audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293"
+  },
+  {
+    id: "A03",
+    name: "I GOT WHAT YOU NEED",
+    roi: 94.2,
+    buy: 3.50,
+    img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147",
+    audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c"
+  },
+  {
+    id: "A04",
+    name: "ZODIAC SIGN",
+    roi: 50.0,
+    buy: 2.50,
+    img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a",
+    audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630"
+  }
+];
