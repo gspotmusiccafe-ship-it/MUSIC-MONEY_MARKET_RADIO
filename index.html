@@ -1,166 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AITIFY PRO // TRADING TERMINAL</title>
-    <style>
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; }
-        * { box-sizing: border-box; }
-        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; text-transform: uppercase; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-
-        /* HIGH-SPEED TICKER */
-        .ticker-wrap { background: #000; border-bottom: 1px solid #333; height: 35px; overflow: hidden; display: flex; align-items: center; }
-        .ticker-move { display: inline-block; white-space: nowrap; animation: ticker 20s linear infinite; color: var(--gold); font-size: 0.85rem; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-
-        header { display: flex; justify-content: space-between; padding: 12px; background: var(--panel); border-bottom: 2px solid #333; font-size: 0.8rem; font-weight: bold; }
-
-        .dashboard { display: flex; flex: 1; overflow: hidden; }
-
-        /* LEFT: WATCHLIST */
-        #watchlist { width: 220px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 12px; }
-        .watch-item { font-size: 0.7rem; padding: 10px 0; border-bottom: 1px solid #222; }
-
-        /* MIDDLE: MARKET VISUALS & ANALYTICS */
-        #market-core { flex: 2; overflow-y: auto; padding: 20px; border-right: 1px solid #333; }
-        .chart-container { background: #000; border: 1px solid #444; height: 250px; margin-bottom: 20px; position: relative; }
-        .asset-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .data-card { background: #111; border: 1px solid #333; padding: 12px; text-align: center; position: relative; }
-
-        /* RIGHT: RADIO DESK & ART */
-        #radio-desk { width: 350px; padding: 20px; background: #0a0a0a; display: flex; flex-direction: column; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); margin-bottom: 15px; background: #222; overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        
-        .radio-controls { background: #1a1a1a; padding: 15px; border: 1px solid #333; text-align: center; }
-        .oscillator-main { font-size: 2.2rem; color: white; margin: 15px 0; font-weight: 900; letter-spacing: -2px; }
-
-        /* ACTION BUTTONS */
-        .btn-stack { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 15px; }
-        .account-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 12px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 15px; font-size: 0.8rem; }
-        button { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px; cursor: pointer; font-family: inherit; font-size: 0.7rem; }
-        button.prio { border-color: var(--gold); color: var(--gold); }
-        button:active { background: var(--neon); color: black; }
-
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 900px) {
-            .dashboard { flex-direction: column; overflow-y: auto; }
-            #watchlist, #radio-desk { width: 100%; height: auto; }
-            .asset-grid { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-
-<div class="ticker-wrap">
-    <div class="ticker-move">
-        $AIT-MARIE +18.4% || $AIT-FOLLOW +5.2% || $AIT-QUEENBEE +50.0% || $AIT-PLAYGROUND +94.2% || $AIT-PREACHER +12.5% || $AIT-NAWF +66.8%
-    </div>
-</div>
-
-<header>
-    <div>AITIFY // GLOBAL EXCHANGE TERMINAL</div>
-    <div id="sys-status" style="color:white">SYSTEM: MONITORING LIVE FEED...</div>
-    <div style="color:var(--gold)">97.7 THE FLAME // LIVE</div>
-</header>
-
-<div class="dashboard">
-    <aside id="watchlist">
-        <div style="color: var(--gold); border-bottom: 1px solid var(--gold); margin-bottom: 10px; font-size: 0.8rem;">ASSET WATCH</div>
-        <div id="list-target"></div>
-    </aside>
-
-    <section id="market-core">
-        <div class="chart-container">
-            <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
-                <path id="green-line" d="M0,80 L20,70 L40,85 L60,40 L80,50 L100,20" fill="none" stroke="var(--neon)" stroke-width="1" />
-                <path id="red-line" d="M0,95 L20,85 L40,90 L60,70 L80,80 L100,60" fill="none" stroke="var(--red)" stroke-width="1" />
-            </svg>
-        </div>
-        <div class="asset-grid" id="asset-cards"></div>
-    </section>
-
-    <aside id="radio-desk">
-        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn">OPEN TRADING ACCOUNT</a>
-        
-        <div class="album-art" id="art-frame">
-            <span style="color:#444; font-size:0.6rem;">ASSET ARTWORK FEED</span>
-        </div>
-
-        <div class="radio-controls">
-            <div id="radio-track" style="color:var(--gold); font-size:0.8rem; margin-bottom:5px;">SYNCHRONIZING...</div>
-            <div id="radio-roi" style="font-size:0.7rem; color:#888;">--% PREDETERMINED ROI</div>
-            <div class="oscillator-main" id="main-osc">$0.00</div>
-            
-            <div style="display:flex; justify-content:center; gap:20px;">
-                <button style="width:50px;">⏮</button>
-                <button style="width:50px;">▶</button>
-                <button style="width:50px;">⏭</button>
-            </div>
-
-            <div class="btn-stack">
-                <button onclick="sysNotify('EXECUTE')">BUY / SELL</button>
-                <button class="prio" onclick="sysNotify('FIFO')">FIFO TRADE</button>
-            </div>
-        </div>
-    </aside>
-</div>
+<audio id="main-audio-engine" preload="auto"></audio>
 
 <script>
+    // 1. THE ASSET VAULT (Mapped with your Firebase Links)
     const assets = [
-        { id: "A01", name: "MARIE: SCENE BY SCENE", roi: 15, buy: 1.00 },
-        { id: "A02", name: "CAN'T FOLLOW THROUGH", roi: 35, buy: 5.00 },
-        { id: "A03", name: "MARIE: QUEEN BEE", roi: 50, buy: 5.00 },
-        { id: "A04", name: "SMOOTH: GOT WHAT YOU NEED", roi: 85, buy: 10.00 },
-        { id: "A05", name: "SMOOTH: PLAYGROUND", roi: 100, buy: 10.00 }
+        { 
+            id: "A01", 
+            name: "SCENE BY SCENE", 
+            roi: 15, 
+            buy: 1.00, 
+            img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72",
+            audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a"
+        },
+        { 
+            id: "A02", 
+            name: "SUPERFLY", 
+            roi: 35, 
+            buy: 5.00, 
+            img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc",
+            audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293"
+        },
+        { 
+            id: "A03", 
+            name: "I GOT WHAT YOU NEED", 
+            roi: 50, 
+            buy: 5.00, 
+            img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147",
+            audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c"
+        },
+        { 
+            id: "A04", 
+            name: "ZODIAC SIGN", 
+            roi: 85, 
+            buy: 10.00, 
+            img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a",
+            audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630"
+        }
     ];
 
-    const listTarget = document.getElementById('list-target');
-    const assetCards = document.getElementById('asset-cards');
-
-    // Build the Floor
-    assets.forEach(asset => {
-        listTarget.innerHTML += `<div class="watch-item">${asset.id} | ${asset.name}<br><span style="color:white">YIELD: ${asset.roi}%</span></div>`;
-        assetCards.innerHTML += `
-            <div class="data-card">
-                <div style="color:var(--gold); font-size:0.6rem;">${asset.id} // BUY-IN: $${asset.buy.toFixed(2)}</div>
-                <div style="font-size:0.7rem; margin:5px 0; color:#fff;">${asset.name}</div>
-                <div class="oscillator" id="card-osc-${asset.id}" style="color:var(--neon); font-weight:bold; font-size:1.1rem;">$0.00</div>
-            </div>
-        `;
-    });
-
-    // MARKET OSCILLATION (ALIVE STATUS)
-    function liveOscillator() {
+    // 2. THE HIGH-VELOCITY OSCILLATOR (MARKET ALIVE)
+    function startOverclockedPulse() {
         setInterval(() => {
-            // Main Desktop Oscillator
-            document.getElementById('main-osc').innerText = `$${(Math.random()).toFixed(2)}`;
+            // Main Desk Pulse
+            const mainVal = (Math.random()).toFixed(2);
+            document.getElementById('main-osc').innerText = `$${mainVal}`;
             
-            // Asset Grid Oscillators
+            // Grid Jitter
             assets.forEach(a => {
-                const el = document.getElementById(`card-osc-${a.id}`);
-                if(el) el.innerText = `$${(Math.random()).toFixed(2)}`;
+                const cardOsc = document.getElementById(`card-osc-${a.id}`);
+                if(cardOsc) {
+                    cardOsc.innerText = `$${(Math.random()).toFixed(2)}`;
+                    cardOsc.style.color = Math.random() > 0.7 ? "var(--gold)" : "var(--neon)";
+                }
             });
-
-            // Analytics Jitter
-            document.getElementById('green-line').setAttribute('stroke-width', (Math.random() * 1 + 0.5));
-        }, 800); // Higher frequency for "Alive" feel
+        }, 150); // Fast 150ms vibration
     }
 
-    function sysNotify(type) {
-        const status = document.getElementById('sys-status');
-        status.innerText = `ORDER: ${type} REGISTERED // QUEUEING...`;
-        setTimeout(() => { status.innerText = "SYSTEM: MONITORING LIVE FEED..."; }, 3000);
-    }
+    // 3. BROADCAST SYNC (Music & Image)
+    let currentAssetIndex = 0;
 
-    function syncRadio(asset) {
+    function syncBroadcast(index) {
+        const asset = assets[index];
+        const audio = document.getElementById('main-audio-engine');
+        const artFrame = document.getElementById('art-frame');
+        
+        // Update UI
         document.getElementById('radio-track').innerText = asset.name;
         document.getElementById('radio-roi').innerText = `${asset.roi}% PREDETERMINED ROI`;
+        
+        // Swap Image
+        artFrame.style.backgroundImage = `url('${asset.img}')`;
+        artFrame.style.backgroundSize = "cover";
+        artFrame.innerHTML = ""; // Remove placeholder text
+
+        // Play Sound
+        audio.src = asset.audio;
+        audio.play();
+
+        // Update System Status
+        document.getElementById('sys-status').innerText = `BROADCASTING: ${asset.name} // BUY: $${asset.buy}`;
     }
 
-    // Initialize
-    liveOscillator();
-    syncRadio(assets[0]);
+    // Wiring the Navigation Buttons
+    function nextAsset() {
+        currentAssetIndex = (currentAssetIndex + 1) % assets.length;
+        syncBroadcast(currentAssetIndex);
+    }
+
+    function prevAsset() {
+        currentAssetIndex = (currentAssetIndex - 1 + assets.length) % assets.length;
+        syncBroadcast(currentAssetIndex);
+    }
+
+    // Initialize on Startup
+    startOverclockedPulse();
+    // syncBroadcast(0); // Uncomment this to auto-play on load
 </script>
-</body>
-</html>
