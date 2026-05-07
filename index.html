@@ -1,93 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MMM // LIVE EXCHANGE</title>
-    <style>
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
-        body { margin: 0; background: var(--bg); color: white; font-family: monospace; text-transform: uppercase; text-align: center; }
-        
-        .header { padding: 10px; border-bottom: 1px solid #333; font-size: 0.8rem; color: var(--gold); }
-        .oscillator-container { padding: 40px 20px; background: #0a0a0a; border-bottom: 2px solid #222; }
-        #main-osc { font-size: 5rem; font-weight: 900; margin: 10px 0; color: white; }
-        #roi-text { font-size: 1.5rem; color: var(--neon); }
-
-        .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 20px; }
-        button { padding: 20px; font-weight: bold; border: none; cursor: pointer; font-family: monospace; font-size: 1.2rem; }
-        .btn-invest { background: var(--neon); color: black; }
-        .btn-liquidate { background: var(--red); color: white; }
-
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 15px; font-size: 0.7rem; background: #111; border-top: 1px solid #333; }
-        #order-flow { height: 150px; overflow: hidden; background: black; padding: 10px; font-size: 0.7rem; color: #666; text-align: left; }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    97.7 THE FLAME // <span id="price-change">BOUNCE: 0%</span>
-</div>
-
-<div class="oscillator-container">
-    <div id="radio-track" style="color:var(--gold); font-size: 0.9rem;">-- LOADING --</div>
-    <div id="main-osc">$0.00</div>
-    <div id="roi-text">0% POTENTIAL</div>
-</div>
-
-<div class="btn-row">
-    <button class="btn-invest" onclick="openInvest()">INVEST</button>
-    <button class="btn-liquidate" onclick="processLiquidate()">LIQUIDATE</button>
-</div>
-
-<div class="stats">
-    <div style="color:var(--gold)">115 BLOCK QUEUE</div>
-    <div id="queue-count" style="text-align:right">0 / 115</div>
-    <div style="color:var(--gold)">BLOCK BUDGET</div>
-    <div style="text-align:right">$1,000.00</div>
-</div>
-
-<div id="order-flow"></div>
-
-<audio id="main-audio-engine" loop></audio>
-
 <script>
     const assets = [
-        { name: "SCENE BY SCENE", base: 1.00, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
-        { name: "SUPERFLY", base: 5.00, audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" }
+        { id: "A01", name: "SCENE BY SCENE", buy: 1.11, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
+        { id: "A02", name: "SUPERFLY", buy: 5.02, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
+        { id: "A03", name: "I GOT WHAT YOU NEED", buy: 3.52, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c" },
+        { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
     ];
 
-    let _Q_COUNT = 0;
-    let currentIdx = 0;
+    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
+    let _Q_COUNT = 0; // TRACKS THE 115 INVESTORS
 
-    // The Kick-Off
-    window.onload = function() {
-        sync(0);
-        setInterval(marketPulse, 160); // Sporadic Bounce
-    };
-
-    function marketPulse() {
-        const a = assets[currentIdx];
-        const bounce = Math.random();
-        const livePrice = (a.base + (bounce * a.base)).toFixed(2);
-        const roi = (bounce * 100).toFixed(0);
-
-        document.getElementById('main-osc').innerText = "$" + livePrice;
-        document.getElementById('roi-text').innerText = roi + "% POTENTIAL";
-        document.getElementById('price-change').innerText = "BOUNCE: " + roi + "%";
+    function startEngine() {
+        if (engineStarted) return;
+        engineStarted = true;
+        document.getElementById('init-overlay').style.display = 'none';
         
-        // Green color if over 85% ROI
-        document.getElementById('main-osc').style.color = (bounce > 0.85) ? "#00ff00" : "white";
+        const list = document.getElementById('list-target');
+        const cards = document.getElementById('asset-cards');
+        const volBars = document.getElementById('volume-bars');
+        
+        assets.forEach((a, i) => {
+            list.innerHTML += `<div class="watch-item" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">VAL: $${a.buy}</span></div>`;
+            cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div style="color:var(--gold)">PRICE: $${a.buy.toFixed(2)}</div><div>${a.name}</div><div style="font-size:0.5rem; opacity:0.7;">ASSET: ${a.id}</div></div>`;
+        });
+
+        for(let i=0; i<40; i++) {
+            const color = Math.random() > 0.5 ? 'var(--neon)' : 'var(--red)';
+            volBars.innerHTML += `<div class="v-bar" style="flex:1; background:${color}; height:${Math.random()*100}%; opacity:0.6; border-radius:1px;"></div>`;
+        }
+        for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
+        
+        setInterval(updateLiquidChart, 40);
+        setInterval(updatePrices, 180); // SPEED UP TO SPORADIC 180ms
+        setInterval(addTrade, 2000);
+        sync(0);
     }
 
-    function openInvest() {
-        let choice = prompt("GATEWAYS: 1.CASHAPP 2.PAYPAL 3.STRIPE 4.BNB 5.BTC");
-        if(choice) alert("CONNECTING...");
-    }
-
-    function processLiquidate() {
-        _Q_COUNT++;
+    function addTrade() {
         const flow = document.getElementById('order-flow');
-        const price = document.getElementById('main-osc').innerText;
+        _Q_COUNT++; // INCREMENT INVESTOR QUEUE
+        
+        const side = Math.random() > 0.4 ? "BUY" : "SELL";
+        
+        // CATCH PRICE: The actual trade value caught in the bounce
+        const a = assets[currentIdx];
+        const catchVal = (a.buy + (Math.random() * a.buy)).toFixed(2);
         
         const row = document.createElement('div');
-        row.innerHTML = "Q:" + _Q_COUNT + " | CATCH: " + price + " | SETTLED
+        row.className = 'trade-row';
+        row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
+        
+        // DISPLAY QUEUE NUMBER IN THE LEDGER
+        row.innerHTML = `<span>Q:${_Q_COUNT} ${side}</span> <span>$${catchVal} <span style="color:#666; font-size:0.45rem;">SETTLED</span></span>`;
+        flow.prepend(row);
+        if(flow.children.length > 5) flow.removeChild(flow.lastChild);
+        
+        // RESET BLOCK AT 115
+        if(_Q_COUNT >= 115) {
+            _Q_COUNT = 0;
+            console.log("BLOCK SETTLED: $522 PAID | $478 SURPLUS");
+        }
+
+        document.querySelectorAll('.v-bar').forEach(b => {
+            b.style.height = Math.random()*100 + "%";
+            b.style.background = Math.random() > 0.5 ? 'var(--neon)' : 'var(--red)';
+        });
+    }
+
+    function updateLiquidChart() {
+        velocity += (Math.random() - 0.5) * 6; velocity *= 0.85; headY += velocity;
+        if (headY < 50 || headY > 250) velocity *= -1.2;
+        for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
+        points[points.length - 1].y = headY;
+        let d = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 0; i < points.length - 1; i++) {
+            const xc = (points[i].x + points[i + 1].x) / 2;
+            const yc = (points[i].y + points[i + 1].y) / 2;
+            d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
+        }
+        document.getElementById('kinetic-line').setAttribute('d', d);
+        document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
+        document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
+    }
+
+    function updatePrices() {
+        // TOP TICKER LOGIC
+        let base = 0.00001000;
+        let fluc = (Math.random() * 0.0000005) - 0.0000002;
+        let finalPrice = (base + fluc).toFixed(8);
+        document.getElementById('coin-price').innerText = `$${finalPrice}`;
+        document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+
+        // THE SPORADIC BOUNCE (0% - 100% ROI)
+        const a = assets[currentIdx];
+        let bounce = Math.random(); 
+        let livePrice = (a.buy + (bounce * a.buy)).toFixed(2);
+        let roi = (bounce * 100).toFixed(0);
+
+        document.getElementById('main-osc').innerText = `$${livePrice}`;
+        document.getElementById('price-change').innerText = `(+${roi}%)`;
+        
+        // COLOR SHIFT ON STRONG OPPORTUNITY
+        document.getElementById('main-osc').style.color = bounce > 0.85 ? "var(--neon)" : "white";
+    }
+
+    function sync(idx) {
+        currentIdx = idx; const a = assets[idx];
+        document.getElementById('radio-track').innerText = a.name;
+        document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
+        // NO LONGER STATIC: Initial price set, but updatePrices() handles the bounce now
+        const audio = document.getElementById('main-audio-engine');
+        audio.src = a.audio; audio.play().catch(() => {});
+    }
+
+    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+    function playCurrent() { document.getElementById('main-audio-engine').play(); }
+</script>
