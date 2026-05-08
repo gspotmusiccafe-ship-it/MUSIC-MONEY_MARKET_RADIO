@@ -176,20 +176,28 @@
         const flow = document.getElementById('order-flow');
         _Q_COUNT++;
         
-        const side = Math.random() > 0.4 ? "BUY" : "SELL";
-        const a = assets[currentIdx];
-        const catchVal = (a.buy + (Math.random() * a.buy)).toFixed(2);
-        
+        // Investment Tiers
+        const tiers = [10, 20, 50, 100];
+        const usdIn = tiers[Math.floor(Math.random() * tiers.length)];
+        const coinOut = usdIn * 10; // The 10x multiplier
+        _TOTAL_LIQUIDITY_RAISED += usdIn;
+
         const row = document.createElement('div');
         row.className = 'trade-row';
-        row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-        row.innerHTML = `<span>Q:${_Q_COUNT} ${side}</span> <span>$${catchVal} <span style="color:#666; font-size:0.45rem;">SETTLED</span></span>`;
+        row.style.color = "var(--gold)";
+        row.innerHTML = `<span>Q:${_Q_COUNT} TRANSFER</span> <span>$${usdIn} > ${coinOut} $MMMC</span>`;
         
         flow.prepend(row);
         if(flow.children.length > 5) flow.removeChild(flow.lastChild);
         
-        if(_Q_COUNT >= 115) {
-            _Q_COUNT = 0; // RESET AT 115
+        // Update the Progress toward $1,000
+        document.getElementById('mkt-cap').innerText = `$${_TOTAL_LIQUIDITY_RAISED.toFixed(2)} / $1,000`;
+
+        document.querySelectorAll('.v-bar').forEach(b => {
+            b.style.height = Math.random()*100 + "%";
+            b.style.background = "var(--gold)";
+        });
+    }
         }
 
         document.querySelectorAll('.v-bar').forEach(b => {
@@ -215,19 +223,20 @@
     }
 
     function updatePrices() {
-        // COIN TICKER PRICE
-        let base = 0.00001000;
-        let fluc = (Math.random() * 0.0000005) - 0.0000002;
-        let finalPrice = (base + fluc).toFixed(8);
-        document.getElementById('coin-price').innerText = `$${finalPrice}`;
-        document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-
-        // 100% ROI BOUNCE OSCILLATOR
+        // COIN TICKER (The $MMMC value)
+        let fluc = (Math.random() * 0.00000010); 
+        tokenValue = parseFloat((tokenValue + fluc).toFixed(8));
+        document.getElementById('coin-price').innerText = `$${tokenValue.toFixed(8)}`;
+        
+        // OSCILLATOR (Shows the Song's USD Entry Price)
         const a = assets[currentIdx];
-        let bounceFactor = Math.random(); 
-        let livePrice = (a.buy + (bounceFactor * a.buy)).toFixed(2);
-        let roi = (bounceFactor * 100).toFixed(0);
-
+        document.getElementById('main-osc').innerText = `$${a.buy.toFixed(2)}`;
+        
+        // REWARD (10 Coins for every $1 USD)
+        let coinReward = (a.buy * 10).toFixed(0);
+        document.getElementById('price-change').innerText = `TRANSFER: ${coinReward} $MMMC`;
+        document.getElementById('main-osc').style.color = "white";
+    }
         document.getElementById('main-osc').innerText = `$${livePrice}`;
         document.getElementById('price-change').innerText = `(+${roi}%)`;
         document.getElementById('main-osc').style.color = bounceFactor > 0.85 ? "var(--neon)" : "white";
