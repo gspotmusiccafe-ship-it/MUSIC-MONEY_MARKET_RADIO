@@ -137,8 +137,14 @@
         { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
     ];
 
-    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
-    let _Q_COUNT = 0;
+  let currentIdx = 0; 
+    let points = []; 
+    let headY = 150; 
+    let velocity = 0; 
+    let engineStarted = false;
+    let _Q_COUNT = 0; 
+    let _TOTAL_LIQUIDITY_RAISED = 0; 
+    let tokenValue = 0.00004000;
 
     function startEngine() {
         if (engineStarted) return;
