@@ -146,27 +146,39 @@
     let tokenValue = 0.00004000; 
 
     // 2. ENTRY ENGINE
-    function startEngine() {
-        // FORCE REMOVE OVERLAY
-        const overlay = document.getElementById('init-overlay');
-        if (overlay) overlay.style.display = 'none';
+function startEngine() {
+        // KILL THE OVERLAY IMMEDIATELY
+        document.getElementById('init-overlay').style.display = 'none';
 
+        // PREVENT DOUBLE START
         if (engineStarted) return;
         engineStarted = true;
         
+        // TARGETS
         const list = document.getElementById('list-target');
         const cards = document.getElementById('asset-cards');
         const volBars = document.getElementById('volume-bars');
         
-        // Populate Lists
+        // FILL THE MARKET
         assets.forEach((a, i) => {
             list.innerHTML += `<div class="watch-item" style="padding:10px; border-bottom:1px solid #222; cursor:pointer;" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">ENTRY: $${a.buy}</span></div>`;
             cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div style="color:var(--gold)">$${a.buy.toFixed(2)}</div><div>${a.name}</div></div>`;
         });
 
-        // Initialize Visuals
+        // DRAW VISUALS
         for(let i=0; i<40; i++) {
             volBars.innerHTML += `<div class="v-bar" style="flex:1; background:var(--gold); height:${Math.random()*100}%; opacity:0.6; border-radius:1px;"></div>`;
+        }
+        for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
+        
+        // KICKSTART LOOPS
+        setInterval(updateLiquidChart, 40);
+        setInterval(updatePrices, 180); 
+        setInterval(addTrade, 2000);
+        
+        // FORCE AUDIO PLAY ON FIRST SONG
+        sync(0);
+    }
         }
         for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
         
