@@ -202,11 +202,19 @@
     }
 
     function updatePrices() {
-        let base = 0.00001000;
-        let fluc = (Math.random() * 0.0000005) - 0.0000002;
-        let finalPrice = (base + fluc).toFixed(8);
-        document.getElementById('coin-price').innerText = `$${finalPrice}`;
-        document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+    // Keep your existing coin price logic...
+    let fluc = (Math.random() * 0.00000010); 
+    tokenValue = parseFloat((tokenValue + fluc).toFixed(8));
+    document.getElementById('coin-price').innerText = `$${tokenValue.toFixed(8)}`;
+
+    // PIVOT: Change Market Cap to show the $1,000 Goal progress
+    const mktCapElement = document.getElementById('mkt-cap');
+    if (mktCapElement) {
+        mktCapElement.innerText = `$${_TOTAL_LIQUIDITY_RAISED.toFixed(2)} / $1,000 RAISED`;
+        // Turn it gold when getting close to the goal
+        mktCapElement.style.color = _TOTAL_LIQUIDITY_RAISED > 800 ? "var(--gold)" : "var(--neon)";
+    }
+}
     }
 
     function sync(idx) {
