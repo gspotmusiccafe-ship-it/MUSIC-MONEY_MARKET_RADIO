@@ -131,7 +131,8 @@
 
 <script>
   <script>
-    // 1. GLOBALS & ASSETS
+   <script>
+    // 1. ASSET DATA (Verify these URLs are correct in your Replit)
     const assets = [
         { id: "A01", name: "SCENE BY SCENE", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
         { id: "A02", name: "SUPERFLY", buy: 5.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
@@ -139,61 +140,58 @@
         { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
     ];
 
-    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; 
+    // 2. STABLE VARIABLES
+    let currentIdx = 0; 
+    let points = []; 
+    let headY = 150; 
+    let velocity = 0; 
     let engineStarted = false;
     let _Q_COUNT = 0; 
     let _TOTAL_LIQUIDITY_RAISED = 0; 
     let tokenValue = 0.00004000; 
 
-    // 2. ENTRY ENGINE
-function startEngine() {
-        // KILL THE OVERLAY IMMEDIATELY
-        document.getElementById('init-overlay').style.display = 'none';
+    // 3. BULLETPROOF ENTRY FUNCTION
+    function startEngine() {
+        console.log("System Initializing...");
+        const overlay = document.getElementById('init-overlay');
+        if (overlay) overlay.style.display = 'none';
 
-        // PREVENT DOUBLE START
         if (engineStarted) return;
         engineStarted = true;
         
-        // TARGETS
         const list = document.getElementById('list-target');
         const cards = document.getElementById('asset-cards');
         const volBars = document.getElementById('volume-bars');
         
-        // FILL THE MARKET
-        assets.forEach((a, i) => {
-            list.innerHTML += `<div class="watch-item" style="padding:10px; border-bottom:1px solid #222; cursor:pointer;" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">ENTRY: $${a.buy}</span></div>`;
-            cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div style="color:var(--gold)">$${a.buy.toFixed(2)}</div><div>${a.name}</div></div>`;
-        });
+        // Load UI
+        if(list && cards) {
+            assets.forEach((a, i) => {
+                list.innerHTML += `<div class="watch-item" style="padding:10px; border-bottom:1px solid #222; cursor:pointer;" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">ENTRY: $${a.buy}</span></div>`;
+                cards.innerHTML += `<div class="data-card" style="cursor:pointer;" onclick="sync(${i})"><div style="color:var(--gold)">$${a.buy.toFixed(2)}</div><div>${a.name}</div></div>`;
+            });
+        }
 
-        // DRAW VISUALS
-        for(let i=0; i<40; i++) {
-            volBars.innerHTML += `<div class="v-bar" style="flex:1; background:var(--gold); height:${Math.random()*100}%; opacity:0.6; border-radius:1px;"></div>`;
+        // Setup Visuals
+        if(volBars) {
+            for(let i=0; i<40; i++) {
+                volBars.innerHTML += `<div class="v-bar" style="flex:1; background:var(--gold); height:${Math.random()*100}%; opacity:0.6; border-radius:1px;"></div>`;
+            }
         }
         for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
         
-        // KICKSTART LOOPS
+        // Start Loops
         setInterval(updateLiquidChart, 40);
         setInterval(updatePrices, 180); 
-        setInterval(addTrade, 2000);
-        
-        // FORCE AUDIO PLAY ON FIRST SONG
-        sync(0);
-    }
-        }
-        for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
-        
-        // START LOOPS
-        setInterval(updateLiquidChart, 40);
-        setInterval(updatePrices, 180); 
-        setInterval(addTrade, 2000);
+        setInterval(addTrade, 3000); // Set to 3 seconds to keep ledger readable
         sync(0);
     }
 
-    // 3. TRANSFER LOGIC (10x REWARD)
+    // 4. CRYPTO LIQUIDITY DRAW (10x Math)
     function addTrade() {
         const flow = document.getElementById('order-flow');
+        if(!flow) return;
+
         _Q_COUNT++;
-        
         const tiers = [10, 20, 50, 100];
         const usdIn = tiers[Math.floor(Math.random() * tiers.length)];
         const coinOut = usdIn * 10; 
@@ -202,30 +200,39 @@ function startEngine() {
         const row = document.createElement('div');
         row.className = 'trade-row';
         row.style.color = "var(--gold)";
+        row.style.fontSize = "0.55rem";
         row.innerHTML = `<span>Q:${_Q_COUNT} TRANSFER</span> <span>$${usdIn} > ${coinOut} $MMMC</span>`;
         
         flow.prepend(row);
         if(flow.children.length > 5) flow.removeChild(flow.lastChild);
         
-        // UPDATE LIQUIDITY PROGRESS
-        document.getElementById('mkt-cap').innerText = `$${_TOTAL_LIQUIDITY_RAISED.toFixed(2)} / $1,000`;
+        // Update Market Progress toward $1k
+        const mktCap = document.getElementById('mkt-cap');
+        if(mktCap) mktCap.innerText = `$${_TOTAL_LIQUIDITY_RAISED.toFixed(2)} / $1,000`;
     }
 
-    // 4. PRICE & OSCILLATOR LOGIC
+    // 5. PRICE OSCILLATOR
     function updatePrices() {
         let fluc = (Math.random() * 0.00000010); 
         tokenValue = parseFloat((tokenValue + fluc).toFixed(8));
-        document.getElementById('coin-price').innerText = `$${tokenValue.toFixed(8)}`;
+        
+        const coinDisp = document.getElementById('coin-price');
+        if(coinDisp) coinDisp.innerText = `$${tokenValue.toFixed(8)}`;
         
         const a = assets[currentIdx];
-        document.getElementById('main-osc').innerText = `$${a.buy.toFixed(2)}`;
+        const mainOsc = document.getElementById('main-osc');
+        if(mainOsc) mainOsc.innerText = `$${a.buy.toFixed(2)}`;
         
         let coinReward = (a.buy * 10).toFixed(0);
-        document.getElementById('price-change').innerText = `REWARD: ${coinReward} $MMMC`;
+        const changeDisp = document.getElementById('price-change');
+        if(changeDisp) changeDisp.innerText = `REWARD: ${coinReward} $MMMC`;
     }
 
-    // 5. CHART ENGINE
+    // 6. KINETIC CHART
     function updateLiquidChart() {
+        const line = document.getElementById('kinetic-line');
+        if(!line) return;
+
         velocity += (Math.random() - 0.5) * 6; velocity *= 0.85; headY += velocity;
         if (headY < 50 || headY > 250) velocity *= -1.2;
         for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
@@ -236,24 +243,34 @@ function startEngine() {
             const yc = (points[i].y + points[i + 1].y) / 2;
             d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
         }
-        document.getElementById('kinetic-line').setAttribute('d', d);
-        document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
-        document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
+        line.setAttribute('d', d);
+        const head = document.getElementById('pulse-head');
+        if(head) {
+            head.setAttribute('cx', points[points.length-1].x);
+            head.setAttribute('cy', points[points.length-1].y);
+        }
     }
 
-    // 6. SYNC & NAVIGATION
+    // 7. SYNC ASSETS
     function sync(idx) {
-        currentIdx = idx; const a = assets[idx];
-        document.getElementById('radio-track').innerText = a.name;
-        document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
+        currentIdx = idx; 
+        const a = assets[idx];
+        const trackName = document.getElementById('radio-track');
+        const artFrame = document.getElementById('art-frame');
+        if(trackName) trackName.innerText = a.name;
+        if(artFrame) artFrame.style.backgroundImage = `url('${a.img}')`;
+        
         const audio = document.getElementById('main-audio-engine');
-        audio.src = a.audio; 
-        audio.play().catch(() => { console.log("User must click to play audio"); });
+        if(audio) {
+            audio.src = a.audio; 
+            audio.play().catch(() => { console.log("Waiting for user interaction..."); });
+        }
     }
 
     function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
     function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
     function playCurrent() { document.getElementById('main-audio-engine').play(); }
+</script>rrent() { document.getElementById('main-audio-engine').play(); }
 </script>
 </script>ocu
 </body>
