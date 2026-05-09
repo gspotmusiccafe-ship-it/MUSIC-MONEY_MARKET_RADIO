@@ -21,7 +21,6 @@
             position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
         }
 
-        /* PREMIUM GLASS BUTTONS */
         .glass-btn {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -35,12 +34,10 @@
             background: rgba(0, 255, 65, 0.1); box-shadow: 0 0 30px rgba(0,255,65,0.3);
         }
 
-        /* KINETIC PRICE BOX */
         .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
         .gain { color: var(--neon); }
         .loss { color: var(--red); }
 
-        /* LIQUID OSCILLATOR */
         .osc-box { height: 80px; background: #000; position: relative; border-y: 1px solid #222; overflow: hidden; }
     </style>
 </head>
@@ -91,12 +88,10 @@
     </div>
 
     <script>
-        // KINETIC PRICE & CHART ENGINE
         let basePrice = 5.84;
         let points = [];
         let headY = 40;
         let velocity = 0;
-        
         for (let i = 0; i <= 50; i++) points.push({ x: (400 / 50) * i, y: 40 });
 
         const priceMain = document.getElementById('price-main');
@@ -108,7 +103,6 @@
             if (headY < 10 || headY > 70) velocity *= -1.1;
             for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
             points[points.length - 1].y = headY;
-            
             let d = `M ${points[0].x} ${points[0].y}`;
             for (let i = 0; i < points.length - 1; i++) {
                 const xc = (points[i].x + points[i + 1].x) / 2;
@@ -124,10 +118,8 @@
             const bounce = (Math.random() * 0.6) - 0.25; 
             const currentPrice = basePrice + bounce;
             const pct = (((currentPrice - 5.00) / 5.00) * 100).toFixed(1);
-
             priceMain.innerText = "$" + currentPrice.toFixed(2);
             mbbpTicker.innerText = "$" + currentPrice.toFixed(2);
-            
             if (bounce >= 0) {
                 priceMain.className = "price-display gain";
                 priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
@@ -143,7 +135,6 @@
         setInterval(updateLiquidChart, 40);
         updateMarket();
 
-        // AUDIO HANDSHAKE
         const radio = document.getElementById('audio-engine');
         const playBtn = document.getElementById('play-btn');
         let isPlaying = false;
@@ -154,11 +145,12 @@
                 playBtn.innerText = "PLAY RADIO FEED";
                 isPlaying = false;
             } else {
+                // FORCE LOAD TO CLEAR CACHE ERRORS
+                radio.load(); 
                 radio.play().then(() => {
                     playBtn.innerText = "PAUSE RADIO FEED";
                     isPlaying = true;
                 }).catch(() => {
-                    radio.load();
                     radio.play();
                     playBtn.innerText = "PAUSE RADIO FEED";
                     isPlaying = true;
