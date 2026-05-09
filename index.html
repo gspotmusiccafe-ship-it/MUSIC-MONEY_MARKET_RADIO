@@ -16,18 +16,16 @@
             min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; 
         }
         
-        /* BLOOMBERG GOLD TRIM PORTAL */
         .portal-container { 
-            width: 100%; max-width: 410px; background: #000; 
-            border: 3px solid var(--gold); 
+            width: 100%; max-width: 410px; background: #000; border: 3px solid var(--gold); 
             position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
         }
 
-        /* HIGH-END GLASS BUTTONS */
+        /* PREMIUM GLASS BUTTONS */
         .glass-btn {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 215, 0, 0.5);
+            border: 1px solid rgba(255, 215, 0, 0.4);
             color: #fff; padding: 22px; border-radius: 2px;
             font-weight: 700; letter-spacing: 3px; transition: 0.3s;
             text-align: center; cursor: pointer;
@@ -38,14 +36,11 @@
             background: rgba(0, 255, 65, 0.15); box-shadow: 0 0 30px rgba(0,255,65,0.4);
         }
 
-        /* BOUNCING PRICE ENGINE */
-        .price-display { font-size: 5.5rem; line-height: 1; font-weight: 900; letter-spacing: -6px; transition: color 0.1s; }
+        .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
         .gain { color: var(--neon); }
         .loss { color: var(--red); }
 
-        /* KINETIC WAVE */
-        .osc-box { height: 70px; background: #000; position: relative; border-y: 1px solid #222; overflow: hidden; }
-        .wave-path { fill: none; stroke: var(--neon); stroke-width: 2.5; }
+        .osc-box { height: 70px; background: #000; position: relative; border-y: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -53,7 +48,7 @@
     <div class="portal-container">
         <div class="p-3 bg-black border-b border-[#222] flex justify-between text-[9px] font-bold">
             <span class="text-white tracking-widest">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse text-green-500 font-black">● SIGNAL: KINETIC_LOCKED</span>
+            <span class="animate-pulse text-green-500">● SIGNAL: KINETIC_LOCKED</span>
         </div>
 
         <div class="relative border-b border-[#222] aspect-square overflow-hidden bg-zinc-900">
@@ -67,9 +62,9 @@
 
         <div class="osc-box">
             <svg width="100%" height="100%" viewBox="0 0 400 70" preserveAspectRatio="none">
-                <path id="kinetic-wave" class="wave-path" d="M0,35 Q50,10 100,35 T200,35 T300,35 T400,35" />
+                <path id="wave-path" fill="none" stroke="#00ff41" stroke-width="2" d="M0,35 Q100,10 200,35 T400,35" />
             </svg>
-            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-ticker">$1.14</span></div>
+            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-val">$1.14</span></div>
         </div>
 
         <div class="grid grid-cols-3 bg-[#050505] border-b border-[#222] text-center text-[10px]">
@@ -98,7 +93,7 @@
             </div>
         </div>
 
-        <audio id="preview-audio" loop crossorigin="anonymous">
+        <audio id="preview-audio" loop crossorigin="anonymous" preload="auto">
             <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media&token=eb090533-5c20-410a-8149-6f917639967d" type="audio/mpeg">
         </audio>
 
@@ -108,15 +103,15 @@
     </div>
 
     <script>
-        // KINETIC ENGINE (Price Bouncing)
+        // KINETIC ENGINE (Price & Wave Dynamics)
         let basePrice = 5.84;
         const priceMain = document.getElementById('price-main');
         const priceChange = document.getElementById('price-change');
         const momentumStat = document.getElementById('momentum-stat');
-        const wave = document.getElementById('kinetic-wave');
+        const wave = document.getElementById('wave-path');
 
         function updateMarket() {
-            const bounce = (Math.random() * 0.8) - 0.35; // Erratic bouncing
+            const bounce = (Math.random() * 0.7) - 0.3; 
             const currentPrice = basePrice + bounce;
             const diff = currentPrice - 5.00;
             const pct = ((diff / 5.00) * 100).toFixed(1);
@@ -125,45 +120,4 @@
             
             if (bounce >= 0) {
                 priceMain.className = "price-display gain";
-                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
-                wave.setAttribute('d', `M0,35 Q50,${10 + Math.random()*20} 100,35 T200,35 T300,35 T400,35`);
-            } else {
-                priceMain.className = "price-display loss";
-                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
-                wave.setAttribute('d', `M0,35 Q50,${40 + Math.random()*20} 100,35 T200,35 T300,35 T400,35`);
-            }
-
-            momentumStat.innerText = Math.floor(Math.random() * 100) + "%";
-            setTimeout(updateMarket, Math.floor(Math.random() * 1200) + 300);
-        }
-        updateMarket();
-
-        // THE RADIO LOGIC
-        const audio = document.getElementById('preview-audio');
-        const playBtn = document.getElementById('play-btn');
-        let isPlaying = false;
-
-        function toggleAudio() {
-            if (isPlaying) {
-                audio.pause();
-                playBtn.innerText = "PLAY ASSET";
-                isPlaying = false;
-            } else {
-                // Ensure audio is loaded and then play
-                audio.load();
-                audio.play().then(() => {
-                    playBtn.innerText = "PAUSE ASSET";
-                    isPlaying = true;
-                }).catch(e => {
-                    // Force play if first attempt fails
-                    audio.play();
-                    playBtn.innerText = "PAUSE ASSET";
-                    isPlaying = true;
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+                priceChange
