@@ -7,134 +7,169 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-        :root { --neon: #00ff41; --gold: #ffd700; --emerald: #103d21; }
-        body { font-family: 'JetBrains+Mono', monospace; background-color: #050505; color: var(--neon); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; }
+        :root { --neon: #00ff41; --gold: #ffd700; --emerald: #062111; }
         
-        .portal-container { width: 100%; max-width: 420px; background: #000; border: 1px solid #333; position: relative; box-shadow: 0 0 60px rgba(0, 255, 65, 0.15); }
+        body { 
+            font-family: 'JetBrains+Mono', monospace; 
+            background-color: #000; 
+            color: var(--neon); 
+            display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; 
+        }
         
-        /* BLOOMBERG GRADIENT */
-        .market-depth-section { 
-            padding: 25px 20px; 
-            background: radial-gradient(circle at center, var(--emerald) 0%, #000 100%); 
-            text-align: center; 
-            border-top: 1px solid #1a4d2e;
+        .portal-container { 
+            width: 100%; max-width: 410px; background: #000; border: 1px solid #222; 
+            position: relative; box-shadow: 0 0 80px rgba(0, 255, 65, 0.1); 
         }
 
-        /* GLASS BUTTONS */
+        /* MOMENTUM SECTION - BLOOMBERG GRADIENT */
+        .market-monitor { 
+            padding: 20px; 
+            background: linear-gradient(180deg, #000 0%, var(--emerald) 50%, #000 100%);
+            border-top: 1px solid #111;
+        }
+
+        /* HIGH-END GLASS BUTTONS */
         .glass-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: #fff;
-            padding: 15px;
-            border-radius: 4px;
+            padding: 18px;
+            border-radius: 2px;
             font-weight: 700;
-            letter-spacing: 2px;
-            transition: 0.3s;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+            letter-spacing: 3px;
+            transition: 0.4s;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+        .glass-btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+        .glass-btn:hover::after { left: 100%; }
         .glass-btn:hover {
-            background: rgba(0, 255, 65, 0.1);
             border-color: var(--neon);
             color: var(--neon);
-            box-shadow: 0 0 15px rgba(0,255,65,0.2);
+            background: rgba(0, 255, 65, 0.05);
+            box-shadow: 0 0 20px rgba(0,255,65,0.2);
         }
 
-        /* OSCILLATION DYNAMICS */
-        .momentum-bar { height: 4px; background: #111; position: relative; overflow: hidden; border-radius: 2px; }
-        .momentum-fill { height: 100%; background: var(--neon); width: 0%; transition: width 0.8s ease-in-out; shadow: 0 0 10px var(--neon); }
+        /* IMPROVED OSCILLATION */
+        .momentum-track { height: 2px; background: #080808; position: relative; margin: 10px 0; }
+        .momentum-glow { 
+            height: 100%; background: var(--neon); width: 0%; 
+            transition: width 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 0 10px var(--neon);
+        }
     </style>
 </head>
 <body>
 
     <div class="portal-container">
-        <div class="p-3 bg-[#111] border-b border-gray-800 flex justify-between text-[9px]">
+        <div class="p-3 bg-[#0a0a0a] border-b border-gray-900 flex justify-between text-[8px] tracking-widest font-bold">
             <span class="text-white">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse">● SIGNAL: HIGH_STABILITY</span>
+            <span class="animate-pulse">SIGNAL: 100% SECURE</span>
         </div>
 
-        <div class="relative border-b border-gray-800">
-            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" class="w-full grayscale-[20%] block">
-            <div class="absolute bottom-4 left-4 bg-black/90 p-3 border-l-4 border-yellow-500">
-                <h1 class="text-white text-xl font-bold leading-none">SUPERFLY</h1>
-                <p class="text-[9px] text-gray-500 mt-1 tracking-widest">ATFY-9C4D7 // NATIVE ASSET</p>
-            </div>
-        </div>
-
-        <div class="bg-black p-4 space-y-4 border-b border-gray-900">
-            <div>
-                <div class="flex justify-between text-[8px] mb-1">
-                    <span>MOMENTUM OSCILLATOR</span>
-                    <span id="mbbp-val">0%</span>
-                </div>
-                <div class="momentum-bar"><div id="mbbp-fill" class="momentum-fill"></div></div>
-            </div>
+        <div class="relative border-b border-gray-900">
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" 
+                 class="w-full grayscale-[10%] opacity-90 block" id="main-art">
             
-            <svg class="w-full h-10 stroke-[#00ff41] opacity-60" viewBox="0 0 400 40">
-                <path d="M0,20 L40,20 L50,5 L70,35 L80,20 L120,20 L130,10 L145,30 L160,20 L400,20" fill="none" stroke-width="1.5">
-                    <animate attributeName="stroke-dasharray" from="0,1000" to="1000,0" dur="3s" repeatCount="indefinite" />
+            <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
+                <h1 class="text-white text-2xl font-black leading-none italic">SUPERFLY</h1>
+                <p class="text-[9px] text-gray-500 mt-1 tracking-[0.3em]">ATFY-9C4D7 // NATIVE ASSET</p>
+            </div>
+        </div>
+
+        <div class="bg-black p-5 border-b border-gray-900">
+            <div class="flex justify-between text-[8px] mb-2 font-bold opacity-70">
+                <span>MOMENTUM OSCILLATOR</span>
+                <span id="mbbp-pct" class="text-white">0%</span>
+            </div>
+            <div class="momentum-track"><div id="mbbp-glow" class="momentum-glow"></div></div>
+            
+            <svg class="w-full h-12 mt-4 opacity-40" viewBox="0 0 400 40">
+                <path d="M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20" 
+                      fill="none" stroke="#00ff41" stroke-width="1">
+                    <animate attributeName="d" 
+                             values="M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20;
+                                     M0,20 Q20,35 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20;
+                                     M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20" 
+                             dur="2s" repeatCount="indefinite" />
                 </path>
             </svg>
         </div>
 
-        <div class="grid grid-cols-3 bg-[#0a0a0a] border-b border-gray-900">
-            <div class="p-3 border-r border-gray-900 text-center">
-                <p class="text-[8px] text-gray-500">BUY-IN</p>
-                <p class="text-xs font-bold text-white">$5.00</p>
+        <div class="grid grid-cols-3 bg-[#050505] border-b border-gray-900 text-center text-[9px]">
+            <div class="p-4 border-r border-gray-900">
+                <p class="text-gray-600 mb-1">BUY-IN</p>
+                <p class="text-white font-bold text-sm">$5.00</p>
             </div>
-            <div class="p-3 border-r border-gray-900 text-center">
-                <p class="text-[8px] text-gray-500">MBBP</p>
-                <p class="text-xs font-bold text-white tracking-widest" id="mbbp-static">READY</p>
+            <div class="p-4 border-r border-gray-900">
+                <p class="text-gray-600 mb-1">MBBP</p>
+                <p class="text-white font-bold text-sm">READY</p>
             </div>
-            <div class="p-3 text-center">
-                <p class="text-[8px] text-gray-500">SPLIT</p>
-                <p class="text-xs font-bold text-white">80/20</p>
-            </div>
-        </div>
-
-        <div class="market-depth-section">
-            <p class="text-[10px] text-gray-400 tracking-widest mb-2">LIVE OFFER PRICE</p>
-            <div class="text-5xl font-black text-white tracking-tighter mb-8">$5.84 <span class="text-xs text-green-400 align-top">+13.2%</span></div>
-
-            <div class="flex flex-col gap-3">
-                <button onclick="toggleAudio()" id="play-btn" class="glass-btn w-full">PLAY AUDIO</button>
-                <a href="https://aitify-music-stream.replit.app/" class="glass-btn w-full">TRADE / CREATE ACCOUNT</a>
+            <div class="p-4">
+                <p class="text-gray-600 mb-1">SPLIT</p>
+                <p class="text-white font-bold text-sm">80/20</p>
             </div>
         </div>
 
-        <audio id="preview-audio" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media"></audio>
+        <div class="market-monitor">
+            <p class="text-[10px] text-gray-500 tracking-[0.4em] mb-3">LIVE OFFER PRICE</p>
+            <div class="text-6xl font-black text-white tracking-tighter mb-10">
+                $5.84 <span class="text-xs text-green-400 align-top ml-1 font-normal">+13.2%</span>
+            </div>
 
-        <div class="p-3 bg-black text-center text-[8px] text-gray-600 border-t border-gray-900">
-            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
+            <div class="flex flex-col gap-4">
+                <button onclick="toggleAudio()" id="play-btn" class="glass-btn">PLAY AUDIO</button>
+                <a href="https://aitify-music-stream.replit.app/" class="glass-btn">TRADE / CREATE ACCOUNT</a>
+            </div>
+        </div>
+
+        <audio id="preview-audio" loop preload="auto">
+            <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media" type="audio/mpeg">
+        </audio>
+
+        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-gray-900">
+            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC PROTECTED
         </div>
     </div>
 
     <script>
-        // AUDIO LOGIC
         const audio = document.getElementById('preview-audio');
         const playBtn = document.getElementById('play-btn');
         let isPlaying = false;
 
         function toggleAudio() {
-            if (isPlaying) { audio.pause(); playBtn.innerText = "PLAY AUDIO"; }
-            else { audio.play(); playBtn.innerText = "PAUSE AUDIO"; }
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerText = "PLAY AUDIO";
+            } else {
+                audio.play().catch(e => console.log("User Interaction Required"));
+                playBtn.innerText = "PAUSE AUDIO";
+            }
             isPlaying = !isPlaying;
         }
 
-        // SPORADIC MBBP OSCILLATION (0% to 100%)
-        const mbbpFill = document.getElementById('mbbp-fill');
-        const mbbpVal = document.getElementById('mbbp-val');
+        // Sporadic MBBP Oscillation (0% to 100%)
+        const glow = document.getElementById('mbbp-glow');
+        const pct = document.getElementById('mbbp-pct');
         
-        function oscillate() {
+        function updateMomentum() {
             const target = Math.floor(Math.random() * 101);
-            mbbpFill.style.width = target + "%";
-            mbbpVal.innerText = target + "%";
+            glow.style.width = target + "%";
+            pct.innerText = target + "%";
             
-            // Random timing for "sporadic" feel: 1s to 3s
-            const nextTick = Math.floor(Math.random() * 2000) + 1000;
-            setTimeout(oscillate, nextTick);
+            // Random jitter timing
+            const timing = Math.floor(Math.random() * 1500) + 500;
+            setTimeout(updateMomentum, timing);
         }
-        oscillate();
+        updateMomentum();
     </script>
 </body>
 </html>
