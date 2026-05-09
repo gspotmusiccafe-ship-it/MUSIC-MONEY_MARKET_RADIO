@@ -16,11 +16,14 @@
             min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; 
         }
         
+        /* BLOOMBERG GOLD TRIM PORTAL */
         .portal-container { 
-            width: 100%; max-width: 410px; background: #000; border: 3px solid var(--gold); 
+            width: 100%; max-width: 410px; background: #000; 
+            border: 3px solid var(--gold); 
             position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
         }
 
+        /* HIGH-END GLASS BUTTONS */
         .glass-btn {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
@@ -35,11 +38,14 @@
             background: rgba(0, 255, 65, 0.15); box-shadow: 0 0 30px rgba(0,255,65,0.4);
         }
 
-        .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
+        /* BOUNCING PRICE ENGINE */
+        .price-display { font-size: 5.5rem; line-height: 1; font-weight: 900; letter-spacing: -6px; transition: color 0.1s; }
         .gain { color: var(--neon); }
         .loss { color: var(--red); }
 
-        .osc-box { height: 70px; background: #000; position: relative; border-y: 1px solid #222; }
+        /* KINETIC WAVE */
+        .osc-box { height: 70px; background: #000; position: relative; border-y: 1px solid #222; overflow: hidden; }
+        .wave-path { fill: none; stroke: var(--neon); stroke-width: 2.5; }
     </style>
 </head>
 <body>
@@ -47,10 +53,10 @@
     <div class="portal-container">
         <div class="p-3 bg-black border-b border-[#222] flex justify-between text-[9px] font-bold">
             <span class="text-white tracking-widest">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse text-green-500">● SIGNAL: KINETIC_LOCKED</span>
+            <span class="animate-pulse text-green-500 font-black">● SIGNAL: KINETIC_LOCKED</span>
         </div>
 
-        <div class="relative border-b border-[#222] aspect-square overflow-hidden">
+        <div class="relative border-b border-[#222] aspect-square overflow-hidden bg-zinc-900">
             <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" 
                  class="w-full h-full object-cover block">
             <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
@@ -61,14 +67,9 @@
 
         <div class="osc-box">
             <svg width="100%" height="100%" viewBox="0 0 400 70" preserveAspectRatio="none">
-                <path fill="none" stroke="#00ff41" stroke-width="2">
-                    <animate attributeName="d" dur="1s" repeatCount="indefinite"
-                        values="M0,35 Q50,10 100,35 T200,35 T300,35 T400,35;
-                                M0,35 Q50,60 100,35 T200,35 T300,35 T400,35;
-                                M0,35 Q50,10 100,35 T200,35 T300,35 T400,35" />
-                </path>
+                <path id="kinetic-wave" class="wave-path" d="M0,35 Q50,10 100,35 T200,35 T300,35 T400,35" />
             </svg>
-            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP: <span id="mbbp-val">$1.14</span></div>
+            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-ticker">$1.14</span></div>
         </div>
 
         <div class="grid grid-cols-3 bg-[#050505] border-b border-[#222] text-center text-[10px]">
@@ -93,4 +94,76 @@
 
             <div class="flex flex-col gap-4 mt-10">
                 <div onclick="toggleAudio()" id="play-btn" class="glass-btn">PLAY ASSET</div>
-                <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS
+                <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS MARKET</a>
+            </div>
+        </div>
+
+        <audio id="preview-audio" loop crossorigin="anonymous">
+            <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media&token=eb090533-5c20-410a-8149-6f917639967d" type="audio/mpeg">
+        </audio>
+
+        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-[#222]">
+            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
+        </div>
+    </div>
+
+    <script>
+        // KINETIC ENGINE (Price Bouncing)
+        let basePrice = 5.84;
+        const priceMain = document.getElementById('price-main');
+        const priceChange = document.getElementById('price-change');
+        const momentumStat = document.getElementById('momentum-stat');
+        const wave = document.getElementById('kinetic-wave');
+
+        function updateMarket() {
+            const bounce = (Math.random() * 0.8) - 0.35; // Erratic bouncing
+            const currentPrice = basePrice + bounce;
+            const diff = currentPrice - 5.00;
+            const pct = ((diff / 5.00) * 100).toFixed(1);
+
+            priceMain.innerText = "$" + currentPrice.toFixed(2);
+            
+            if (bounce >= 0) {
+                priceMain.className = "price-display gain";
+                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
+                wave.setAttribute('d', `M0,35 Q50,${10 + Math.random()*20} 100,35 T200,35 T300,35 T400,35`);
+            } else {
+                priceMain.className = "price-display loss";
+                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
+                wave.setAttribute('d', `M0,35 Q50,${40 + Math.random()*20} 100,35 T200,35 T300,35 T400,35`);
+            }
+
+            momentumStat.innerText = Math.floor(Math.random() * 100) + "%";
+            setTimeout(updateMarket, Math.floor(Math.random() * 1200) + 300);
+        }
+        updateMarket();
+
+        // THE RADIO LOGIC
+        const audio = document.getElementById('preview-audio');
+        const playBtn = document.getElementById('play-btn');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerText = "PLAY ASSET";
+                isPlaying = false;
+            } else {
+                // Ensure audio is loaded and then play
+                audio.load();
+                audio.play().then(() => {
+                    playBtn.innerText = "PAUSE ASSET";
+                    isPlaying = true;
+                }).catch(e => {
+                    // Force play if first attempt fails
+                    audio.play();
+                    playBtn.innerText = "PAUSE ASSET";
+                    isPlaying = true;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
