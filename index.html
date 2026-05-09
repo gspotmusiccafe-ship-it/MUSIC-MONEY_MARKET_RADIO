@@ -3,66 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONGSHARE OPPORTUNITY | MUSIC MONEY MARKET</title>
+    <title>AITITRADE | SINGLE PORTAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #00ff41; --gold: #ffd700; --emerald: #103d21; }
         body { font-family: 'JetBrains+Mono', monospace; background-color: #050505; color: var(--neon); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; }
         
-        .portal-container { width: 100%; max-width: 420px; background: #000; border: 1px solid #333; position: relative; box-shadow: 0 0 50px rgba(0, 255, 65, 0.1); }
-        .header-strip { background: #111; padding: 10px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 10px; }
+        .portal-container { width: 100%; max-width: 420px; background: #000; border: 1px solid #333; position: relative; box-shadow: 0 0 60px rgba(0, 255, 65, 0.15); }
         
         /* BLOOMBERG GRADIENT */
-        .price-section { 
+        .market-depth-section { 
             padding: 25px 20px; 
             background: radial-gradient(circle at center, var(--emerald) 0%, #000 100%); 
             text-align: center; 
             border-top: 1px solid #1a4d2e;
         }
 
-        /* LIVE ORDER BOOK / QUEUE */
-        .order-book { background: #080808; border-y: 1px solid #222; font-size: 9px; padding: 10px; height: 80px; overflow: hidden; position: relative; }
-        .order-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #111; opacity: 0.7; }
-        .order-active { color: #fff; opacity: 1; font-weight: bold; animation: blink 1.5s infinite; }
-        @keyframes blink { 50% { opacity: 0.5; } }
+        /* GLASS BUTTONS */
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 15px;
+            border-radius: 4px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            transition: 0.3s;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+        .glass-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--neon);
+            color: var(--neon);
+            box-shadow: 0 0 15px rgba(0,255,65,0.2);
+        }
 
-        /* THE OSCILLATOR */
-        .oscillator-svg { width: 100%; height: 40px; stroke: var(--neon); stroke-width: 1.5; fill: none; opacity: 0.6; }
-
-        .buy-btn { background: #00d632; color: white; padding: 18px; width: 100%; display: block; font-weight: 900; font-size: 1.2rem; border-radius: 4px; border-bottom: 4px solid #008000; text-align: center; }
-        .secondary-btn { border: 1px solid #444; color: #888; padding: 10px; font-size: 9px; flex: 1; text-align: center; cursor: pointer; }
+        /* OSCILLATION DYNAMICS */
+        .momentum-bar { height: 4px; background: #111; position: relative; overflow: hidden; border-radius: 2px; }
+        .momentum-fill { height: 100%; background: var(--neon); width: 0%; transition: width 0.8s ease-in-out; shadow: 0 0 10px var(--neon); }
     </style>
 </head>
 <body>
 
     <div class="portal-container">
-        <div class="header-strip">
+        <div class="p-3 bg-[#111] border-b border-gray-800 flex justify-between text-[9px]">
             <span class="text-white">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse">● SIGNAL: STABLE</span>
+            <span class="animate-pulse">● SIGNAL: HIGH_STABILITY</span>
         </div>
 
         <div class="relative border-b border-gray-800">
-            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" class="w-full grayscale-[20%] block">
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media" class="w-full grayscale-[20%] block">
             <div class="absolute bottom-4 left-4 bg-black/90 p-3 border-l-4 border-yellow-500">
                 <h1 class="text-white text-xl font-bold leading-none">SUPERFLY</h1>
                 <p class="text-[9px] text-gray-500 mt-1 tracking-widest">ATFY-9C4D7 // NATIVE ASSET</p>
             </div>
         </div>
 
-        <div class="bg-black py-1 px-4 border-b border-gray-900">
-            <svg class="oscillator-svg" viewBox="0 0 400 40">
-                <path d="M0,20 L40,20 L50,5 L70,35 L80,20 L120,20 L130,10 L145,30 L160,20 L400,20" stroke="#00ff41" stroke-dasharray="1000" stroke-dashoffset="1000">
-                    <animate attributeName="stroke-dashoffset" from="1000" to="0" dur="5s" repeatCount="indefinite" />
+        <div class="bg-black p-4 space-y-4 border-b border-gray-900">
+            <div>
+                <div class="flex justify-between text-[8px] mb-1">
+                    <span>MOMENTUM OSCILLATOR</span>
+                    <span id="mbbp-val">0%</span>
+                </div>
+                <div class="momentum-bar"><div id="mbbp-fill" class="momentum-fill"></div></div>
+            </div>
+            
+            <svg class="w-full h-10 stroke-[#00ff41] opacity-60" viewBox="0 0 400 40">
+                <path d="M0,20 L40,20 L50,5 L70,35 L80,20 L120,20 L130,10 L145,30 L160,20 L400,20" fill="none" stroke-width="1.5">
+                    <animate attributeName="stroke-dasharray" from="0,1000" to="1000,0" dur="3s" repeatCount="indefinite" />
                 </path>
             </svg>
-        </div>
-
-        <div class="order-book" id="order-book">
-            <div class="order-row order-active"><span>LOCKED: 0.165% UNIT</span> <span class="text-yellow-500">PENDING...</span></div>
-            <div class="order-row"><span>QUEUE ID: #AT-977</span> <span>$5.84</span></div>
-            <div class="order-row"><span>SETTLEMENT BLOCK: 4022</span> <span>ACTIVE</span></div>
-            <div class="order-row text-gray-700"><span>MARKET MAKER: KINETIC_VAULT</span> <span>--</span></div>
         </div>
 
         <div class="grid grid-cols-3 bg-[#0a0a0a] border-b border-gray-900">
@@ -72,7 +84,7 @@
             </div>
             <div class="p-3 border-r border-gray-900 text-center">
                 <p class="text-[8px] text-gray-500">MBBP</p>
-                <p class="text-xs font-bold text-white">$6.50</p>
+                <p class="text-xs font-bold text-white tracking-widest" id="mbbp-static">READY</p>
             </div>
             <div class="p-3 text-center">
                 <p class="text-[8px] text-gray-500">SPLIT</p>
@@ -80,49 +92,49 @@
             </div>
         </div>
 
-        <div class="price-section">
+        <div class="market-depth-section">
             <p class="text-[10px] text-gray-400 tracking-widest mb-2">LIVE OFFER PRICE</p>
-            <div class="text-5xl font-black text-white tracking-tighter mb-8">$5.84 <span class="text-xs text-emerald-400 align-top">+13.2%</span></div>
+            <div class="text-5xl font-black text-white tracking-tighter mb-8">$5.84 <span class="text-xs text-green-400 align-top">+13.2%</span></div>
 
-            <a href="https://cash.app/$AITITRADEBROKERAGE" class="buy-btn mb-4">EXECUTE TRADE</a>
-
-            <div class="flex gap-2">
-                <div class="secondary-btn" id="audio-btn" onclick="toggleAudio()">AUDIO PREVIEW</div>
-                <a href="https://aitify-music-stream.replit.app/" class="secondary-btn">TRUST VAULT</a>
+            <div class="flex flex-col gap-3">
+                <button onclick="toggleAudio()" id="play-btn" class="glass-btn w-full">PLAY AUDIO</button>
+                <a href="https://aitify-music-stream.replit.app/" class="glass-btn w-full">TRADE / CREATE ACCOUNT</a>
             </div>
         </div>
 
-        <audio id="preview-audio" src="https://firebasestorage.googleapis.com/v0/b/aitify-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media"></audio>
+        <audio id="preview-audio" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media"></audio>
 
-        <div class="p-3 bg-black text-center text-[8px] text-gray-600">
-            AITITRADE SOVEREIGN TRUST // PROTECTED BY KINETIC LOGIC
+        <div class="p-3 bg-black text-center text-[8px] text-gray-600 border-t border-gray-900">
+            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
         </div>
     </div>
 
     <script>
-        let isPlaying = false;
+        // AUDIO LOGIC
         const audio = document.getElementById('preview-audio');
-        const btn = document.getElementById('audio-btn');
+        const playBtn = document.getElementById('play-btn');
+        let isPlaying = false;
 
         function toggleAudio() {
-            if (isPlaying) {
-                audio.pause();
-                btn.innerText = "AUDIO PREVIEW";
-                isPlaying = false;
-            } else {
-                audio.play();
-                btn.innerText = "PAUSE AUDIO";
-                isPlaying = true;
-            }
+            if (isPlaying) { audio.pause(); playBtn.innerText = "PLAY AUDIO"; }
+            else { audio.play(); playBtn.innerText = "PAUSE AUDIO"; }
+            isPlaying = !isPlaying;
         }
 
-        // Simulating Order Book Activity
-        setInterval(() => {
-            const rows = document.querySelectorAll('.order-row');
-            rows.forEach(row => row.classList.remove('order-active'));
-            const random = Math.floor(Math.random() * rows.length);
-            rows[random].classList.add('order-active');
-        }, 2000);
+        // SPORADIC MBBP OSCILLATION (0% to 100%)
+        const mbbpFill = document.getElementById('mbbp-fill');
+        const mbbpVal = document.getElementById('mbbp-val');
+        
+        function oscillate() {
+            const target = Math.floor(Math.random() * 101);
+            mbbpFill.style.width = target + "%";
+            mbbpVal.innerText = target + "%";
+            
+            // Random timing for "sporadic" feel: 1s to 3s
+            const nextTick = Math.floor(Math.random() * 2000) + 1000;
+            setTimeout(oscillate, nextTick);
+        }
+        oscillate();
     </script>
 </body>
 </html>
