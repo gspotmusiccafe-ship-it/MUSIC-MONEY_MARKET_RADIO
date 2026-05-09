@@ -22,9 +22,9 @@
         }
 
         .glass-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 215, 0, 0.4);
+            border: 1px solid rgba(255, 215, 0, 0.5);
             color: #fff; padding: 22px; border-radius: 2px;
             font-weight: 700; letter-spacing: 3px; transition: 0.3s;
             text-align: center; cursor: pointer;
@@ -35,14 +35,11 @@
             background: rgba(0, 255, 65, 0.15); box-shadow: 0 0 30px rgba(0,255,65,0.4);
         }
 
-        /* BOUNCING PRICE ENGINE */
         .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
-        .gain { color: var(--neon); text-shadow: 0 0 20px rgba(0,255,65,0.3); }
-        .loss { color: var(--red); text-shadow: 0 0 20px rgba(255,49,49,0.3); }
+        .gain { color: var(--neon); }
+        .loss { color: var(--red); }
 
-        /* KINETIC WAVE */
         .osc-box { height: 70px; background: #000; position: relative; border-y: 1px solid #222; }
-        .wave-path { fill: none; stroke: var(--neon); stroke-width: 2; }
     </style>
 </head>
 <body>
@@ -55,7 +52,7 @@
 
         <div class="relative border-b border-[#222] aspect-square overflow-hidden">
             <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" 
-                 class="w-full h-full object-cover block opacity-90">
+                 class="w-full h-full object-cover block">
             <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
                 <h1 class="text-white text-2xl font-black italic">SUPERFLY</h1>
                 <p class="text-[9px] text-gray-500 mt-1 tracking-[0.3em]">ATFY-9C4D7 // NATIVE ASSET</p>
@@ -64,14 +61,14 @@
 
         <div class="osc-box">
             <svg width="100%" height="100%" viewBox="0 0 400 70" preserveAspectRatio="none">
-                <path id="kinetic-wave" class="wave-path" d="M0,35 Q50,10 100,35 T200,35 T300,35 T400,35">
-                    <animate attributeName="d" dur="2s" repeatCount="indefinite"
+                <path fill="none" stroke="#00ff41" stroke-width="2">
+                    <animate attributeName="d" dur="1s" repeatCount="indefinite"
                         values="M0,35 Q50,10 100,35 T200,35 T300,35 T400,35;
                                 M0,35 Q50,60 100,35 T200,35 T300,35 T400,35;
                                 M0,35 Q50,10 100,35 T200,35 T300,35 T400,35" />
                 </path>
             </svg>
-            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-val">$1.14</span></div>
+            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP: <span id="mbbp-val">$1.14</span></div>
         </div>
 
         <div class="grid grid-cols-3 bg-[#050505] border-b border-[#222] text-center text-[10px]">
@@ -95,70 +92,5 @@
             <div id="price-change" class="text-sm font-bold tracking-widest text-green-500">▲ +0.11 (+1.9%)</div>
 
             <div class="flex flex-col gap-4 mt-10">
-                <div onclick="toggleAudio()" id="play-btn" class="glass-btn">PLAY AUDIO FEED</div>
-                <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS MARKET</a>
-            </div>
-        </div>
-
-        <audio id="preview-audio" loop crossorigin="anonymous">
-            <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media&token=eb090533-5c20-410a-8149-6f917639967d" type="audio/mpeg">
-        </audio>
-
-        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-[#222]">
-            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
-        </div>
-    </div>
-
-    <script>
-        // KINETIC PRICE ENGINE
-        let basePrice = 5.84;
-        const priceMain = document.getElementById('price-main');
-        const priceChange = document.getElementById('price-change');
-        const momentumStat = document.getElementById('momentum-stat');
-
-        function updateMarket() {
-            const bounce = (Math.random() * 0.5) - 0.2; 
-            const currentPrice = basePrice + bounce;
-            const diff = currentPrice - 5.00;
-            const pct = ((diff / 5.00) * 100).toFixed(1);
-
-            priceMain.innerText = "$" + currentPrice.toFixed(2);
-            
-            if (bounce >= 0) {
-                priceMain.className = "price-display gain";
-                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
-            } else {
-                priceMain.className = "price-display loss";
-                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
-            }
-
-            momentumStat.innerText = Math.floor(Math.random() * 100) + "%";
-            setTimeout(updateMarket, Math.floor(Math.random() * 1500) + 500);
-        }
-        updateMarket();
-
-        // RADIO LOGIC
-        const audio = document.getElementById('preview-audio');
-        const playBtn = document.getElementById('play-btn');
-        let isPlaying = false;
-
-        function toggleAudio() {
-            if (isPlaying) {
-                audio.pause();
-                playBtn.innerText = "PLAY AUDIO FEED";
-                isPlaying = false;
-            } else {
-                audio.play().then(() => {
-                    playBtn.innerText = "PAUSE AUDIO FEED";
-                    isPlaying = true;
-                }).catch(e => {
-                    console.log("Audio Blocked:", e);
-                    alert("INTERACTION REQUIRED: Click the button again to start the radio stream.");
-                });
-            }
-        }
-    </script>
-</body>
-</html>
+                <div onclick="toggleAudio()" id="play-btn" class="glass-btn">PLAY ASSET</div>
+                <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS
