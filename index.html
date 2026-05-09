@@ -84,7 +84,7 @@
         <div class="radio-controls">
             <div id="radio-track" style="color:var(--gold); font-size: 0.8rem;">--</div>
             <div class="oscillator-main" id="main-osc">$0.00</div>
-            <a href="https://aitify-music-stream.replit.app/" target="_blank" class="buy-sell-master">BUY SONGSHARE VIA CASH APP</a>
+            <a href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-sell-master">BUY SONGSHARE VIA CASH APP</a>
             <div class="btn-row">
                 <button class="nav" onclick="prevAsset()">⏮</button>
                 <button class="nav" onclick="playCurrent()">▶</button>
@@ -209,20 +209,13 @@
         document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
     }
 
-   function updateMarket() {
-            const bounce = (Math.random() * 0.6) - 0.25; 
-            const currentPrice = basePrice + bounce;
-            const pct = (((currentPrice - 5.00) / 5.00) * 100).toFixed(1);
-            priceMain.innerText = "$" + currentPrice.toFixed(2);
-            mbbpTicker.innerText = "$" + currentPrice.toFixed(2);
-            if (bounce >= 0) {
-                priceMain.className = "price-display gain";
-                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
-            } else {
-                priceMain.className = "price-display loss";
-                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
-                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
+    function sync(idx) {
+        currentIdx = idx; const a = assets[idx];
+        document.getElementById('radio-track').innerText = a.name;
+        document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
+        document.getElementById('main-osc').innerText = `$${a.buy.toFixed(2)}`;
+        const audio = document.getElementById('main-audio-engine');
+        audio.src = a.audio; audio.play().catch(() => {});
     }
 
     function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
