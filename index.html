@@ -11,65 +11,67 @@
         
         body { 
             font-family: 'JetBrains+Mono', monospace; 
-            background-color: #000; color: var(--neon); 
+            background: radial-gradient(circle at center, #0a3d1d 0%, #000 100%);
+            color: var(--neon); 
             display: flex; justify-content: center; align-items: center; 
             min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; 
         }
         
+        /* BLOOMBERG GOLD TRIM TERMINAL */
         .portal-container { 
-            width: 100%; max-width: 410px; background: #000; border: 1px solid #222; 
-            position: relative; box-shadow: 0 0 80px rgba(0, 255, 65, 0.1); 
+            width: 100%; max-width: 410px; background: #000; 
+            border: 3px solid var(--gold); 
+            position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
         }
 
         .market-monitor { 
             padding: 25px; 
-            background: linear-gradient(180deg, #000 0%, var(--emerald) 50%, #000 100%);
-            border-top: 1px solid #111;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 0%, var(--emerald) 100%);
         }
 
-        /* HIGH-END GLASS BUTTONS */
+        /* PREMIUM GLASS BUTTONS */
         .glass-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
             color: #fff;
             padding: 20px;
-            border-radius: 4px;
+            border-radius: 2px;
             font-weight: 700;
             letter-spacing: 3px;
-            transition: 0.4s;
+            transition: 0.3s;
             text-align: center;
             cursor: pointer;
-            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
         }
         .glass-btn:hover {
             border-color: var(--neon);
             color: var(--neon);
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 25px rgba(0,255,65,0.3);
-            transform: translateY(-1px);
+            background: rgba(0, 255, 65, 0.15);
+            box-shadow: 0 0 30px rgba(0,255,65,0.4);
         }
 
-        .momentum-track { height: 2px; background: #080808; position: relative; margin: 10px 0; }
+        /* KINETIC MOMENTUM OSCILLATOR */
+        .momentum-track { height: 4px; background: #080808; position: relative; margin: 15px 0; border: 1px solid #222; }
         .momentum-glow { 
             height: 100%; background: var(--neon); width: 0%; 
-            transition: width 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-            box-shadow: 0 0 15px var(--neon);
+            transition: width 0.3s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            box-shadow: 0 0 20px var(--neon);
         }
     </style>
 </head>
 <body>
 
     <div class="portal-container">
-        <div class="p-3 bg-[#0a0a0a] border-b border-gray-900 flex justify-between text-[8px] font-bold">
+        <div class="p-3 bg-black border-b border-[#333] flex justify-between text-[9px] font-bold">
             <span class="text-white tracking-widest">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse">SIGNAL: SECURE</span>
+            <span class="animate-pulse text-green-500">SIGNAL: 100% SECURE</span>
         </div>
 
-        <div class="relative border-b border-gray-900 bg-zinc-900 aspect-square overflow-hidden">
+        <div class="relative border-b border-[#333] bg-zinc-900 aspect-square overflow-hidden">
             <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" 
-                 class="w-full h-full object-cover block opacity-90" id="main-art">
+                 class="w-full h-full object-cover block opacity-80" id="main-art">
             
             <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
                 <h1 class="text-white text-2xl font-black italic">SUPERFLY</h1>
@@ -77,33 +79,33 @@
             </div>
         </div>
 
-        <div class="bg-black p-5 border-b border-gray-900">
-            <div class="flex justify-between text-[8px] mb-2 font-bold opacity-70">
-                <span>MOMENTUM OSCILLATOR</span>
+        <div class="bg-black p-5 border-b border-[#333]">
+            <div class="flex justify-between text-[9px] mb-2 font-bold opacity-70">
+                <span>MOMENTUM MONITOR</span>
                 <span id="mbbp-pct" class="text-white">0%</span>
             </div>
             <div class="momentum-track"><div id="mbbp-glow" class="momentum-glow"></div></div>
             
-            <svg class="w-full h-12 mt-4 opacity-40" viewBox="0 0 400 40">
+            <svg class="w-full h-12 mt-4 opacity-50" viewBox="0 0 400 40">
                 <path d="M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20" 
-                      fill="none" stroke="#00ff41" stroke-width="1.5">
+                      fill="none" stroke="#00ff41" stroke-width="2">
                     <animate attributeName="d" 
                              values="M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20;
                                      M0,20 Q20,35 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20;
                                      M0,20 Q20,5 40,20 T80,20 T120,20 T160,20 T200,20 T240,20 T280,20 T320,20 T360,20 T400,20" 
-                             dur="1.5s" repeatCount="indefinite" />
+                             dur="1s" repeatCount="indefinite" />
                 </path>
             </svg>
         </div>
 
-        <div class="grid grid-cols-3 bg-[#050505] border-b border-gray-900 text-center text-[9px]">
-            <div class="p-4 border-r border-gray-900">
+        <div class="grid grid-cols-3 bg-[#050505] border-b border-[#333] text-center text-[10px]">
+            <div class="p-4 border-r border-[#333]">
                 <p class="text-gray-600 mb-1">BUY-IN</p>
                 <p class="text-white font-bold text-sm">$5.00</p>
             </div>
-            <div class="p-4 border-r border-gray-900">
+            <div class="p-4 border-r border-[#333]">
                 <p class="text-gray-600 mb-1">MBBP</p>
-                <p class="text-white font-bold text-sm">READY</p>
+                <p class="text-white font-bold text-sm" id="mbbp-static">READY</p>
             </div>
             <div class="p-4">
                 <p class="text-gray-600 mb-1">SPLIT</p>
@@ -127,7 +129,7 @@
             <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media&token=eb090533-5c20-410a-8149-6f917639967d" type="audio/mpeg">
         </audio>
 
-        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-gray-900">
+        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-[#333]">
             AITITRADE SOVEREIGN TRUST // KINETIC LOGIC PROTECTED
         </div>
     </div>
@@ -142,16 +144,29 @@
                 audio.pause();
                 playBtn.innerText = "PLAY AUDIO";
             } else {
-                audio.play().catch(e => {
-                    console.error("Playback error:", e);
+                // We attempt to play and update UI
+                audio.play().then(() => {
+                    playBtn.innerText = "PAUSE AUDIO";
+                }).catch(e => {
+                    console.error("Audio block:", e);
+                    alert("INTERACTION REQUIRED: Click the button again to verify your session and start the radio.");
                 });
-                playBtn.innerText = "PAUSE AUDIO";
             }
             isPlaying = !isPlaying;
         }
 
+        // Sporadic MBBP Oscillation (0% to 100%)
         const glow = document.getElementById('mbbp-glow');
         const pct = document.getElementById('mbbp-pct');
         
         function updateMomentum() {
-            const target = Math.floor(Math.random
+            const target = Math.floor(Math.random() * 101);
+            glow.style.width = target + "%";
+            pct.innerText = target + "%";
+            const timing = Math.floor(Math.random() * 800) + 200; // Faster sporadic timing
+            setTimeout(updateMomentum, timing);
+        }
+        updateMomentum();
+    </script>
+</body>
+</html>
