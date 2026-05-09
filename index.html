@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AITITRADE | SOVEREIGN PORTAL</title>
+    <title>AITITRADE | SOVEREIGN DEX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
@@ -21,23 +21,27 @@
             position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
         }
 
+        /* PREMIUM GLASS BUTTONS */
         .glass-btn {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            color: #fff; padding: 22px; border-radius: 2px;
-            font-weight: 700; letter-spacing: 3px; transition: 0.3s;
-            text-align: center; cursor: pointer;
-            box-shadow: inset 0 1px 2px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #fff; padding: 20px; border-radius: 2px;
+            font-weight: 700; letter-spacing: 2px; transition: 0.3s;
+            text-align: center; cursor: pointer; display: block;
         }
         .glass-btn:hover {
             border-color: var(--neon); color: var(--neon);
-            background: rgba(0, 255, 65, 0.15); box-shadow: 0 0 30px rgba(0,255,65,0.4);
+            background: rgba(0, 255, 65, 0.1); box-shadow: 0 0 30px rgba(0,255,65,0.3);
         }
 
+        /* KINETIC PRICE BOX */
         .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
         .gain { color: var(--neon); }
         .loss { color: var(--red); }
+
+        /* LIQUID OSCILLATOR */
+        .osc-box { height: 80px; background: #000; position: relative; border-y: 1px solid #222; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -45,16 +49,24 @@
     <div class="portal-container">
         <div class="p-3 bg-black border-b border-[#222] flex justify-between text-[9px] font-bold">
             <span class="text-white tracking-widest">AITITRADE // 97.7 THE FLAME</span>
-            <span class="animate-pulse text-green-500 font-black">● SIGNAL: ACTIVE</span>
+            <span class="animate-pulse text-green-500">● SIGNAL: KINETIC_LOCKED</span>
         </div>
 
         <div class="relative border-b border-[#222] aspect-square overflow-hidden bg-zinc-900">
             <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc" 
-                 class="w-full h-full object-cover block">
+                 class="w-full h-full object-cover block opacity-90">
             <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
                 <h1 class="text-white text-2xl font-black italic">SUPERFLY</h1>
                 <p class="text-[9px] text-gray-500 mt-1 tracking-[0.3em]">ATFY-9C4D7 // NATIVE ASSET</p>
             </div>
+        </div>
+
+        <div class="osc-box">
+            <svg width="100%" height="100%" viewBox="0 0 400 80" preserveAspectRatio="none">
+                <path id="kinetic-line" fill="none" stroke="var(--neon)" stroke-width="3" d="" />
+                <circle id="pulse-head" r="6" fill="var(--neon)" />
+            </svg>
+            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-ticker">$5.84</span></div>
         </div>
 
         <div class="p-8 text-center bg-gradient-to-t from-emerald-950/30 to-black border-b border-[#222]">
@@ -64,11 +76,14 @@
         </div>
 
         <div class="p-6 space-y-4">
-            <div onclick="toggleRadio()" id="radio-btn" class="glass-btn">INITIALIZE RADIO FEED</div>
-            <a href="https://aitify-music-stream.replit.app/" class="glass-btn block">ACCESS MARKET</a>
+            <div onclick="toggleAudio()" id="play-btn" class="glass-btn">PLAY RADIO FEED</div>
+            <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="glass-btn">OPEN TRADING ACCOUNT</a>
+            <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS MARKET FLOOR</a>
         </div>
 
-        <audio id="audio-engine" loop crossorigin="anonymous"></audio>
+        <audio id="audio-engine" loop crossorigin="anonymous">
+            <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" type="audio/mpeg">
+        </audio>
 
         <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-[#222]">
             AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
@@ -76,18 +91,43 @@
     </div>
 
     <script>
-        // KINETIC PRICE ENGINE
+        // KINETIC PRICE & CHART ENGINE
         let basePrice = 5.84;
+        let points = [];
+        let headY = 40;
+        let velocity = 0;
+        
+        for (let i = 0; i <= 50; i++) points.push({ x: (400 / 50) * i, y: 40 });
+
         const priceMain = document.getElementById('price-main');
         const priceChange = document.getElementById('price-change');
+        const mbbpTicker = document.getElementById('mbbp-ticker');
+
+        function updateLiquidChart() {
+            velocity += (Math.random() - 0.5) * 4; velocity *= 0.85; headY += velocity;
+            if (headY < 10 || headY > 70) velocity *= -1.1;
+            for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
+            points[points.length - 1].y = headY;
+            
+            let d = `M ${points[0].x} ${points[0].y}`;
+            for (let i = 0; i < points.length - 1; i++) {
+                const xc = (points[i].x + points[i + 1].x) / 2;
+                const yc = (points[i].y + points[i + 1].y) / 2;
+                d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
+            }
+            document.getElementById('kinetic-line').setAttribute('d', d);
+            document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
+            document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
+        }
 
         function updateMarket() {
-            const bounce = (Math.random() * 0.7) - 0.3; 
+            const bounce = (Math.random() * 0.6) - 0.25; 
             const currentPrice = basePrice + bounce;
-            const diff = currentPrice - 5.00;
-            const pct = ((diff / 5.00) * 100).toFixed(1);
+            const pct = (((currentPrice - 5.00) / 5.00) * 100).toFixed(1);
 
             priceMain.innerText = "$" + currentPrice.toFixed(2);
+            mbbpTicker.innerText = "$" + currentPrice.toFixed(2);
+            
             if (bounce >= 0) {
                 priceMain.className = "price-display gain";
                 priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
@@ -99,31 +139,30 @@
             }
             setTimeout(updateMarket, Math.floor(Math.random() * 1000) + 400);
         }
+
+        setInterval(updateLiquidChart, 40);
         updateMarket();
 
-        // THE BULLETPROOF RADIO HANDSHAKE
+        // AUDIO HANDSHAKE
         const radio = document.getElementById('audio-engine');
-        const btn = document.getElementById('radio-btn');
-        const streamUrl = "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/Superfly.mp3?alt=media&token=eb090533-5c20-410a-8149-6f917639967d";
+        const playBtn = document.getElementById('play-btn');
         let isPlaying = false;
 
-        function toggleRadio() {
-            if (!isPlaying) {
-                // Force load the source ONLY on click to bypass browser blocks
-                radio.src = streamUrl;
+        function toggleAudio() {
+            if (isPlaying) {
+                radio.pause();
+                playBtn.innerText = "PLAY RADIO FEED";
+                isPlaying = false;
+            } else {
                 radio.play().then(() => {
-                    btn.innerText = "PAUSE RADIO FEED";
+                    playBtn.innerText = "PAUSE RADIO FEED";
                     isPlaying = true;
-                }).catch(e => {
+                }).catch(() => {
                     radio.load();
                     radio.play();
-                    btn.innerText = "PAUSE RADIO FEED";
+                    playBtn.innerText = "PAUSE RADIO FEED";
                     isPlaying = true;
                 });
-            } else {
-                radio.pause();
-                btn.innerText = "PLAY RADIO FEED";
-                isPlaying = false;
             }
         }
     </script>
