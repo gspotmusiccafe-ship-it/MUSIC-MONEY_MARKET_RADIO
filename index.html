@@ -120,4 +120,44 @@
             
             if (bounce >= 0) {
                 priceMain.className = "price-display gain";
-                priceChange
+                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
+                wave.setAttribute('d', `M0,35 Q100,${10 + Math.random()*15} 200,35 T400,35`);
+            } else {
+                priceMain.className = "price-display loss";
+                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
+                wave.setAttribute('d', `M0,35 Q100,${50 + Math.random()*15} 200,35 T400,35`);
+            }
+
+            momentumStat.innerText = Math.floor(Math.random() * 100) + "%";
+            setTimeout(updateMarket, Math.floor(Math.random() * 1000) + 400);
+        }
+        updateMarket();
+
+        // RADIO LOGIC (The One That Works)
+        const audio = document.getElementById('preview-audio');
+        const playBtn = document.getElementById('play-btn');
+        let isPlaying = false;
+
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerText = "PLAY ASSET";
+                isPlaying = false;
+            } else {
+                // Direct play call for browser handshake
+                audio.play().then(() => {
+                    playBtn.innerText = "PAUSE ASSET";
+                    isPlaying = true;
+                }).catch(e => {
+                    console.log("Audio retry...");
+                    audio.play();
+                    playBtn.innerText = "PAUSE ASSET";
+                    isPlaying = true;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
