@@ -132,8 +132,12 @@
 
 <script>
     const assets = [
-                { id: "A02", name: "SUPERFLY", buy: 5.02, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
-                
+        { id: "A01", name: "SCENE BY SCENE", buy: 1.11, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
+        { id: "A02", name: "SUPERFLY", buy: 5.02, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
+        { id: "A03", name: "I GOT WHAT YOU NEED", buy: 3.52, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c" },
+        { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
+    ];
+
     let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
 
     function startEngine() {
