@@ -19,13 +19,12 @@
         #market-core { flex: 1; overflow-y: auto; padding: 12px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
         #radio-desk { width: 360px; padding: 15px; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; }
 
-        /* MOBILE FLOW FIX - PREVENTS MIDDLE SECTION FROM HIDING */
         @media (max-width: 900px) {
             .dashboard { flex-direction: column; overflow-y: auto; display: block; }
             #watchlist, #market-core, #radio-desk { width: 100%; border-right: none; border-bottom: 2px solid #222; overflow: visible; display: block; position: relative; }
-            #radio-desk { order: -1; } /* Radio First */
-            #watchlist { order: 1; } /* Ledger Second */
-            #market-core { order: 2; } /* Market Middle Section - Now Exposed */
+            #radio-desk { order: -1; }
+            #watchlist { order: 1; }
+            #market-core { order: 2; }
             .oscillator-main { font-size: 2.2rem !important; }
         }
 
@@ -42,8 +41,8 @@
         .radio-controls { background: #151515; padding: 15px; border: 1px solid #333; text-align: center; border-radius: 4px; }
         .oscillator-main { font-size: 2.5rem; color: white; margin: 5px 0; font-weight: 900; letter-spacing: -1px; }
 
-        .account-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem; }
-        .buy-sell-master { background: var(--cash); color: white; font-size: 0.9rem; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+        .trade-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem; }
+        .buy-order-btn { background: var(--cash); color: white; font-size: 0.9rem; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
         
         .btn-row { display: flex; gap: 10px; margin-top: 12px; }
         button.nav { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px; flex: 1; cursor: pointer; font-size: 1.1rem; }
@@ -57,9 +56,8 @@
 <div id="init-overlay">
     <div class="gate-box">
         <h2 style="color:var(--gold); margin-top:0;">THE MUSIC MONEY MARKET</h2>
-        <p style="color:white; font-size:0.7rem; margin-bottom:25px;">$MMM TOKEN: PRE-MINT PHASE (100M)<br>SONGSHARE TRADING ACTIVE</p>
-        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn" onclick="startEngine()">OPEN TRADING ACCOUNT</a>
-        <p style="color:var(--neon); font-size:0.6rem; cursor:pointer;" onclick="startEngine()">ENTER TERMINAL AS GUEST</p>
+        <p style="color:white; font-size:0.7rem; margin-bottom:25px;">$MMM TOKEN: PRE-MINT PHASE (100M)<br>QUEEN BUTTA COLLECTION LIVE</p>
+        <button class="trade-btn" onclick="startEngine()">ENTER TERMINAL</button>
     </div>
 </div>
 
@@ -67,11 +65,11 @@
 
 <header>
     <div class="head-top">
-        <div style="font-weight:bold;">THE MUSIC MONEY MARKET</div>
+        <div style="font-weight:bold;">AITITRADE // SONGSHARE</div>
         <div style="color:var(--gold)">97.7 THE FLAME</div>
     </div>
     <div class="ticker-bar">
-        <span>TOKEN: $MMM (UPCOMING)</span>
+        <span>TOKEN: $MMM</span>
         <span>PRICE: <span id="coin-price" style="color:var(--gold)">$0.00001000</span></span>
         <span id="price-change" style="color:var(--neon)">(+0.00%)</span>
     </div>
@@ -79,12 +77,12 @@
 
 <div class="dashboard">
     <aside id="radio-desk">
-        <a href="https://gspotmusiccafe.wixsite.com/the-music-money-mark/groups" class="account-btn">ADD TO PORTFOLIO</a>
+        <a href="https://aitify-music-stream.replit.app/" target="_blank" class="trade-btn">OPEN TRADE TERMINAL</a>
         <div class="album-art" id="art-frame"></div>
         <div class="radio-controls">
-            <div id="radio-track" style="color:var(--gold); font-size: 0.8rem;">--</div>
-            <div class="oscillator-main" id="main-osc">$0.00</div>
-            <a href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-sell-master">BUY SONGSHARE VIA CASH APP</a>
+            <div id="radio-track" style="color:var(--gold); font-size: 0.8rem; margin-bottom: 5px;">--</div>
+            <div class="oscillator-main" id="main-osc">$1.00</div>
+            <a id="buy-link" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-order-btn">PURCHASE ORDER: $1.00</a>
             <div class="btn-row">
                 <button class="nav" onclick="prevAsset()">⏮</button>
                 <button class="nav" onclick="playCurrent()">▶</button>
@@ -132,10 +130,19 @@
 
 <script>
     const assets = [
-        { id: "A01", name: "SCENE BY SCENE", buy: 1.11, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE%20IMG.png?alt=media&token=2838e442-9b05-4704-a407-a209dd754d72", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SCENE%20BY%20SCENE.mp3?alt=media&token=647413ee-9384-4436-8f0c-9df717d1da0a" },
-        { id: "A02", name: "SUPERFLY", buy: 5.02, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY%20PNG.jpeg?alt=media&token=2441faff-08e2-45dd-b9ba-bdc5a3b6d2fc", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/SUPERFLY.mp3?alt=media&token=c5a7d3b4-dc94-4842-93ea-6d396e0fa293" },
-        { id: "A03", name: "I GOT WHAT YOU NEED", buy: 3.52, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=3188b436-bd97-4503-8e12-a1e33bdfd147", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/I%20GOT%20WHAT%20YOU%20NEED.mp3?alt=media&token=a5cf44ea-56ef-49f8-839c-0b9d2c3c250c" },
-        { id: "A04", name: "ZODIAC SIGN", buy: 2.51, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN-J.%20MARIE.png?alt=media&token=763cef9d-c8dd-48ad-bc37-f701d1cf6a9a", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/ZODIAC%20SIGN.mp3?alt=media&token=915fde66-5e25-401e-ab03-61a0a5642630" }
+        { id: "QB01", name: "SUPERFLY", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+        { id: "QB02", name: "YOU'RE MY ADDICTION", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+        { id: "QB03", name: "TIMES UP", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+        { id: "QB04", name: "LOVE MAKE OVER", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+        { id: "QB05", name: "I'M NOT HER", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+        { id: "QB06", name: "GANSTA CHICK", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
+        { id: "QB07", name: "IT'S FRIDAY NIGHT", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
+        { id: "QB08", name: "HEARTBREAK MOTEL REMIX", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
+        { id: "QB09", name: "LET'S GO BACK", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
+        { id: "QB10", name: "I DESERVE", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
+        { id: "QB11", name: "THAT GIRL FROM THE GHETTO", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+        { id: "QB12", name: "MIDNIGHT SMOKE", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
+        { id: "QB13", name: "BETTER THAN GOOD", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
 
     let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
@@ -150,7 +157,7 @@
         const volBars = document.getElementById('volume-bars');
         
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="watch-item" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">VAL: $${a.buy}</span></div>`;
+            list.innerHTML += `<div class="watch-item" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">VAL: $${a.buy.toFixed(2)}</span></div>`;
             cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div style="color:var(--gold)">PRICE: $${a.buy.toFixed(2)}</div><div>${a.name}</div><div style="font-size:0.5rem; opacity:0.7;">ASSET: ${a.id}</div></div>`;
         });
 
@@ -170,19 +177,12 @@
         const flow = document.getElementById('order-flow');
         const side = Math.random() > 0.4 ? "BUY" : "SELL";
         const amt = (Math.random()*500).toFixed(2);
-        const fee = (amt * 0.025).toFixed(2);
         const row = document.createElement('div');
         row.className = 'trade-row';
         row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-        row.innerHTML = `<span>${side} SONGSHARE</span> <span>$${amt} <span style="color:#666; font-size:0.45rem;">(FEE: $${fee})</span></span>`;
+        row.innerHTML = `<span>${side} SONGSHARE</span> <span>$${amt}</span>`;
         flow.prepend(row);
         if(flow.children.length > 5) flow.removeChild(flow.lastChild);
-        
-        // UPDATE CANDLE COLORS RANDOMLY ON TRADES
-        document.querySelectorAll('.v-bar').forEach(b => {
-            b.style.height = Math.random()*100 + "%";
-            b.style.background = Math.random() > 0.5 ? 'var(--neon)' : 'var(--red)';
-        });
     }
 
     function updateLiquidChart() {
@@ -214,6 +214,7 @@
         document.getElementById('radio-track').innerText = a.name;
         document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
         document.getElementById('main-osc').innerText = `$${a.buy.toFixed(2)}`;
+        document.getElementById('buy-link').innerText = `PURCHASE ORDER: ${a.name} ($${a.buy.toFixed(2)})`;
         const audio = document.getElementById('main-audio-engine');
         audio.src = a.audio; audio.play().catch(() => {});
     }
