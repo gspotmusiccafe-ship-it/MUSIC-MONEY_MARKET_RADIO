@@ -4,101 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE MUSIC MONEY MARKET // QUEEN BUTTA EDITION</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
-        * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-transform: uppercase; overflow: hidden; }
-        body { display: flex; flex-direction: column; }
-
-        header { padding: 10px 15px; background: var(--panel); border-bottom: 2px solid #333; }
-        .head-top { display: flex; justify-content: space-between; align-items: center; }
-        .ticker-bar { background: #000; padding: 5px 10px; border: 1px solid #222; margin-top: 5px; font-size: 0.7rem; display: flex; justify-content: space-between; }
         
-        .dashboard { display: flex; flex: 1; width: 100%; overflow: hidden; }
-        #watchlist { width: 260px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 12px; }
+        * { box-sizing: border-box; }
+        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; }
+        
+        header { padding: 10px 15px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
+        
+        .dashboard { display: flex; flex: 1; height: calc(100vh - 70px); width: 100%; overflow: hidden; }
+        
+        /* 3-PART DESKTOP LAYOUT */
+        #radio-desk { width: 380px; padding: 15px; background: #0a0a0a; border-right: 1px solid #333; overflow-y: auto; display: flex; flex-direction: column; }
         #market-core { flex: 1; overflow-y: auto; padding: 12px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
-        #radio-desk { width: 380px; padding: 15px; background: #0a0a0a; display: flex; flex-direction: column; }
+        #watchlist { width: 260px; overflow-y: auto; background: #080808; padding: 12px; }
 
-        /* CANDLESTICK / CHART BOX */
+        /* MOBILE OVERRIDE: SONG -> BOARD -> LEDGER */
+        @media (max-width: 900px) {
+            .dashboard { display: block; overflow-y: auto; height: auto; }
+            #radio-desk, #market-core, #watchlist { width: 100%; border-right: none; border-bottom: 2px solid #333; height: auto; overflow: visible; }
+            #radio-desk { order: 1; }
+            #market-core { order: 2; }
+            #watchlist { order: 3; }
+        }
+
         .chart-container { background: #000; border: 1px solid #333; height: 260px; position: relative; border-radius: 4px; overflow: hidden; }
         #volume-bars { position: absolute; bottom: 0; width: 100%; height: 80px; display: flex; align-items: flex-end; gap: 2px; padding: 0 5px; opacity: 0.4; }
-        .v-bar { flex: 1; border-radius: 1px; transition: 0.2s; }
-
-        /* STOCK OSCILLATOR VISUALS */
-        .oscillator-main { font-size: 3.2rem; color: white; margin: 5px 0; font-weight: 900; letter-spacing: -2px; }
+        
+        .oscillator-main { font-size: 3.5rem; color: white; margin: 5px 0; font-weight: 900; letter-spacing: -2px; }
         .gain { color: var(--neon) !important; }
         .loss { color: var(--red) !important; }
 
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 15px; }
-        .radio-controls { background: #151515; padding: 20px; border: 1px solid #333; text-align: center; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 15px; max-width: 340px; margin-inline: auto; }
+        
+        .trade-btn { background: var(--gold); color: #000; font-weight: 900; padding: 15px; width: 100%; display: block; text-align: center; text-decoration: none; margin-bottom: 10px; border: none; cursor: pointer; }
+        .buy-order-btn { background: var(--cash); color: white; font-weight: 900; padding: 20px; width: 100%; display: block; text-align: center; text-decoration: none; border: none; cursor: pointer; font-size: 1rem; }
 
-        .account-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem; }
-        .buy-sell-master { background: var(--cash); color: white; font-size: 0.9rem; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
-        
-        .watch-item { padding: 10px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.7rem; }
-        .watch-item:hover { background: #111; }
-        
-        #order-flow { height: 140px; background: #080808; border: 1px solid #222; overflow: hidden; font-size: 0.6rem; padding: 10px; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        #order-flow { height: 160px; background: #080808; border: 1px solid #222; overflow: hidden; font-size: 0.65rem; padding: 10px; }
+        .trade-row { display: flex; justify-content: space-between; margin-bottom: 6px; border-bottom: 1px solid #111; padding-bottom: 2px; }
 
         #init-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .gate-box { text-align: center; border: 3px solid var(--gold); padding: 40px; background: #0a0a0a; width: 400px; }
     </style>
 </head>
 <body>
 
 <div id="init-overlay">
-    <div class="gate-box">
-        <h2 style="color:var(--gold); margin-top:0;">THE MUSIC MONEY MARKET</h2>
-        <button class="account-btn" onclick="startEngine()">ENTER TRADING FLOOR</button>
+    <div class="p-10 border-4 border-yellow-500 bg-black text-center max-w-sm">
+        <h2 class="text-yellow-500 font-black text-2xl mb-6">AITITRADE // TERMINAL</h2>
+        <button onclick="startEngine()" class="trade-btn">INITIALIZE FEED</button>
     </div>
 </div>
 
 <header>
-    <div class="head-top">
-        <div style="font-weight:bold;">AITITRADE // SONGSHARE TERMINAL</div>
-        <div style="color:var(--gold)">97.7 THE FLAME</div>
-    </div>
-    <div class="ticker-bar">
-        <span>ASSET: QUEEN BUTTA COLLECTION</span>
-        <span>MARKET: <span id="mkt-status" style="color:var(--neon)">● OPEN</span></span>
+    <div class="flex justify-between items-center px-4">
+        <div class="font-bold">AITITRADE // SONGSHARE</div>
+        <div class="text-yellow-500 font-black animate-pulse">● MARKET OPEN</div>
     </div>
 </header>
 
 <div class="dashboard">
-    <aside id="watchlist">
-        <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:10px; padding-bottom:5px;">MARKET LEDGER</div>
-        <div id="list-target"></div>
+    <aside id="radio-desk">
+        <a href="https://aitify-music-stream.replit.app/" class="trade-btn">OPEN DEX PORTAL</a>
+        <div class="album-art" id="art-frame"></div>
+        <div class="bg-[#151515] p-5 border border-[#333] text-center">
+            <div id="radio-track" class="text-yellow-500 text-xs mb-2">--</div>
+            <div id="main-osc" class="oscillator-main">$1.00</div>
+            <div id="price-arrow" class="font-bold text-lg mb-4">▲ +0.00</div>
+            <a id="buy-link" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-order-btn">PURCHASE SONG: $1.00</a>
+            <div class="flex gap-2 mt-4">
+                <button onclick="prevAsset()" class="flex-1 border border-green-500 py-3">⏮</button>
+                <button onclick="playCurrent()" class="flex-1 border border-green-500 py-3">▶</button>
+                <button onclick="nextAsset()" class="flex-1 border border-green-500 py-3">⏭</button>
+            </div>
+        </div>
     </aside>
 
     <section id="market-core">
         <div class="chart-container">
             <div id="volume-bars"></div>
             <svg width="100%" height="100%" viewBox="0 0 1000 300" preserveAspectRatio="none">
-                <path id="kinetic-line" d="" fill="none" stroke="var(--neon)" stroke-width="4" />
-                <circle id="pulse-head" r="8" fill="var(--neon)" />
+                <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="4" />
+                <circle id="pulse-head" r="8" fill="#00ff00" />
             </svg>
         </div>
+        
         <div id="order-flow"></div>
-        <div class="ticker-bar" style="background:#111;">
-            <span>TOKEN: $MMM (UPCOMING)</span>
-            <span>PRICE: <span id="coin-price" style="color:var(--gold)">$0.00001000</span></span>
+        
+        <div class="grid grid-cols-2 gap-2 text-[10px]">
+            <div class="bg-[#111] p-3 border border-[#222]">
+                <div class="text-yellow-500">LIQUIDITY</div>
+                <div class="text-white">1.62 BNB ($1,042)</div>
+            </div>
+            <div class="bg-[#111] p-3 border border-[#222] text-right">
+                <div class="text-yellow-500">TRADING FEE</div>
+                <div class="text-green-500">2.5% PER TRADE</div>
+            </div>
         </div>
     </section>
 
-    <aside id="radio-desk">
-        <a href="https://aitify-music-stream.replit.app/" target="_blank" class="account-btn">TRADE NOW ON DEX</a>
-        <div class="album-art" id="art-frame"></div>
-        <div class="radio-controls">
-            <div id="radio-track" style="color:var(--gold); font-size: 0.8rem; margin-bottom:10px;">--</div>
-            <div class="oscillator-main" id="main-osc">$1.00</div>
-            <div id="price-arrow" style="font-size:1.2rem; font-weight:bold; margin-bottom:10px;">▲ +0.00</div>
-            <a href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-sell-master" id="buy-btn">PURCHASE ORDER: $1.00</a>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <button style="flex:1; background:transparent; border:1px solid var(--neon); color:var(--neon); padding:10px; cursor:pointer;" onclick="prevAsset()">⏮</button>
-                <button style="flex:1; background:transparent; border:1px solid var(--neon); color:var(--neon); padding:10px; cursor:pointer;" onclick="nextAsset()">⏭</button>
-            </div>
-        </div>
+    <aside id="watchlist">
+        <div class="text-yellow-500 border-b border-yellow-500 pb-2 mb-4 text-xs font-bold tracking-widest">MARKET LEDGER</div>
+        <div id="list-target" class="text-[10px] space-y-3"></div>
     </aside>
 </div>
 
@@ -107,7 +115,7 @@
 <script>
     const assets = [
         { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12ce12c" },
         { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
         { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
         { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
@@ -122,7 +130,7 @@
     ];
 
     const queenImg = "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982";
-    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false; let currentSongPrice = 1.00;
+    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false; let songPrice = 1.00;
 
     function startEngine() {
         if (engineStarted) return;
@@ -133,70 +141,62 @@
         const volBars = document.getElementById('volume-bars');
         
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="watch-item" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">MARKET: PRE-SALE</span></div>`;
+            list.innerHTML += `<div class="p-3 border-b border-[#222] cursor-pointer hover:bg-[#111]" onclick="sync(${i})">${a.name}<br><span class="text-white opacity-50">MARKET: PRE-SALE</span></div>`;
         });
 
         for(let i=0; i<60; i++) {
-            volBars.innerHTML += `<div class="v-bar" style="height:${10 + Math.random()*80}%; background:var(--neon); opacity:0.3;"></div>`;
+            volBars.innerHTML += `<div class="v-bar" style="height:${10 + Math.random()*80}%; background:#00ff00; opacity:0.3;"></div>`;
         }
         for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
         
         setInterval(updateChart, 40);
-        setInterval(addTradeRow, 1500); 
+        setInterval(addTradeRow, 1400); 
         sync(0);
     }
 
     function addTradeRow() {
         const flow = document.getElementById('order-flow');
         const side = Math.random() > 0.4 ? "BUY" : "SELL";
-        
-        // PRICE MOVEMENT LOGIC: Rises with BUY orders
-        const impact = (Math.random() * 0.40) + 0.10;
+        const impact = (Math.random() * 0.45) + 0.05;
+
         if (side === "BUY") {
-            currentSongPrice = Math.min(5.00, currentSongPrice + impact);
-            velocity -= 15; // Pulse Chart Up
+            songPrice = Math.min(5.00, songPrice + impact);
+            velocity -= 18;
         } else {
-            currentSongPrice = Math.max(1.00, currentSongPrice - (impact * 0.6));
-            velocity += 12; // Pulse Chart Down
+            songPrice = Math.max(1.00, songPrice - (impact * 0.7));
+            velocity += 14;
         }
 
-        // Update UI
-        const osc = document.getElementById('main-osc');
+        document.getElementById('main-osc').innerText = `$${songPrice.toFixed(2)}`;
         const arrow = document.getElementById('price-arrow');
-        osc.innerText = `$${currentSongPrice.toFixed(2)}`;
         
         if (side === "BUY") {
-            osc.className = "oscillator-main gain";
+            document.getElementById('main-osc').className = "oscillator-main gain";
             arrow.innerHTML = `▲ +${impact.toFixed(2)}`;
             arrow.className = "gain";
         } else {
-            osc.className = "oscillator-main loss";
-            arrow.innerHTML = `▼ -${(impact*0.6).toFixed(2)}`;
+            document.getElementById('main-osc').className = "oscillator-main loss";
+            arrow.innerHTML = `▼ -${(impact*0.7).toFixed(2)}`;
             arrow.className = "loss";
         }
 
-        // Log Order
         const row = document.createElement('div');
         row.className = 'trade-row';
         row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-        row.innerHTML = `<span>${side} SONGSHARE</span> <span>QTY: 1</span>`;
+        row.innerHTML = `<span>${side} RETAIL ORDER</span> <span>QTY: 1</span>`;
         flow.prepend(row);
-        if(flow.children.length > 7) flow.removeChild(flow.lastChild);
+        if(flow.children.length > 6) flow.removeChild(flow.lastChild);
         
-        // Pulse Candles
         document.querySelectorAll('.v-bar').forEach(b => {
             b.style.height = (10 + Math.random()*80) + "%";
-            b.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
-            b.style.opacity = "0.5";
+            b.style.background = side === "BUY" ? "#00ff00" : "#ff3333";
         });
     }
 
     function updateChart() {
         velocity *= 0.82; headY += velocity;
-        
-        // Trend Toward Price Level
-        let targetY = 250 - ((currentSongPrice - 1) / 4 * 200);
-        headY += (targetY - headY) * 0.05;
+        let targetY = 250 - ((songPrice - 1) / 4 * 200);
+        headY += (targetY - headY) * 0.06;
 
         if (headY < 40 || headY > 260) velocity *= -1.1;
         
@@ -218,13 +218,14 @@
         currentIdx = idx; const a = assets[idx];
         document.getElementById('radio-track').innerText = a.name;
         document.getElementById('art-frame').style.backgroundImage = `url('${queenImg}')`;
-        document.getElementById('buy-btn').innerText = `PURCHASE ${a.name}: $1.00`;
+        document.getElementById('buy-link').innerText = `PURCHASE ${a.name}: $1.00`;
         const audio = document.getElementById('main-audio-engine');
         audio.src = a.audio; audio.play().catch(() => {});
     }
 
     function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
     function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+    function playCurrent() { document.getElementById('main-audio-engine').play(); }
 </script>
 </body>
 </html>
