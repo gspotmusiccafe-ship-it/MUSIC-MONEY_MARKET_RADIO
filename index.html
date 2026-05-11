@@ -14,7 +14,6 @@
         header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
         .dashboard { display: flex; flex-direction: column; width: 100%; min-height: 100vh; padding-bottom: 50px; }
 
-        /* SECTION STACKING */
         .section-box { width: 100%; max-width: 500px; margin: 0 auto 20px auto; border: 2px solid #222; background: #000; overflow: hidden; }
         
         /* VERTICAL LEDGER FIX */
@@ -22,7 +21,7 @@
         .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); }
         .ledger-row span { color: white; opacity: 0.6; font-size: 0.6rem; }
 
-        /* OSCILLATOR VISUALS */
+        /* KINETIC OSCILLATOR */
         .oscillator-main { font-size: 4rem; color: white; line-height: 1; font-weight: 900; letter-spacing: -3px; }
         .chart-container { background: #000; height: 200px; position: relative; border-bottom: 1px solid #222; }
         
@@ -108,7 +107,7 @@
     let currentIdx = 0; let points = []; let headY = 100; let velocity = 0; let engineStarted = false; let price = 1.00;
 
     const audio = document.getElementById('main-audio-engine');
-    audio.onended = () => { nextAsset(); }; // Auto-Cycle Song to Song
+    audio.onended = () => { nextAsset(); };
 
     function startEngine() {
         if (engineStarted) return;
