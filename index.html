@@ -9,27 +9,38 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
         * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; }
+        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
         
-        header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        .dashboard { display: flex; flex-direction: column; width: 100%; min-height: 100vh; padding-bottom: 50px; }
+        header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; }
+        .dashboard { display: grid; grid-template-columns: 350px 1fr 300px; height: calc(100vh - 60px); }
 
-        .section-box { width: 100%; max-width: 500px; margin: 0 auto 20px auto; border: 2px solid #222; background: #000; overflow: hidden; }
-        
-        /* VERTICAL LEDGER FIX */
-        .ledger-row { display: flex; flex-direction: column; padding: 12px; border-bottom: 1px solid #222; font-size: 0.75rem; transition: 0.3s; cursor: pointer; }
+        @media (max-width: 1000px) {
+            .dashboard { display: flex; flex-direction: column; height: auto; overflow-y: auto; }
+            .side-col, .main-col { width: 100% !important; border: none; border-bottom: 2px solid #222; }
+        }
+
+        .side-col { background: #0a0a0a; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
+        .main-col { background: var(--bg); border-right: 1px solid #333; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+
+        /* THE CANDLESTICK CHART */
+        .chart-box { background: #000; border: 1px solid #333; height: 280px; position: relative; border-radius: 4px; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-around; padding: 0 10px; z-index: 1; }
+        .candle { width: 8px; border-radius: 1px; position: relative; }
+        .wick { position: absolute; width: 2px; height: 140%; left: 3px; top: -20%; z-index: -1; }
+
+        /* ORDER FLOW DATA */
+        #order-flow { background: #080808; border: 1px solid #222; height: 200px; overflow: hidden; font-size: 0.65rem; padding: 10px; }
+        .trade-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
+
+        /* VERTICAL LEDGER */
+        .ledger-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border-bottom: 1px solid #222; cursor: pointer; }
         .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); }
-        .ledger-row span { color: white; opacity: 0.6; font-size: 0.6rem; }
 
-        /* KINETIC OSCILLATOR */
-        .oscillator-main { font-size: 4rem; color: white; line-height: 1; font-weight: 900; letter-spacing: -3px; }
-        .chart-container { background: #000; height: 200px; position: relative; border-bottom: 1px solid #222; }
+        .oscillator-main { font-size: 3.5rem; color: white; font-weight: 900; letter-spacing: -3px; line-height: 1; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 15px; }
         
-        .trade-row { display: flex; justify-content: space-between; padding: 6px 12px; font-size: 0.65rem; border-bottom: 1px solid #111; }
-        .album-art { width: 100%; aspect-ratio: 1; background-size: cover; background-position: center; border-bottom: 2px solid var(--gold); }
-        
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 18px; width: 100%; display: block; text-align: center; text-decoration: none; border: none; font-size: 0.9rem; }
-        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 22px; width: 100%; display: block; text-align: center; text-decoration: none; border: none; font-size: 1.1rem; }
+        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 15px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; margin-bottom: 10px; cursor: pointer; }
+        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 18px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; font-size: 1.1rem; cursor: pointer; }
         
         #init-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
     </style>
@@ -38,50 +49,50 @@
 
 <div id="init-overlay">
     <div class="p-12 border-4 border-yellow-500 bg-black text-center">
-        <h2 class="text-yellow-500 font-black text-2xl mb-8 tracking-tighter">97.7 THE FLAME<br>NEW ARTIST SHOWCASE</h2>
-        <button onclick="startEngine()" class="btn-gold">INITIALIZE AUDIO FEED</button>
+        <h2 class="text-yellow-500 font-black text-2xl mb-8">97.7 THE FLAME // RETAIL ARM</h2>
+        <button onclick="startEngine()" class="btn-gold">INITIALIZE TERMINAL</button>
     </div>
 </div>
 
 <header class="flex justify-between items-center">
-    <div class="font-bold tracking-tighter">97.7 THE FLAME // RETAIL ARM</div>
-    <div class="text-yellow-500 font-black animate-pulse text-xs">● LIVE BROADCAST</div>
+    <div class="font-bold">97.7 THE FLAME // QUEEN BUTTA SHOWCASE</div>
+    <div class="text-yellow-500 font-black animate-pulse text-xs">● LIVE MARKET DATA</div>
 </header>
 
-<div class="dashboard p-4">
-    <div class="section-box border-yellow-500">
+<div class="dashboard">
+    <aside class="side-col">
+        <a href="https://aitify-music-stream.replit.app/" class="btn-gold">TRADE ON AITITRADE DEX</a>
         <div id="art-frame" class="album-art"></div>
-        <div class="p-6 text-center bg-[#0a0a0a]">
-            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold tracking-[0.3em]">--</div>
-            <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
-            <div id="price-arrow" class="font-bold text-xl mb-6">▲ +0.00</div>
-            
-            <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="btn-cash mb-4">BUY SONG: $1.00</a>
-            <a href="https://aitify-music-stream.replit.app/" class="btn-gold">TRADE ON AITITRADE DEX</a>
-            
-            <div class="flex gap-2 mt-6">
-                <button onclick="prevAsset()" class="flex-1 border border-green-500 py-4">⏮</button>
-                <button onclick="playCurrent()" class="flex-1 border border-green-500 py-4 font-black">PLAY</button>
-                <button onclick="nextAsset()" class="flex-1 border border-green-500 py-4">⏭</button>
+        <div class="bg-[#151515] p-5 border border-[#333] text-center">
+            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold">--</div>
+            <div id="main-osc" class="oscillator-main mb-1">$1.00</div>
+            <div id="price-arrow" class="font-bold text-xl mb-4">▲ +0.00</div>
+            <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="btn-cash">BUY SONG: $1.00</a>
+            <div class="flex gap-2 mt-4">
+                <button onclick="prevAsset()" class="flex-1 border border-green-500 py-3">⏮</button>
+                <button onclick="nextAsset()" class="flex-1 border border-green-500 py-3">⏭</button>
             </div>
         </div>
-    </div>
+    </aside>
 
-    <div class="section-box">
-        <div class="p-2 bg-[#111] text-[9px] font-bold border-b border-[#222]">MARKET KINETICS</div>
-        <div class="chart-container">
-            <svg width="100%" height="100%" viewBox="0 0 1000 200" preserveAspectRatio="none">
-                <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="4" />
-                <circle id="pulse-head" r="8" fill="#00ff00" />
+    <main class="main-col">
+        <div class="chart-box">
+            <div id="candle-layer"></div>
+            <svg width="100%" height="100%" viewBox="0 0 1000 280" preserveAspectRatio="none" style="position:absolute; top:0; opacity:0.3;">
+                <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="2" />
             </svg>
         </div>
-        <div id="order-flow" class="bg-[#080808] h-48 overflow-hidden"></div>
-    </div>
+        <div id="order-flow"></div>
+        <div class="bg-[#111] p-3 text-[10px] flex justify-between border border-[#222]">
+            <span>LIQUIDITY: 1.62 BNB</span>
+            <span class="text-green-500">FEE: 2.5%</span>
+        </div>
+    </main>
 
-    <div class="section-box">
-        <div class="p-3 text-yellow-500 font-bold border-b border-yellow-500 text-xs">QUEEN BUTTA // MARKET LEDGER</div>
+    <aside class="side-col" style="border-right:none; border-left:1px solid #333;">
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-xs">MARKET LEDGER</div>
         <div id="list-target"></div>
-    </div>
+    </aside>
 </div>
 
 <audio id="main-audio-engine"></audio>
@@ -104,8 +115,7 @@
     ];
 
     const queenImg = "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982";
-    let currentIdx = 0; let points = []; let headY = 100; let velocity = 0; let engineStarted = false; let price = 1.00;
-
+    let currentIdx = 0; let engineStarted = false; let price = 1.00;
     const audio = document.getElementById('main-audio-engine');
     audio.onended = () => { nextAsset(); };
 
@@ -116,82 +126,37 @@
         
         const list = document.getElementById('list-target');
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})">${a.name} <span>AITITRADE // PRE-SALE RETAIL</span></div>`;
+            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right opacity-50">$1.00</div></div>`;
         });
 
-        for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 100 });
-        
-        setInterval(updateChart, 40);
         setInterval(simulateMarket, 1200); 
         sync(0);
     }
 
     function simulateMarket() {
-        const side = Math.random() > 0.4 ? "BUY" : "SELL";
-        const impact = (Math.random() * 0.50) + 0.10;
+        const side = Math.random() > 0.45 ? "BUY" : "SELL";
+        const impact = (Math.random() * 0.40) + 0.05;
+        const candleLayer = document.getElementById('candle-layer');
         
         if (side === "BUY") {
             price = Math.min(5.00, price + impact);
-            velocity -= 20;
         } else {
-            price = Math.max(1.00, price - (impact * 0.6));
-            velocity += 15;
+            price = Math.max(1.00, price - impact);
         }
 
+        // UPDATE OSCILLATOR
         const osc = document.getElementById('main-osc');
         const arrow = document.getElementById('price-arrow');
         osc.innerText = `$${price.toFixed(2)}`;
-        
-        if (side === "BUY") {
-            osc.className = "oscillator-main text-[#00ff00]";
-            arrow.innerHTML = `▲ +${impact.toFixed(2)}`;
-            arrow.style.color = "#00ff00";
-        } else {
-            osc.className = "oscillator-main text-[#ff3333]";
-            arrow.innerHTML = `▼ -${(impact*0.6).toFixed(2)}`;
-            arrow.style.color = "#ff3333";
-        }
+        osc.className = `oscillator-main ${side === "BUY" ? "text-green-500" : "text-red-500"}`;
+        arrow.innerHTML = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
+        arrow.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
 
-        const flow = document.getElementById('order-flow');
-        const row = document.createElement('div');
-        row.className = 'trade-row';
-        row.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
-        row.innerHTML = `<span>${side} SONGSHARE</span> <span>QTY: 1</span>`;
-        flow.prepend(row);
-        if(flow.children.length > 10) flow.removeChild(flow.lastChild);
-    }
-
-    function updateChart() {
-        velocity *= 0.82; headY += velocity;
-        let targetY = 180 - ((price - 1) / 4 * 140);
-        headY += (targetY - headY) * 0.08;
-
-        for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
-        points[points.length - 1].y = headY;
-        
-        let d = `M ${points[0].x} ${points[0].y}`;
-        for (let i = 0; i < points.length - 1; i++) {
-            const xc = (points[i].x + points[i + 1].x) / 2;
-            const yc = (points[i].y + points[i + 1].y) / 2;
-            d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
-        }
-        document.getElementById('kinetic-line').setAttribute('d', d);
-        document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
-        document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
-    }
-
-    function sync(idx) {
-        currentIdx = idx; const a = assets[idx];
-        document.getElementById('radio-track').innerText = a.name;
-        document.getElementById('art-frame').style.backgroundImage = `url('${queenImg}')`;
-        document.getElementById('buy-btn').innerText = `BUY ${a.name}: $1.00`;
-        audio.src = a.audio; 
-        audio.play().catch(() => { console.log("Handshake required"); });
-    }
-
-    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
-    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
-    function playCurrent() { audio.play(); }
-</script>
-</body>
-</html>
+        // ADD CANDLESTICK
+        const c = document.createElement('div');
+        c.className = "candle";
+        c.style.height = (impact * 200) + "px";
+        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
+        c.innerHTML = `<div class="wick" style="background:${side === "BUY" ? "var(--neon)" : "var(--red)"}"></div>`;
+        candleLayer.appendChild(c);
+        if (candleLayer.children.length >
