@@ -9,68 +9,79 @@
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
         * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
+        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; overflow: hidden; }
+        
+        /* HIGH-END RADIO INTERFACE */
+        #init-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .radio-console { width: 400px; padding: 40px; border: 4px double var(--gold); background: #0a0a0a; box-shadow: 0 0 50px rgba(255, 204, 0, 0.1); text-align: center; }
+        .vu-meter { height: 10px; background: #222; margin: 20px 0; display: flex; gap: 2px; }
+        .vu-bar { flex: 1; background: #333; }
         
         header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; }
-        .dashboard { display: grid; grid-template-columns: 350px 1fr 300px; height: calc(100vh - 60px); }
+        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 60px); }
 
         @media (max-width: 1000px) {
             .dashboard { display: flex; flex-direction: column; height: auto; overflow-y: auto; }
             .side-col, .main-col { width: 100% !important; border: none; border-bottom: 2px solid #222; }
         }
 
-        .side-col { background: #0a0a0a; border-right: 1px solid #333; overflow-y: auto; padding: 15px; }
-        .main-col { background: var(--bg); border-right: 1px solid #333; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 15px; }
+        .side-col { background: #0a0a0a; border-right: 1px solid #333; overflow-y: auto; padding: 20px; }
+        .main-col { background: var(--bg); border-right: 1px solid #333; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
         /* THE CANDLESTICK CHART */
-        .chart-box { background: #000; border: 1px solid #333; height: 280px; position: relative; border-radius: 4px; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-around; padding: 0 10px; z-index: 1; }
-        .candle { width: 8px; border-radius: 1px; position: relative; }
-        .wick { position: absolute; width: 2px; height: 140%; left: 3px; top: -20%; z-index: -1; }
+        .chart-box { background: #000; border: 1px solid #333; height: 300px; position: relative; border-radius: 4px; overflow: hidden; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; z-index: 1; }
+        .candle { width: 10px; border-radius: 1px; position: relative; min-height: 5px; }
+        .wick { position: absolute; width: 2px; height: 150%; left: 4px; top: -25%; z-index: -1; }
 
-        /* ORDER FLOW DATA */
-        #order-flow { background: #080808; border: 1px solid #222; height: 200px; overflow: hidden; font-size: 0.65rem; padding: 10px; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px solid #111; padding-bottom: 2px; }
-
-        /* VERTICAL LEDGER */
-        .ledger-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px; border-bottom: 1px solid #222; cursor: pointer; }
+        /* VERTICAL SIDE-BY-SIDE LEDGER */
+        .ledger-row { display: grid; grid-template-columns: 1fr 80px; gap: 10px; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
         .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); }
 
-        .oscillator-main { font-size: 3.5rem; color: white; font-weight: 900; letter-spacing: -3px; line-height: 1; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 15px; }
+        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; letter-spacing: -4px; line-height: 0.9; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 3px solid var(--gold); background-size: cover; background-position: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; }
         
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 15px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; margin-bottom: 10px; cursor: pointer; }
-        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 18px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; font-size: 1.1rem; cursor: pointer; }
+        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 18px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; margin-bottom: 12px; cursor: pointer; font-size: 1rem; }
+        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 22px; width: 100%; text-align: center; text-decoration: none; border: none; display: block; font-size: 1.2rem; cursor: pointer; box-shadow: inset 0 0 10px rgba(0,0,0,0.2); }
         
-        #init-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        #order-flow { background: #080808; border: 1px solid #222; height: 220px; overflow: hidden; font-size: 0.7rem; padding: 12px; }
+        .trade-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div id="init-overlay">
-    <div class="p-12 border-4 border-yellow-500 bg-black text-center">
-        <h2 class="text-yellow-500 font-black text-2xl mb-8">97.7 THE FLAME // RETAIL ARM</h2>
-        <button onclick="startEngine()" class="btn-gold">INITIALIZE TERMINAL</button>
+    <div class="radio-console">
+        <h1 class="text-yellow-500 font-black text-2xl tracking-widest mb-2">97.7 THE FLAME</h1>
+        <p class="text-white text-[10px] mb-6 opacity-60">BROADCASTING FROM THE AITIFY MUSIC RADIO FLOOR</p>
+        
+        <div class="vu-meter">
+            <div class="vu-bar bg-green-500"></div><div class="vu-bar bg-green-500"></div><div class="vu-bar bg-green-500"></div>
+            <div class="vu-bar bg-yellow-500"></div><div class="vu-bar bg-yellow-500"></div><div class="vu-bar bg-red-500"></div>
+        </div>
+
+        <button onclick="startEngine()" class="btn-gold animate-pulse">SMASH TO INITIALIZE</button>
+        <p class="text-green-500 text-[8px] mt-4 font-bold">SYSTEM STATUS: READY FOR QUEEN BUTTA SHOWCASE</p>
     </div>
 </div>
 
 <header class="flex justify-between items-center">
-    <div class="font-bold">97.7 THE FLAME // QUEEN BUTTA SHOWCASE</div>
-    <div class="text-yellow-500 font-black animate-pulse text-xs">● LIVE MARKET DATA</div>
+    <div class="font-bold">AITITRADE // RETAIL PURCHASE PORTAL</div>
+    <div class="text-yellow-500 font-black animate-pulse text-xs tracking-widest">● LIVE TRANSMISSION</div>
 </header>
 
 <div class="dashboard">
     <aside class="side-col">
-        <a href="https://aitify-music-stream.replit.app/" class="btn-gold">TRADE ON AITITRADE DEX</a>
+        <a href="https://aitify-music-stream.replit.app/" class="btn-gold">OPEN TRADING DESK</a>
         <div id="art-frame" class="album-art"></div>
-        <div class="bg-[#151515] p-5 border border-[#333] text-center">
-            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold">--</div>
-            <div id="main-osc" class="oscillator-main mb-1">$1.00</div>
-            <div id="price-arrow" class="font-bold text-xl mb-4">▲ +0.00</div>
+        <div class="bg-[#151515] p-6 border border-[#333] text-center rounded-sm">
+            <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold tracking-widest">--</div>
+            <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
+            <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
             <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="btn-cash">BUY SONG: $1.00</a>
-            <div class="flex gap-2 mt-4">
-                <button onclick="prevAsset()" class="flex-1 border border-green-500 py-3">⏮</button>
-                <button onclick="nextAsset()" class="flex-1 border border-green-500 py-3">⏭</button>
+            <div class="flex gap-2 mt-6">
+                <button onclick="prevAsset()" class="flex-1 border border-green-500 py-4 font-black">⏮</button>
+                <button onclick="nextAsset()" class="flex-1 border border-green-500 py-4 font-black">⏭</button>
             </div>
         </div>
     </aside>
@@ -78,19 +89,19 @@
     <main class="main-col">
         <div class="chart-box">
             <div id="candle-layer"></div>
-            <svg width="100%" height="100%" viewBox="0 0 1000 280" preserveAspectRatio="none" style="position:absolute; top:0; opacity:0.3;">
+            <svg width="100%" height="100%" viewBox="0 0 1000 300" preserveAspectRatio="none" style="position:absolute; top:0; opacity:0.2;">
                 <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="2" />
             </svg>
         </div>
         <div id="order-flow"></div>
-        <div class="bg-[#111] p-3 text-[10px] flex justify-between border border-[#222]">
-            <span>LIQUIDITY: 1.62 BNB</span>
-            <span class="text-green-500">FEE: 2.5%</span>
+        <div class="bg-[#111] p-4 text-[11px] flex justify-between border border-[#222]">
+            <span class="text-yellow-500 font-bold">BROKERAGE: $AITITRADE</span>
+            <span class="text-green-500 font-bold">FEES: 2.5%</span>
         </div>
     </main>
 
     <aside class="side-col" style="border-right:none; border-left:1px solid #333;">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-xs">MARKET LEDGER</div>
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-3 mb-4 text-xs tracking-widest">MARKET LEDGER</div>
         <div id="list-target"></div>
     </aside>
 </div>
@@ -126,7 +137,7 @@
         
         const list = document.getElementById('list-target');
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right opacity-50">$1.00</div></div>`;
+            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`;
         });
 
         setInterval(simulateMarket, 1200); 
@@ -144,7 +155,6 @@
             price = Math.max(1.00, price - impact);
         }
 
-        // UPDATE OSCILLATOR
         const osc = document.getElementById('main-osc');
         const arrow = document.getElementById('price-arrow');
         osc.innerText = `$${price.toFixed(2)}`;
@@ -152,11 +162,34 @@
         arrow.innerHTML = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
         arrow.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
 
-        // ADD CANDLESTICK
         const c = document.createElement('div');
         c.className = "candle";
-        c.style.height = (impact * 200) + "px";
+        c.style.height = (impact * 250) + "px";
         c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
         c.innerHTML = `<div class="wick" style="background:${side === "BUY" ? "var(--neon)" : "var(--red)"}"></div>`;
         candleLayer.appendChild(c);
-        if (candleLayer.children.length >
+        if (candleLayer.children.length > 28) candleLayer.removeChild(candleLayer.firstChild);
+
+        const flow = document.getElementById('order-flow');
+        const row = document.createElement('div');
+        row.className = 'trade-row';
+        row.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
+        row.innerHTML = `<span>${side} RETAIL ORDER</span> <span>$${price.toFixed(2)}</span>`;
+        flow.prepend(row);
+        if(flow.children.length > 12) flow.removeChild(flow.lastChild);
+    }
+
+    function sync(idx) {
+        currentIdx = idx; const a = assets[idx];
+        document.getElementById('radio-track').innerText = a.name;
+        document.getElementById('art-frame').style.backgroundImage = `url('${queenImg}')`;
+        document.getElementById('buy-btn').innerText = `BUY ${a.name}: $1.00`;
+        audio.src = a.audio; 
+        audio.play().catch(() => {});
+    }
+
+    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+</script>
+</body>
+</html>
