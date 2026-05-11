@@ -3,124 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MUSIC MONEY MARKET // RETAIL ARM</title>
+    <title>AITITRADE | SOVEREIGN BOUNCER TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-        :root { --neon: #00ff41; --gold: #ffd700; --bg: #050505; --red: #ff3131; }
-        body { font-family: 'JetBrains+Mono', monospace; background: var(--bg); color: var(--neon); text-transform: uppercase; margin: 0; }
-        .portal-container { max-width: 410px; margin: 20px auto; border: 3px solid var(--gold); background: #000; position: relative; }
-        .glass-btn { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 215, 0, 0.4); color: #fff; padding: 18px; text-align: center; cursor: pointer; display: block; font-weight: 700; }
-        .osc-box { height: 100px; background: #000; position: relative; border-bottom: 1px solid #222; overflow: hidden; }
-        .chart-path { fill: none; stroke: var(--neon); stroke-width: 3; transition: 0.1s; }
-        #init-overlay { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; align-items: center; justify-content: center; }
+        :root { --neon: #00ff41; --gold: #ffd700; --emerald: #062111; --red: #ff3131; }
+        
+        body { 
+            font-family: 'JetBrains+Mono', monospace; 
+            background: radial-gradient(circle at center, #0a3d1d 0%, #000 100%);
+            color: var(--neon); display: flex; justify-content: center; align-items: center; 
+            min-height: 100vh; margin: 0; padding: 15px; text-transform: uppercase; 
+        }
+        
+        .portal-container { 
+            width: 100%; max-width: 410px; background: #000; border: 3px solid var(--gold); 
+            position: relative; box-shadow: 0 0 100px rgba(0, 255, 65, 0.2); 
+        }
+
+        /* PREMIUM GLASS BUTTONS */
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            color: #fff; padding: 20px; border-radius: 2px;
+            font-weight: 700; letter-spacing: 2px; transition: 0.3s;
+            text-align: center; cursor: pointer; display: block;
+        }
+        .glass-btn:hover {
+            border-color: var(--neon); color: var(--neon);
+            background: rgba(0, 255, 65, 0.1); box-shadow: 0 0 30px rgba(0,255,65,0.3);
+        }
+
+        /* KINETIC PRICE BOX */
+        .price-display { font-size: 5rem; line-height: 1; font-weight: 900; letter-spacing: -5px; }
+        .gain { color: var(--neon); }
+        .loss { color: var(--red); }
+
+        /* PULSING OSCILLATOR */
+        .osc-box { height: 80px; background: #000; position: relative; border-y: 1px solid #222; overflow: hidden; }
+        .liquid-line { fill: none; stroke: var(--neon); stroke-width: 2.5; filter: drop-shadow(0 0 5px var(--neon)); transition: 0.1s ease-out; }
     </style>
 </head>
 <body>
 
-<div id="init-overlay">
-    <div class="p-10 border-2 border-yellow-500 text-center bg-black">
-        <h2 class="text-yellow-500 text-xl font-black mb-4">MUSIC MONEY MARKET</h2>
-        <button onclick="startEngine()" class="glass-btn w-full">INITIALIZE TERMINAL</button>
-    </div>
-</div>
-
-<div class="portal-container">
-    <div class="p-3 border-b border-[#222] flex justify-between text-[10px] font-bold">
-        <span>AITITRADE // RETAIL ARM</span>
-        <span class="animate-pulse text-green-500">● FORECAST_ACTIVE</span>
-    </div>
-
-    <div class="aspect-square bg-zinc-900 overflow-hidden border-b border-[#222]">
-        <div id="art-frame" class="w-full h-full bg-cover bg-center"></div>
-    </div>
-
-    <div class="osc-box">
-        <svg width="100%" height="100%" viewBox="0 0 400 100" preserveAspectRatio="none">
-            <path id="kinetic-line" class="chart-path" d="" />
-            <circle id="pulse-head" r="5" fill="var(--neon)" />
-        </svg>
-    </div>
-
-    <div class="grid grid-cols-2 border-b border-[#222] text-center bg-black">
-        <div class="p-4 border-r border-[#222]">
-            <p class="text-[8px] text-gray-500">RETAIL PRICE</p>
-            <p id="main-osc" class="text-white font-bold text-xl">$1.00</p>
+    <div class="portal-container">
+        <div class="p-3 bg-black border-b border-[#222] flex justify-between text-[9px] font-bold">
+            <span class="text-white tracking-widest">AITITRADE // 97.7 THE FLAME</span>
+            <span class="animate-pulse text-green-500 font-black">● SIGNAL: ACTIVE</span>
         </div>
-        <div class="p-4">
-            <p class="text-[8px] text-gray-500">WEEKS TO $15.00</p>
-            <p id="weeks-val" class="text-yellow-500 font-bold text-xl">12.4 WKS</p>
+
+        <div class="relative border-b border-[#222] aspect-square overflow-hidden bg-zinc-900">
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" 
+                 class="w-full h-full object-cover block">
+            <div class="absolute bottom-5 left-5 bg-black/95 p-4 border-l-4 border-yellow-500">
+                <h1 class="text-white text-2xl font-black italic">SUPERFLY</h1>
+                <p class="text-[9px] text-gray-500 mt-1 tracking-[0.3em]">SONG PRE-SALE // $1.00</p>
+            </div>
+        </div>
+
+        <div class="osc-box">
+            <svg width="100%" height="100%" viewBox="0 0 400 80" preserveAspectRatio="none">
+                <path id="kinetic-line" class="liquid-line" d="" />
+                <circle id="pulse-head" r="5" fill="var(--neon)" />
+            </svg>
+            <div class="absolute top-2 right-4 text-[8px] font-bold text-white opacity-50">MBBP FEED: <span id="mbbp-ticker">$1.00</span></div>
+        </div>
+
+        <div class="p-8 text-center bg-gradient-to-t from-emerald-950/30 to-black border-b border-[#222]">
+            <p class="text-[10px] text-gray-500 tracking-[0.4em] mb-2 font-bold">RETAIL MARKET VALUATION</p>
+            <div id="price-main" class="price-display gain mb-2">$1.00</div>
+            <div id="price-change" class="text-sm font-bold tracking-widest text-green-500">▲ +0.00 (+0.0%)</div>
+        </div>
+
+        <div class="p-6 space-y-4">
+            <div onclick="toggleAudio()" id="play-btn" class="glass-btn">INITIALIZE AUDIO FEED</div>
+            <a href="https://cash.app/$AITITRADEBROKERAGE" class="glass-btn">PURCHASE SONG: $1.00</a>
+            <a href="https://aitify-music-stream.replit.app/" class="glass-btn">ACCESS MARKET FLOOR</a>
+        </div>
+
+        <audio id="preview-audio" loop crossorigin="anonymous">
+            <source src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" type="audio/mpeg">
+        </audio>
+
+        <div class="p-4 bg-black text-center text-[7px] text-gray-700 tracking-[0.5em] border-t border-[#222]">
+            AITITRADE SOVEREIGN TRUST // KINETIC LOGIC ENFORCED
         </div>
     </div>
 
-    <div class="p-6 space-y-4">
-        <a id="buy-link" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="glass-btn bg-green-950/20 text-green-400">PURCHASE ORDER: $1.00</a>
-        <a href="https://aitify-music-stream.replit.app/" class="glass-btn text-yellow-500">TRADE ON AITITRADE DEX</a>
-        <div class="flex gap-2">
-            <button onclick="prevAsset()" class="glass-btn flex-1">PREV</button>
-            <button onclick="nextAsset()" class="glass-btn flex-1">NEXT</button>
-        </div>
-    </div>
-    
-    <audio id="main-audio-engine" loop></audio>
-</div>
+    <script>
+        // KINETIC BOUNCER ENGINE
+        let points = [];
+        let basePrice = 1.00;
+        let headY = 40;
+        let velocity = 0;
+        for (let i = 0; i <= 50; i++) points.push({ x: (400 / 50) * i, y: 40 });
 
-<script>
-    const assets = [
-        { name: "SUPERFLY", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "YOU'RE MY ADDICTION", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-        { name: "TIMES UP", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" }
-    ];
+        const priceMain = document.getElementById('price-main');
+        const priceChange = document.getElementById('price-change');
+        const mbbpTicker = document.getElementById('mbbp-ticker');
+        const kineticLine = document.getElementById('kinetic-line');
 
-    let currentIdx = 0; let points = []; let headY = 80; let velocity = 0;
-    const targetPrice = 15.00;
+        function updateBouncer() {
+            // Aggressive random bouncing logic ($1 to $5 range)
+            let bounce = (Math.random() * 4.0) - 1.5; 
+            let currentPrice = Math.max(1.00, basePrice + bounce);
+            currentPrice = Math.min(5.00, currentPrice); // Cap at $5
+            
+            let priceDiff = currentPrice - 1.00;
+            let pct = (priceDiff * 100).toFixed(1);
 
-    function startEngine() {
-        document.getElementById('init-overlay').style.display = 'none';
-        for (let i = 0; i <= 50; i++) points.push({ x: (400 / 50) * i, y: 80 });
-        setInterval(updateLogic, 100);
-        sync(0);
-    }
+            priceMain.innerText = "$" + currentPrice.toFixed(2);
+            mbbpTicker.innerText = "$" + currentPrice.toFixed(2);
+            
+            // Map Price to Chart Y (5.00 = 10, 1.00 = 70)
+            let targetY = 70 - ((currentPrice - 1) / (5 - 1) * 60);
+            headY += (targetY - headY) * 0.2; // Fast trend
 
-    function updateLogic() {
-        // DEMAND LOGIC: Price rises by purchase simulation
-        let demand = Math.random() > 0.4 ? 0.05 : -0.02;
-        assets[currentIdx].buy = Math.max(1.00, assets[currentIdx].buy + demand);
-        
-        // Map Price to Chart Y (15.00 = 10, 1.00 = 90)
-        let targetY = 90 - ((assets[currentIdx].buy - 1) / (targetPrice - 1) * 80);
-        headY += (targetY - headY) * 0.1;
+            // Pulse chart color based on gain/loss
+            if (bounce >= 0) {
+                priceMain.className = "price-display gain";
+                priceChange.innerHTML = `▲ +${bounce.toFixed(2)} (+${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-green-500";
+                kineticLine.style.stroke = "var(--neon)";
+            } else {
+                priceMain.className = "price-display loss";
+                priceChange.innerHTML = `▼ ${bounce.toFixed(2)} (${pct}%)`;
+                priceChange.className = "text-sm font-bold tracking-widest text-red-500";
+                kineticLine.style.stroke = "var(--red)";
+            }
 
-        // Render Path
-        for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
-        points[points.length - 1].y = headY;
-        let d = `M ${points[0].x} ${points[0].y}`;
-        for (let i = 0; i < points.length - 1; i++) {
-            const xc = (points[i].x + points[i + 1].x) / 2;
-            const yc = (points[i].y + points[i + 1].y) / 2;
-            d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
+            // Shift points for liquid effect
+            for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
+            points[points.length - 1].y = headY;
+            
+            // Render aggressive path
+            let d = `M ${points[0].x} ${points[0].y}`;
+            for (let i = 0; i < points.length - 1; i++) {
+                const xc = (points[i].x + points[i + 1].x) / 2;
+                const yc = (points[i].y + points[i + 1].y) / 2;
+                d += ` Q ${points[i].x} ${points[i].y}, ${xc} ${yc}`;
+            }
+            kineticLine.setAttribute('d', d);
+            document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
+            document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
+
+            // Set erratic bouncer frequency
+            setTimeout(updateBouncer, Math.floor(Math.random() * 800) + 300);
         }
-        document.getElementById('kinetic-line').setAttribute('d', d);
-        document.getElementById('pulse-head').setAttribute('cx', points[points.length-1].x);
-        document.getElementById('pulse-head').setAttribute('cy', points[points.length-1].y);
 
-        // Update Text
-        document.getElementById('main-osc').innerText = `$${assets[currentIdx].buy.toFixed(2)}`;
-        let weeks = (targetPrice - assets[currentIdx].buy) / 1.12;
-        document.getElementById('weeks-val').innerText = weeks.toFixed(1) + " WKS";
-    }
+        updateBouncer();
 
-    function sync(idx) {
-        currentIdx = idx; const a = assets[idx];
-        document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
-        document.getElementById('buy-link').innerText = `PURCHASE ${a.name}: $1.00`;
-        const audio = document.getElementById('main-audio-engine');
-        audio.src = a.audio; audio.play().catch(() => {});
-    }
+        // AUDIO HANDSHAKE
+        const audio = document.getElementById('preview-audio');
+        const playBtn = document.getElementById('play-btn');
+        let isPlaying = false;
 
-    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
-    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
-</script>
-
+        function toggleAudio() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerText = "PLAY RADIO FEED";
+                isPlaying = false;
+            } else {
+                audio.play().then(() => {
+                    playBtn.innerText = "PAUSE RADIO FEED";
+                    isPlaying = true;
+                }).catch(() => {
+                    radio.load();
+                    radio.play();
+                    playBtn.innerText = "PAUSE RADIO FEED";
+                    isPlaying = true;
+                });
+            }
+        }
+    </script>
 </body>
 </html>
