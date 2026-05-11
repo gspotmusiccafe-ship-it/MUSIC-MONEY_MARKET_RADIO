@@ -1,133 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE MUSIC MONEY MARKET // DEX TERMINAL</title>
-    <style>
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
-        * { box-sizing: border-box; }
-        html, body { height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; text-transform: uppercase; }
-        body { display: flex; flex-direction: column; overflow-x: hidden; }
-
-        header { padding: 10px 15px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        .head-top { display: flex; justify-content: space-between; align-items: center; }
-        .ticker-bar { background: #000; padding: 5px 10px; border: 1px solid #222; margin-top: 5px; font-size: 0.7rem; display: flex; justify-content: space-between; }
-        
-        .dashboard { display: flex; flex: 1; width: 100%; overflow: hidden; }
-        #watchlist { width: 240px; border-right: 1px solid #333; overflow-y: auto; background: #080808; padding: 12px; }
-        #market-core { flex: 1; overflow-y: auto; padding: 12px; border-right: 1px solid #333; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
-        #radio-desk { width: 360px; padding: 15px; background: #0a0a0a; display: flex; flex-direction: column; overflow-y: auto; }
-
-        @media (max-width: 900px) {
-            .dashboard { flex-direction: column; overflow-y: auto; display: block; }
-            #watchlist, #market-core, #radio-desk { width: 100%; border-right: none; border-bottom: 2px solid #222; overflow: visible; display: block; position: relative; }
-            #radio-desk { order: -1; }
-            #watchlist { order: 1; }
-            #market-core { order: 2; }
-            .oscillator-main { font-size: 2.2rem !important; }
-        }
-
-        .chart-container { background: #000; border: 1px solid #333; height: 240px; position: relative; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .market-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px; background: #111; border: 1px solid #222; font-size: 0.65rem; }
-        
-        #order-flow { height: 120px; background: #080808; border: 1px solid #222; overflow: hidden; font-size: 0.55rem; padding: 8px; margin: 10px 0; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 4px; border-bottom: 1px solid #111; }
-
-        .asset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
-        .data-card { background: #111; border: 1px solid #222; padding: 10px; text-align: center; font-size: 0.65rem; cursor: pointer; }
-
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); margin-bottom: 10px; background-size: cover; background-position: center; background-color: #222; max-width: 320px; margin-left: auto; margin-right: auto; }
-        .radio-controls { background: #151515; padding: 15px; border: 1px solid #333; text-align: center; border-radius: 4px; }
-        .oscillator-main { font-size: 2.5rem; color: white; margin: 5px 0; font-weight: 900; letter-spacing: -1px; }
-
-        .trade-btn { background: var(--gold); color: #000; font-weight: 900; border: none; padding: 15px; width: 100%; cursor: pointer; text-decoration: none; display: block; text-align: center; margin-bottom: 10px; font-size: 0.8rem; }
-        .buy-order-btn { background: var(--cash); color: white; font-size: 0.9rem; padding: 18px; width: 100%; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: block; text-align: center; }
-        
-        .btn-row { display: flex; gap: 10px; margin-top: 12px; }
-        button.nav { background: transparent; border: 1px solid var(--neon); color: var(--neon); padding: 12px; flex: 1; cursor: pointer; font-size: 1.1rem; }
-        
-        #init-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .gate-box { text-align:center; border: 2px solid var(--gold); padding: 30px; background: #0a0a0a; width: 100%; max-width: 400px; }
-    </style>
-</head>
-<body>
-
-<div id="init-overlay">
-    <div class="gate-box">
-        <h2 style="color:var(--gold); margin-top:0;">THE MUSIC MONEY MARKET</h2>
-        <p style="color:white; font-size:0.7rem; margin-bottom:25px;">$MMM TOKEN: PRE-MINT PHASE (100M)<br>QUEEN BUTTA COLLECTION LIVE</p>
-        <button class="trade-btn" onclick="startEngine()">ENTER TERMINAL</button>
-    </div>
-</div>
-
-<audio id="main-audio-engine" onended="nextAsset()"></audio>
-
-<header>
-    <div class="head-top">
-        <div style="font-weight:bold;">AITITRADE // SONGSHARE</div>
-        <div style="color:var(--gold)">97.7 THE FLAME</div>
-    </div>
-    <div class="ticker-bar">
-        <span>TOKEN: $MMM</span>
-        <span>PRICE: <span id="coin-price" style="color:var(--gold)">$0.00001000</span></span>
-        <span id="price-change" style="color:var(--neon)">(+0.00%)</span>
-    </div>
-</header>
-
-<div class="dashboard">
-    <aside id="radio-desk">
-        <a href="https://aitify-music-stream.replit.app/" target="_blank" class="trade-btn">OPEN TRADE TERMINAL</a>
-        <div class="album-art" id="art-frame"></div>
-        <div class="radio-controls">
-            <div id="radio-track" style="color:var(--gold); font-size: 0.8rem; margin-bottom: 5px;">--</div>
-            <div class="oscillator-main" id="main-osc">$1.00</div>
-            <a id="buy-link" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="buy-order-btn">PURCHASE ORDER: $1.00</a>
-            <div class="btn-row">
-                <button class="nav" onclick="prevAsset()">⏮</button>
-                <button class="nav" onclick="playCurrent()">▶</button>
-                <button class="nav" onclick="nextAsset()">⏭</button>
-            </div>
-        </div>
-    </aside>
-
-    <aside id="watchlist">
-        <div style="color:var(--gold); border-bottom:1px solid var(--gold); margin-bottom:10px; padding-bottom:5px;">MARKET LEDGER</div>
-        <div id="list-target"></div>
-    </aside>
-
-    <section id="market-core">
-        <div class="market-stats">
-            <div>
-                <div style="color:var(--gold)">LIQUIDITY (BNB)</div>
-                <div>1.62 BNB ($1,042)</div>
-            </div>
-            <div style="text-align:right;">
-                <div style="color:var(--gold)">MARKET CAP</div>
-                <div id="mkt-cap">$1,000.00</div>
-            </div>
-            <div>
-                <div style="color:var(--gold)">24H VOLUME</div>
-                <div id="vol-24h">$14,201</div>
-            </div>
-            <div style="text-align:right;">
-                <div style="color:var(--gold)">BROKERAGE FEE</div>
-                <div style="color:var(--neon)">2.5% PER TRADE</div>
-            </div>
-        </div>
-        
-        <div class="chart-container">
-            <div id="volume-bars" style="position:absolute; bottom:0; width:100%; height:60px; display:flex; align-items:flex-end; gap:3px; padding:0 5px; opacity:0.5;"></div>
-            <svg width="100%" height="100%" viewBox="0 0 1000 300" preserveAspectRatio="none">
-                <path id="kinetic-line" d="" fill="none" stroke="var(--neon)" stroke-width="4" />
-                <circle id="pulse-head" r="8" fill="var(--neon)" />
-            </svg>
-        </div>
-        <div id="order-flow"></div>
-        <div id="asset-cards" class="asset-grid"></div>
-    </section>
-</div>
-
 <script>
     const assets = [
         { id: "QB01", name: "SUPERFLY", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
@@ -145,7 +15,12 @@
         { id: "QB13", name: "BETTER THAN GOOD", buy: 1.00, img: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
 
-    let currentIdx = 0; let points = []; let headY = 150; let velocity = 0; let engineStarted = false;
+    let currentIdx = 0; 
+    let points = []; 
+    let headY = 150; 
+    let velocity = 0; 
+    let engineStarted = false;
+    let targetPrice = 15.00;
 
     function startEngine() {
         if (engineStarted) return;
@@ -157,39 +32,66 @@
         const volBars = document.getElementById('volume-bars');
         
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="watch-item" onclick="sync(${i})">${a.name}<br><span style="color:white; font-size:0.55rem;">VAL: $${a.buy.toFixed(2)}</span></div>`;
-            cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div style="color:var(--gold)">PRICE: $${a.buy.toFixed(2)}</div><div>${a.name}</div><div style="font-size:0.5rem; opacity:0.7;">ASSET: ${a.id}</div></div>`;
+            list.innerHTML += `<div class="watch-item" id="ledger-${i}" onclick="sync(${i})">${a.name}<br><span class="price-val" style="color:white; font-size:0.55rem;">VAL: $${a.buy.toFixed(2)}</span></div>`;
+            cards.innerHTML += `<div class="data-card" onclick="sync(${i})"><div class="card-price" style="color:var(--gold)">PRICE: $${a.buy.toFixed(2)}</div><div>${a.name}</div><div style="font-size:0.5rem; opacity:0.7;">ASSET: ${a.id}</div></div>`;
         });
 
         for(let i=0; i<40; i++) {
-            const color = Math.random() > 0.5 ? 'var(--neon)' : 'var(--red)';
-            volBars.innerHTML += `<div class="v-bar" style="flex:1; background:${color}; height:${Math.random()*100}%; opacity:0.6; border-radius:1px;"></div>`;
+            volBars.innerHTML += `<div class="v-bar" style="flex:1; background:var(--neon); height:20%; opacity:0.6; border-radius:1px;"></div>`;
         }
         for (let i = 0; i <= 50; i++) points.push({ x: (1000 / 50) * i, y: 150 });
         
         setInterval(updateLiquidChart, 40);
-        setInterval(updatePrices, 800);
-        setInterval(addTrade, 2000);
+        setInterval(updatePrices, 1000);
+        setInterval(simulateTradeDemand, 2500); 
         sync(0);
     }
 
-    function addTrade() {
+    function simulateTradeDemand() {
+        const side = Math.random() > 0.3 ? "BUY" : "SELL"; // Heavy Buy Bias
+        executePriceMove(side);
+    }
+
+    function executePriceMove(side) {
         const flow = document.getElementById('order-flow');
-        const side = Math.random() > 0.4 ? "BUY" : "SELL";
-        const amt = (Math.random()*500).toFixed(2);
+        const asset = assets[currentIdx];
+        const impact = 0.05; // Each order moves price by $0.05
+
+        if (side === "BUY") {
+            asset.buy += impact;
+            velocity -= 8; // Chart pulses UP
+        } else {
+            asset.buy = Math.max(1.00, asset.buy - impact);
+            velocity += 5; // Chart pulses DOWN
+        }
+
+        // Update UI displays
+        document.getElementById('main-osc').innerText = `$${asset.buy.toFixed(2)}`;
+        document.getElementById('ledger-' + currentIdx).querySelector('.price-val').innerText = `VAL: $${asset.buy.toFixed(2)}`;
+        
+        // Log Trade in Order Flow
+        const amt = (Math.random()*100 + 1).toFixed(0);
         const row = document.createElement('div');
         row.className = 'trade-row';
         row.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-        row.innerHTML = `<span>${side} SONGSHARE</span> <span>$${amt}</span>`;
+        row.innerHTML = `<span>${side} SONGSHARE</span> <span>QTY: ${amt}</span>`;
         flow.prepend(row);
         if(flow.children.length > 5) flow.removeChild(flow.lastChild);
     }
 
     function updateLiquidChart() {
-        velocity += (Math.random() - 0.5) * 6; velocity *= 0.85; headY += velocity;
-        if (headY < 50 || headY > 250) velocity *= -1.2;
+        velocity *= 0.85; 
+        headY += velocity;
+        
+        // Map Price to Y-axis: $1.00 = Bottom, $15.00 = Top
+        let priceTargetY = 250 - ((assets[currentIdx].buy - 1) / (targetPrice - 1) * 200);
+        headY += (priceTargetY - headY) * 0.1; // Smooth trend toward current price val
+
+        if (headY < 20 || headY > 280) velocity *= -1;
+        
         for (let i = 0; i < points.length - 1; i++) points[i].y = points[i+1].y;
         points[points.length - 1].y = headY;
+        
         let d = `M ${points[0].x} ${points[0].y}`;
         for (let i = 0; i < points.length - 1; i++) {
             const xc = (points[i].x + points[i + 1].x) / 2;
@@ -202,11 +104,15 @@
     }
 
     function updatePrices() {
-        let base = 0.00001000;
-        let fluc = (Math.random() * 0.0000005) - 0.0000002;
-        let finalPrice = (base + fluc).toFixed(8);
-        document.getElementById('coin-price').innerText = `$${finalPrice}`;
-        document.getElementById('mkt-cap').innerText = `$${(100000000 * parseFloat(finalPrice)).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+        // Forecast Calculation: Weeks to Reach $15.00
+        let current = assets[currentIdx].buy;
+        let diff = targetPrice - current;
+        let weeks = (diff / 0.85).toFixed(1); // Assuming 0.85 growth per week
+        
+        // Update Token Ticker
+        let base = 0.00001000 + (current * 0.00000001);
+        document.getElementById('coin-price').innerText = `$${base.toFixed(8)}`;
+        document.getElementById('mkt-cap').innerText = `$${(100000000 * base).toLocaleString()}`;
     }
 
     function sync(idx) {
@@ -214,7 +120,7 @@
         document.getElementById('radio-track').innerText = a.name;
         document.getElementById('art-frame').style.backgroundImage = `url('${a.img}')`;
         document.getElementById('main-osc').innerText = `$${a.buy.toFixed(2)}`;
-        document.getElementById('buy-link').innerText = `PURCHASE ORDER: ${a.name} ($${a.buy.toFixed(2)})`;
+        document.getElementById('buy-link').innerText = `PURCHASE ORDER: ${a.name} ($1.00 PRE-SALE)`;
         const audio = document.getElementById('main-audio-engine');
         audio.src = a.audio; audio.play().catch(() => {});
     }
@@ -223,5 +129,3 @@
     function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
     function playCurrent() { document.getElementById('main-audio-engine').play(); }
 </script>
-</body>
-</html>
