@@ -10,7 +10,6 @@
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
         * { box-sizing: border-box; }
         
-        /* FIX: Removed overflow: hidden to allow scrolling */
         html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains+Mono', monospace; text-transform: uppercase; }
         
         #init-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
@@ -18,7 +17,6 @@
         
         header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
         
-        /* LAYOUT: Radio -> Trading -> Ledger */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 60px); }
 
         @media (max-width: 1024px) {
@@ -40,8 +38,8 @@
         .oscillator-main { font-size: 4rem; color: white; font-weight: 900; letter-spacing: -4px; line-height: 0.9; }
         .album-art { width: 100%; aspect-ratio: 1; border: 3px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 20px; }
         
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 18px; width: 100%; text-align: center; border: none; display: block; margin-bottom: 12px; cursor: pointer; }
-        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 22px; width: 100%; text-align: center; border: none; display: block; font-size: 1.2rem; cursor: pointer; }
+        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 18px; width: 100%; text-align: center; border: none; display: block; margin-bottom: 12px; cursor: pointer; text-decoration: none; }
+        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 22px; width: 100%; text-align: center; border: none; display: block; font-size: 1.2rem; cursor: pointer; text-decoration: none; }
         
         #order-flow { background: #080808; border: 1px solid #222; height: 220px; overflow: hidden; font-size: 0.7rem; padding: 12px; }
         .trade-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
@@ -58,7 +56,7 @@
 </div>
 
 <header class="flex justify-between items-center">
-    <div class="font-bold">MUSIC MARKET // QUEEN BUTTA</div>
+    <div class="font-bold text-[10px] tracking-tighter">MUSIC MARKET // QUEEN BUTTA</div>
     <div class="text-yellow-500 font-black animate-pulse text-xs tracking-widest">● LIVE</div>
 </header>
 
@@ -66,11 +64,25 @@
     <aside class="side-col">
         <a href="https://aitify-music-stream.replit.app/" class="btn-gold">TRADE SONG</a>
         <div id="art-frame" class="album-art"></div>
+        
         <div class="bg-[#151515] p-6 border border-[#333] text-center">
             <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold tracking-widest">--</div>
             <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
             <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
-            <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="btn-cash">BUY SONG: $1.00</a>
+
+            <div class="flex flex-col gap-3">
+                <a href="YOUR_PARTNER_LICENSE_URL" target="_blank" class="border-2 border-yellow-500 text-yellow-500 font-black py-3 text-[10px] tracking-widest hover:bg-yellow-500/10 transition-all no-underline">
+                    PARTNER LICENSE: $100
+                </a>
+
+                <a href="https://payhip.com/b/cONHP" target="_blank" class="btn-cash text-xs">
+                    FULL ALBUM: $9.99
+                </a>
+
+                <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" class="border border-white text-white py-3 text-[10px] font-bold opacity-80 hover:opacity-100 transition-all no-underline">
+                    BUY SINGLE: $1.00
+                </a>
+            </div>
             <div class="flex gap-2 mt-6">
                 <button onclick="prevAsset()" class="flex-1 border border-green-500 py-4">⏮</button>
                 <button onclick="nextAsset()" class="flex-1 border border-green-500 py-4">⏭</button>
