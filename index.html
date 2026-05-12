@@ -1,24 +1,32 @@
-<div id="market-actions" style="border: 1px solid #333; padding: 20px; background: #050505;">
+<aside class="side-col">
+    <a href="https://aitify-music-stream.replit.app/" class="btn-gold">TRADE SONG</a>
     
-    <div class="market-row" style="margin-bottom: 15px;">
-        <a href="YOUR_PARTNER_LINK" target="_blank" 
-           style="display: block; border: 2px solid #FFD700; color: #FFD700; padding: 15px; text-decoration: none; font-weight: bold; text-align: center; background: rgba(255, 215, 0, 0.05);">
-            ALBUM RESELLER RIGHTS: $100
-        </a>
-    </div>
+    <div id="art-frame" class="album-art"></div>
 
-    <div class="market-row" style="margin-bottom: 15px;">
-        <a href="https://payhip.com/b/cONHP" target="_blank" 
-           style="display: block; background: #00FF41; color: #000; padding: 15px; text-decoration: none; font-weight: bold; text-align: center; border: 2px solid #00FF41;">
-            BUY FULL ALBUM: $9.99
-        </a>
-    </div>
+    <div class="bg-[#151515] p-6 border border-[#333] text-center">
+        <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold tracking-widest">--</div>
+        <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
+        <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
 
-    <div class="market-row">
-        <a href="YOUR_SINGLE_LINK" target="_blank" 
-           style="display: block; border: 1px solid #FFFFFF; color: #FFFFFF; padding: 10px; text-decoration: none; text-align: center; font-size: 0.85em; opacity: 0.8;">
-            BUY SINGLE SONG: $1.00
-        </a>
-    </div>
+        <div class="flex flex-col gap-3">
+            <a href="YOUR_PARTNER_LICENSE_URL" target="_blank" 
+               style="border: 2px solid var(--gold); color: var(--gold); padding: 12px; font-weight: 900; font-size: 0.8rem; text-decoration: none;">
+                PARTNER LICENSE: $100
+            </a>
 
-</div>
+            <a id="album-btn" href="https://payhip.com/b/cONHP" target="_blank" class="btn-cash">
+                FULL ALBUM: $9.99
+            </a>
+
+            <a id="buy-btn" href="https://cash.app/$AITITRADEBROKERAGE" target="_blank" 
+               style="border: 1px solid #ffffff; color: #ffffff; padding: 10px; font-size: 0.7rem; text-decoration: none;">
+                BUY SINGLE: $1.00
+            </a>
+        </div>
+
+        <div class="flex gap-2 mt-6">
+            <button onclick="prevAsset()" class="flex-1 border border-green-500 py-4 hover:bg-green-900/20">⏮</button>
+            <button onclick="nextAsset()" class="flex-1 border border-green-500 py-4 hover:bg-green-900/20">⏭</button>
+        </div>
+    </div>
+</aside>
