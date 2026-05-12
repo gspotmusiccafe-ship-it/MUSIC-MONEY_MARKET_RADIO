@@ -39,9 +39,6 @@
         .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 18px; width: 100%; text-align: center; border: none; display: block; margin-bottom: 12px; cursor: pointer; }
         .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 18px; width: 100%; text-align: center; border: none; display: block; font-size: 0.9rem; cursor: pointer; text-decoration: none; }
         .btn-elite { background: #000; color: var(--gold); border: 2px solid var(--gold); font-weight: 900; padding: 18px; width: 100%; text-align: center; display: block; font-size: 0.9rem; cursor: pointer; text-decoration: none; margin-bottom: 8px; }
-        
-        #order-flow { background: #080808; border: 1px solid #222; height: 220px; overflow: hidden; font-size: 0.7rem; padding: 12px; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -91,7 +88,7 @@
                 <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="2" />
             </svg>
         </div>
-        <div id="order-flow"></div>
+        <div id="order-flow" class="bg-[#080808] border border-[#222] h-[220px] overflow-hidden text-[0.7rem] p-3"></div>
     </main>
 
     <aside class="side-col" style="border-right:none; border-left:1px solid #333;">
@@ -132,12 +129,10 @@
         if (engineStarted) return;
         engineStarted = true;
         document.getElementById('init-overlay').style.display = 'none';
-        
         const list = document.getElementById('list-target');
         assets.forEach((a, i) => {
             list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$5.00</div></div>`;
         });
-        
         setInterval(simulateMarket, 1200);
         sync(0);
     }
@@ -146,29 +141,24 @@
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
         const impact = (Math.random() * 0.40) + 0.10;
         const candleLayer = document.getElementById('candle-layer');
-        
         if (side === "BUY") price = Math.min(50.00, price + impact);
         else price = Math.max(5.00, price - impact);
-        
         const osc = document.getElementById('main-osc');
         const arrow = document.getElementById('price-arrow');
         osc.innerText = `$${price.toFixed(2)}`;
         osc.className = `oscillator-main ${side === "BUY" ? "text-green-500" : "text-red-500"}`;
         arrow.innerHTML = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
         arrow.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
-        
         const c = document.createElement('div');
         c.className = "candle";
         c.style.height = (impact * 200) + "px";
         c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
         c.innerHTML = `<div class="wick" style="background:${side === "BUY" ? "var(--neon)" : "var(--red)"}"></div>`;
         candleLayer.appendChild(c);
-        
         if (candleLayer.children.length > 28) candleLayer.removeChild(candleLayer.firstChild);
-        
         const flow = document.getElementById('order-flow');
         const row = document.createElement('div');
-        row.className = 'trade-row';
+        row.style.display = "flex"; row.style.justifyContent = "space-between"; row.style.marginBottom = "8px";
         row.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
         row.innerHTML = `<span>${side} RETAIL ORDER</span> <span>$${price.toFixed(2)}</span>`;
         flow.prepend(row);
@@ -180,25 +170,16 @@
         const a = assets[idx];
         document.getElementById('radio-track').innerText = a.name;
         document.getElementById('art-frame').style.backgroundImage = `url('${queenImg}')`;
-        
         const buyBtn = document.getElementById('buy-btn');
         buyBtn.innerText = `BUY EXCLUSIVE RIGHTS: $10.00`;
         buyBtn.href = `https://cash.app/$AITITRADEBROKERAGE?memo=EXCLUSIVE_RIGHTS_${a.name.replace(/\s+/g, '_')}`;
-
         audio.src = a.audio;
         audio.load();
         audio.play().catch(() => { console.log("Interaction required"); });
     }
 
-    function nextAsset() {
-        currentIdx = (currentIdx + 1) % assets.length;
-        sync(currentIdx);
-    }
-
-    function prevAsset() {
-        currentIdx = (currentIdx - 1 + assets.length) % assets.length;
-        sync(currentIdx);
-    }
+    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
 </script>
 </body>
 </html>
