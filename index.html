@@ -1,144 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME | AITIFY MASTER LEDGER</title>
-    <style>
-        body {
-            background-color: #000000;
-            color: #00FF41;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            margin: 0;
-            padding: 20px;
-            min-height: 100vh;
-        }
-
-        /* THE TICKER */
-        .ticker-container {
-            width: 100%;
-            border-bottom: 2px solid #00FF41;
-            padding: 10px 0;
-            margin-bottom: 30px;
-            overflow: hidden;
-            white-space: nowrap;
-        }
-
-        .ticker-text {
-            display: inline-block;
-            animation: scroll 20s linear infinite;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-
-        @keyframes scroll {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-
-        /* THE 3-WAY ENGAGEMENT PANEL */
-        .market-panel {
-            width: 100%;
-            max-width: 600px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .btn-box {
-            padding: 5px;
-            transition: transform 0.2s;
-        }
-
-        .btn-box:hover {
-            transform: scale(1.02);
-        }
-
-        /* $100 GOLD TIER */
-        .partner-btn {
-            border: 2px solid #FFD700;
-            color: #FFD700;
-            padding: 20px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-weight: bold;
-            background: rgba(255, 215, 0, 0.05);
-        }
-
-        /* $9.99 GREEN TIER */
-        .album-btn {
-            border: 2px solid #00FF41;
-            background: #00FF41;
-            color: #000000;
-            padding: 20px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-weight: bold;
-        }
-
-        /* $1.00 WHITE TIER */
-        .single-btn {
-            border: 1px solid #FFFFFF;
-            color: #FFFFFF;
-            padding: 15px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-size: 0.9em;
-        }
-
-        .ledger-info {
-            margin-top: 40px;
-            border: 1px solid #333;
-            padding: 20px;
-            width: 100%;
-            max-width: 600px;
-            font-size: 0.8em;
-            color: #888;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="ticker-container">
-        <div class="ticker-text">
-            50 FOUNDING PARTNER SLOTS OPEN // 1K QUALIFIER ACTIVE // RETAIL MARKET: OPEN // QUEEN BUTTA: LOVE MAKE OVER
-        </div>
+<div id="market-actions" style="border: 1px solid #333; padding: 20px; background: #050505;">
+    
+    <div class="market-row" style="margin-bottom: 15px;">
+        <a href="YOUR_PARTNER_LINK" target="_blank" 
+           style="display: block; border: 2px solid #FFD700; color: #FFD700; padding: 15px; text-decoration: none; font-weight: bold; text-align: center; background: rgba(255, 215, 0, 0.05);">
+            ALBUM RESELLER RIGHTS: $100
+        </a>
     </div>
 
-    <div class="market-panel">
-        
-        <div class="btn-box">
-            <a href="YOUR_PARTNER_LINK" target="_blank" class="partner-btn">
-                ALBUM RESELLER RIGHTS: $100
-            </a>
-        </div>
-
-        <div class="btn-box">
-            <a href="https://payhip.com/b/cONHP" target="_blank" class="album-btn">
-                BUY FULL ALBUM: $9.99
-            </a>
-        </div>
-
-        <div class="btn-box">
-            <a href="YOUR_SINGLE_LINK" target="_blank" class="single-btn">
-                BUY SINGLE SONG: $1.00
-            </a>
-        </div>
-
+    <div class="market-row" style="margin-bottom: 15px;">
+        <a href="https://payhip.com/b/cONHP" target="_blank" 
+           style="display: block; background: #00FF41; color: #000; padding: 15px; text-decoration: none; font-weight: bold; text-align: center; border: 2px solid #00FF41;">
+            BUY FULL ALBUM: $9.99
+        </a>
     </div>
 
-    <div class="ledger-info">
-        <p>AITIFY MASTER LEDGER v2.0</p>
-        <p>STATUS: 1K QUALIFIER MEASURING RETAIL VELOCITY</p>
-        <p>PARTNERS: 00/50 FOUNDING SLOTS</p>
+    <div class="market-row">
+        <a href="YOUR_SINGLE_LINK" target="_blank" 
+           style="display: block; border: 1px solid #FFFFFF; color: #FFFFFF; padding: 10px; text-decoration: none; text-align: center; font-size: 0.85em; opacity: 0.8;">
+            BUY SINGLE SONG: $1.00
+        </a>
     </div>
 
-</body>
-</html>
+</div>
