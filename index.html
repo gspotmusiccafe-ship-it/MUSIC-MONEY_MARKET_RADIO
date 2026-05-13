@@ -16,15 +16,20 @@
         @media (max-width: 1024px) { .dashboard { display: flex; flex-direction: column; } .side-col { width: 100% !important; border-bottom: 1px solid #222; } }
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 15px; }
         .glass-btn { background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; padding: 14px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.7rem; }
-        .chart-box { background: #000; border: 1px solid #222; height: 250px; position: relative; overflow: hidden; margin: 10px 0; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 10px; }
-        .candle { width: 6px; border-radius: 1px; transition: 0.3s; }
+        .chart-box { background: #000; border: 1px solid #222; height: 300px; position: relative; overflow: hidden; margin: 10px 0; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 40px 10px; }
+        
+        /* CANDLE WITH POINTS (WICKS) */
+        .candle { width: 8px; position: relative; transition: 0.3s; }
+        .wick { position: absolute; width: 2px; height: 160%; left: 3px; top: -30%; z-index: -1; }
+        
         .oscillator-main { font-size: 4rem; color: #fff; font-weight: 900; letter-spacing: -3px; line-height: 1; }
         .album-art { width: 100%; max-width: 320px; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin: 0 auto 15px auto; }
-        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; }
+        #order-flow { height: 150px; background: #000; border: 1px solid #222; overflow: hidden; font-size: 0.6rem; padding: 10px; line-height: 1.5; }
     </style>
 </head>
 <body>
+
 <div id="prospectus-overlay">
     <div class="prospectus-container">
         <h1 class="text-xl font-black text-white border-b border-neon pb-2 mb-4 text-center">WELCOME TO THE MUSIC MARKET</h1>
@@ -42,6 +47,7 @@
         <button onclick="startEngine()" class="glass-btn border-2 border-green-500 text-green-500 py-6 text-xl animate-pulse">ENTER THE MARKET FLOOR</button>
     </div>
 </div>
+
 <div id="main-ui" class="dashboard">
     <aside class="side-col">
         <a href="https://aitify-music-stream.replit.app/" class="glass-btn mb-4 text-yellow-500 border-yellow-500">AITITRADE ACCESS</a>
@@ -63,15 +69,17 @@
         </div>
     </aside>
     <main class="p-4 space-y-4">
-        <div id="ticker-box"><div class="text-white font-bold text-[10px]" id="market-msg">GLOBAL PRE-RELEASE ACTIVE</div></div>
         <div class="chart-box"><div id="candle-layer"></div></div>
+        <div id="order-flow"></div>
     </main>
     <aside class="side-col">
         <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-[10px] text-center">MARKET LEDGER</div>
         <div id="list-target" class="text-[9px] space-y-1"></div>
     </aside>
 </div>
+
 <audio id="player" playsinline></audio>
+
 <script>
     const assets = [
         { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
@@ -90,16 +98,14 @@
     ];
     let current = 0, started = false, albumPrice = 9.99;
     const player = document.getElementById('player');
-    const msgs = ["LIQUIDITY RISING", "PARTNERS EARN 50% PROFIT", "50 SHARES AVAILABLE", "90 DAYS TO RELEASE"];
     player.onended = () => { nextTrack(); };
     function startEngine() {
         if (started) return; started = true;
         document.getElementById('prospectus-overlay').style.display = 'none';
         document.getElementById('main-ui').style.display = 'grid';
         const list = document.getElementById('list-target');
-        assets.forEach((a, i) => list.innerHTML += `<div class='p-2 border-b border-zinc-800 cursor-pointer' onclick='sync(${i})'>${a.n} <span class='float-right text-yellow-500 font-bold'>$1.00</span></div>`);
+        assets.forEach((a, i) => list.innerHTML += `<div class='p-2 border-b border-zinc-800' onclick='sync(${i})'>${a.n} <span class='float-right text-yellow-500'>$1.00</span></div>`);
         setInterval(marketLoop, 1200);
-        setInterval(() => { document.getElementById('market-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)]; }, 4000);
         sync(0);
     }
     function marketLoop() {
@@ -109,11 +115,22 @@
         document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
         document.getElementById('price-arrow').innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
         document.getElementById('price-arrow').style.color = side === "BUY" ? "#0f0" : "#f00";
+        
+        // CANDLE WITH POINTS
         const candle = document.createElement('div');
         candle.className = "candle"; candle.style.height = (impact * 15 + 5) + "px";
         candle.style.background = side === "BUY" ? "#0f0" : "#f00";
+        candle.innerHTML = `<div class='wick' style='background:${side === "BUY" ? "#0f0" : "#f00"}'></div>`;
         document.getElementById('candle-layer').appendChild(candle);
         if(document.getElementById('candle-layer').children.length > 25) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+
+        // MARKET ORDER DATA FLOW
+        const flow = document.getElementById('order-flow');
+        const entry = document.createElement('div');
+        entry.style.color = side === "BUY" ? "#0f0" : "#f00";
+        entry.innerText = `${side} ORDER: ${impact.toFixed(4)} UNITS @ $${albumPrice.toFixed(2)} [EXECUTED]`;
+        flow.prepend(entry);
+        if(flow.children.length > 8) flow.removeChild(flow.lastChild);
     }
     function sync(i) {
         current = i; const a = assets[i];
