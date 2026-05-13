@@ -9,49 +9,173 @@
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
         * { box-sizing: border-box; }
+        html, body { min-height: 100%; margin: 0; background: #000; color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
         
-        html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
-        
-        #init-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        .radio-console { width: 90%; max-width: 400px; padding: 40px; border: 4px double var(--gold); background: #0a0a0a; text-align: center; }
-        
-        header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; position: sticky; top: 0; z-index: 100; }
-        
-        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: calc(100vh - 60px); }
-
-        @media (max-width: 1024px) {
-            .dashboard { display: flex; flex-direction: column; height: auto; }
-            .side-col, .main-col { width: 100% !important; height: auto !important; border: none; border-bottom: 2px solid #222; overflow: visible !important; }
+        /* THE CRITICAL FIX FOR THE BLACK SCREEN */
+        #init-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: #000 !important; 
+            z-index: 99999; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            justify-content: center; 
+        }
+        .radio-console { 
+            border: 4px double var(--gold); 
+            padding: 40px; 
+            background: #0a0a0a; 
+            text-align: center; 
+            color: #fff !important; 
         }
 
+        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: calc(100vh - 60px); visibility: hidden; }
+        .dashboard.active { visibility: visible; }
+
+        header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; display: flex; justify-content: space-between; align-items: center; }
         .side-col { background: #0a0a0a; border-right: 1px solid #333; padding: 20px; }
         .main-col { background: var(--bg); border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
 
-        /* INFO CENTER FLASH LOGIC */
-        #info-center { height: 60px; background: #111; border: 1px solid #333; display: flex; align-items: center; justify-content: center; padding: 0 20px; text-align: center; overflow: hidden; border-radius: 4px; }
-        .flash-msg { font-size: 0.7rem; color: #fff; font-weight: bold; letter-spacing: 1px; display: none; line-height: 1.2; }
-        .flash-msg.active { display: block; animation: pulse-gold 2s infinite; }
+        /* THE TRINITY BUTTONS & CHART */
+        .btn-gold { background: var(--gold) !important; color: #000 !important; font-weight: 900; padding: 15px; width: 100%; text-align: center; border: none; display: block; cursor: pointer; text-decoration: none; }
+        .btn-cash { background: var(--cash) !important; color: white !important; font-weight: 900; padding: 20px; width: 100%; text-align: center; border: none; display: block; font-size: 1.1rem; cursor: pointer; text-decoration: none; }
         
-        @keyframes pulse-gold { 0% { color: #fff; } 50% { color: var(--gold); } 100% { color: #fff; } }
+        .chart-box { background: #000; border: 1px solid #333; height: 300px; position: relative; border-radius: 4px; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; }
+        .candle { width: 10px; position: relative; }
+        .wick { position: absolute; width: 2px; height: 150%; left: 4px; top: -25%; z-index: -1; }
 
-        /* THE TRADING MESSAGE BLOCK */
-        .songshare-flash {
-            background: #000; border: 3px solid var(--gold); margin: 20px 0; padding: 0;
-            box-shadow: 0 0 30px rgba(255, 204, 0, 0.3); animation: snap-in 0.2s ease-out;
-        }
+        /* SONGSHARE FLASH */
+        .songshare-flash { background: #000; border: 3px solid var(--gold); margin: 20px 0; animation: snap-in 0.2s ease-out; }
         .flash-header { background: var(--gold); color: #000; font-family: 'Archivo Black', sans-serif; font-size: 1.2rem; text-align: center; padding: 10px; }
         .flash-content { padding: 15px; color: #fff; }
         .flash-grid { display: grid; grid-template-columns: 130px 1fr; gap: 5px; font-size: 0.7rem; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-        .label { color: var(--gold); font-weight: 900; }
-        .value { text-align: right; }
         .benefit-tag { background: #111; color: var(--neon); font-size: 0.65rem; padding: 8px; margin-bottom: 4px; border-left: 4px solid var(--neon); font-weight: 900; }
 
-        .chart-box { background: #000; border: 1px solid #333; height: 300px; position: relative; border-radius: 4px; overflow: hidden; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; z-index: 1; }
-        .candle { width: 10px; border-radius: 1px; position: relative; min-height: 5px; transition: 0.3s; }
-        .wick { position: absolute; width: 2px; height: 150%; left: 4px; top: -25%; z-index: -1; }
+        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; letter-spacing: -4px; line-height: 0.9; text-align: center; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 3px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 20px; }
+        #order-flow { background: #080808; border: 1px solid #222; height: 400px; overflow-y: hidden; font-size: 0.7rem; padding: 12px; display: flex; flex-direction: column-reverse; gap: 8px;}
+        @keyframes snap-in { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    </style>
+</head>
+<body>
 
-        .ledger-row { display: grid; grid-template-columns: 1fr 80px; gap: 10px; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.8rem; }
-        .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); }
+<div id="init-overlay">
+    <div class="radio-console">
+        <h1 style="color:#ffcc00 !important; font-size: 2rem; font-weight: 900; margin-bottom: 20px;">97.7 THE FLAME</h1>
+        <button onclick="startEngine()" style="background:#ffcc00; color:#000; padding: 20px 40px; font-weight: 900; border: none; cursor: pointer; font-size: 1.5rem;">ENTER TERMINAL</button>
+        <p style="color:#00ff00 !important; font-size: 10px; margin-top: 20px;">SYSTEM STATUS: ONLINE</p>
+    </div>
+</div>
 
-        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; letter-spacing: -4px; line-
+<header>
+    <div class="font-bold text-xs text-white">GLOBAL PRE-RELEASE // MUSIC MONEY MARKET</div>
+    <div class="text-yellow-500 font-black animate-pulse text-[10px]">● LIVE CONNECTION</div>
+</header>
+
+<div id="main-dashboard" class="dashboard">
+    <aside class="side-col">
+        <a href="https://aitify-music-stream.replit.app/" class="btn-gold mb-4">OPEN MARKET TERMINAL</a>
+        <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="bg-[#151515] p-6 border border-[#333]">
+            <div id="radio-track" class="text-yellow-500 text-center text-[11px] mb-3 font-bold tracking-widest">LOVE MAKE OVER</div>
+            <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
+            <div id="price-arrow" class="font-bold text-center text-2xl mb-6 text-green-500">▲ +0.00</div>
+            
+            <div class="flex flex-col gap-3">
+                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="border-2 border-yellow-500 text-yellow-500 font-black py-4 text-center text-[10px] no-underline">SONGSHARE PARTNER: $100</a>
+                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="btn-cash">BUY ALBUM: $9.99</a>
+                <a id="buy-btn" href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="border border-white text-white py-3 text-center text-[10px] font-bold no-underline opacity-80">BUY SONG: $1.00</a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-col">
+        <div class="chart-box">
+            <div id="candle-layer"></div>
+        </div>
+        <div id="order-flow"></div>
+    </main>
+
+    <aside class="side-col" style="border-left:1px solid #333;">
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-3 mb-4 text-[10px]">MARKET LEDGER</div>
+        <div id="list-target" class="text-[10px] space-y-2 text-white"></div>
+    </aside>
+</div>
+
+<audio id="main-audio-engine" preload="auto"></audio>
+
+<script>
+    const assets = [
+        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" }
+    ];
+
+    const songshareData = {
+        title: "SONGSHARE OPPORTUNITY",
+        stats: [["OFFERED", "QUEEN BUTTA"], ["STATUS", "PRE-RELEASE"], ["LABEL", "G. SPOT RECORDS"], ["PARTNER CAP", "50 RETAILERS"], ["INVESTMENT", "$100.00"]],
+        benefits: ["50% RETAIL SALES EARNINGS", "PERSONAL ID TRACKING APP", "25% MARKET ENGAGEMENT", "GLOBAL ROYALTY SHARES"]
+    };
+
+    let engineStarted = false; let price = 1.00;
+    const audio = document.getElementById('main-audio-engine');
+
+    function startEngine() {
+        // FORCE REMOVE BLACK SCREEN
+        document.getElementById('init-overlay').style.display = 'none';
+        document.getElementById('main-dashboard').classList.add('active');
+        
+        if (engineStarted) return;
+        engineStarted = true;
+
+        const list = document.getElementById('list-target');
+        assets.forEach((a, i) => {
+            list.innerHTML += `<div class="flex justify-between py-2 border-b border-[#222]"><span>${a.name}</span><span class="text-yellow-500">$1.00</span></div>`;
+        });
+        
+        setInterval(simulateMarket, 2000); 
+        audio.src = assets[0].audio;
+        audio.play().catch(e => console.log("Audio ready for interaction"));
+    }
+
+    function simulateMarket() {
+        const flow = document.getElementById('order-flow');
+        const isFlash = Math.random() > 0.8;
+
+        if (isFlash) {
+            const div = document.createElement('div');
+            div.className = 'songshare-flash';
+            let stats = songshareData.stats.map(s => `<div style="color:var(--gold); font-weight:900;">${s[0]}</div><div style="text-align:right">${s[1]}</div>`).join('');
+            let benefits = songshareData.benefits.map(b => `<div class="benefit-tag">▶ ${b}</div>`).join('');
+            div.innerHTML = `<div class="flash-header">${songshareData.title}</div><div class="flash-content"><div class="flash-grid">${stats}</div>${benefits}</div>`;
+            flow.appendChild(div);
+        } else {
+            const up = Math.random() > 0.45;
+            const impact = (Math.random() * 0.40) + 0.05;
+            price = up ? price + impact : Math.max(1.00, price - impact);
+
+            document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
+            document.getElementById('main-osc').style.color = up ? "white" : "#ff3333";
+            document.getElementById('price-arrow').innerHTML = `${up ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
+            document.getElementById('price-arrow').style.color = up ? "#00ff00" : "#ff3333";
+
+            const c = document.createElement('div');
+            c.className = "candle";
+            c.style.height = (impact * 250) + "px";
+            c.style.background = up ? "var(--neon)" : "var(--red)";
+            c.innerHTML = `<div class="wick" style="background:${up ? "var(--neon)" : "var(--red)"}"></div>`;
+            document.getElementById('candle-layer').appendChild(c);
+            if (document.getElementById('candle-layer').children.length > 25) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+
+            const row = document.createElement('div');
+            row.className = "flex justify-between border-b border-[#111] pb-1";
+            row.style.color = up ? "#00ff00" : "#ff3333";
+            row.innerHTML = `<span>RETAIL ORDER</span> <span>$${price.toFixed(2)}</span>`;
+            flow.appendChild(row);
+        }
+        if(flow.children.length > 15) flow.removeChild(flow.firstChild);
+    }
+</script>
+</body>
+</html>
