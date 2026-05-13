@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // OFFICIAL LEDGER</title>
+    <title>97.7 THE FLAME // PARTNER TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -12,42 +12,49 @@
             --neon: #00ff00; --gold: #ffcc00; --bg: #000; 
             --glass: rgba(255, 255, 255, 0.05);
             --electric-blue: rgba(0, 210, 255, 0.2);
+            --red: #ff3333;
         }
         
         body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow: hidden; height: 100vh; }
         
-        /* DIGITAL GLASS INFO CENTER */
+        /* DIGITAL MESSAGE CENTER - NO EXTRA NOISE */
         #info-center { 
-            height: 100px; background: var(--glass); backdrop-filter: blur(25px);
+            height: 110px; background: var(--glass); backdrop-filter: blur(25px);
             border: 1px solid rgba(0, 210, 255, 0.4);
             display: flex; align-items: center; justify-content: center;
-            padding: 20px; text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
-            margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0, 210, 255, 0.1);
+            padding: 25px; text-align: center;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.1);
+            margin-bottom: 10px;
         }
 
-        .flash-msg { font-family: 'Syncopate', sans-serif; font-size: 0.75rem; color: #fff; display: none; }
+        .flash-msg { 
+            font-family: 'Syncopate', sans-serif; font-size: 0.8rem; 
+            color: #fff; font-weight: 900; display: none; letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
+        }
         .flash-msg.active { display: block; }
 
         /* COMMAND ROW */
-        .command-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
+        .command-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
         .glass-btn {
             background: var(--glass); backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 204, 0, 0.4);
             color: var(--gold); font-family: 'Syncopate', sans-serif;
             font-size: 0.6rem; padding: 15px 5px; text-align: center; cursor: pointer;
         }
-        .glass-btn:hover { background: rgba(255, 204, 0, 0.15); border-color: var(--gold); box-shadow: 0 0 15px rgba(255,204,0,0.2); }
+
+        /* MARKET CANDLES RESTORED */
+        #candle-container { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 100%; width: 100%; padding: 20px; }
+        .candle { width: 8px; border-radius: 2px 2px 0 0; transition: all 0.6s ease; }
 
         /* LAYOUT */
         .dashboard { display: grid; grid-template-columns: 360px 1fr 340px; height: calc(100vh - 60px); gap: 10px; padding: 10px; }
-        .side-col { background: rgba(5, 5, 5, 0.9); border: 1px solid #1a1a1a; padding: 20px; display: flex; flex-direction: column; }
-        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -4px; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; }
+        .side-col { background: rgba(5, 5, 5, 0.95); border: 1px solid #1a1a1a; padding: 20px; display: flex; flex-direction: column; }
+        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -4px; margin-top: 10px; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; }
         
-        /* LEDGER FIX */
-        .ledger-row { display: grid; grid-template-columns: 1fr 60px; padding: 16px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.7rem; transition: 0.2s; }
-        .ledger-row:hover { background: rgba(0, 210, 255, 0.1); color: #fff; border-left: 4px solid var(--electric-blue); }
-        .ledger-row.playing { border-left: 4px solid var(--neon); background: rgba(0, 255, 0, 0.05); }
+        .ledger-row { display: grid; grid-template-columns: 1fr 60px; padding: 16px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.7rem; }
+        .ledger-row.playing { border-left: 4px solid var(--neon); background: rgba(0, 255, 0, 0.05); color: #fff; }
 
         .media-ctrl { display: flex; justify-content: center; gap: 25px; margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid #222; }
     </style>
@@ -55,7 +62,7 @@
 <body>
 
 <header class="p-3 border-b border-white/5 flex justify-between items-center bg-black">
-    <div class="text-[9px] tracking-[4px] font-bold opacity-50">ASSET CLASS: LOVE MAKE OVER // LEDGER VERIFIED</div>
+    <div class="text-[9px] tracking-[4px] font-bold opacity-50">PARTNER TERMINAL // KINETIC FLOW</div>
     <div class="text-yellow-500 font-black animate-pulse text-[9px] tracking-[3px]">● LIVE MARKET FEED</div>
 </header>
 
@@ -71,7 +78,7 @@
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
         <div class="text-center mt-4">
-            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] tracking-widest">VERIFYING...</div>
+            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] tracking-widest">VERIFYING LEDGER...</div>
             <div id="main-osc" class="oscillator-main">$1.00</div>
             <div id="price-arrow" class="font-black text-xl mb-4">▲ +0.00</div>
             
@@ -85,16 +92,17 @@
 
     <main class="flex flex-col gap-3">
         <div id="info-center">
-            <div class="flash-msg active">HUMAN ENERGY ONLY // NO BOTTING PERMITTED</div>
-            <div class="flash-msg">SONGSHARE PARTNERS: 50% COMMISSION + 25% POOL</div>
-            <div class="flash-msg">KINETIC VALUATION: 0.00165% REAL-TIME ROI ACTIVE</div>
+            <div class="flash-msg active">"A COMPLIANT COMMUNITY DRIVEN BY HUMAN ENERGY, EMOTION, AND ENGAGEMENT. NO BOTTING PERMITTED."</div>
+            <div class="flash-msg">"SONGSHARE PARTNERS: EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT."</div>
+            <div class="flash-msg">"BENEFITS: OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
+            <div class="flash-msg">"MONETIZE YOUR ENGAGEMENT: TRANSFORM LISTENS INTO KINETIC TRADING PROFITS."</div>
         </div>
         
-        <div class="flex-1 bg-black/40 border border-white/5 relative overflow-hidden">
-             <div id="candle-layer" class="flex items-end justify-around h-full p-8"></div>
+        <div class="flex-1 bg-black border border-white/5 relative overflow-hidden">
+             <div id="candle-container"></div>
         </div>
 
-        <div id="order-flow" class="h-32 bg-black border border-white/5 p-4 overflow-hidden text-[10px]">
+        <div id="order-flow" class="h-28 bg-black border border-white/5 p-4 overflow-hidden text-[10px]">
             <div class="text-white border-b border-white/10 pb-1 mb-2 tracking-widest">LIVE EXECUTION LOG</div>
             <div id="flow-content"></div>
         </div>
@@ -102,14 +110,13 @@
 
     <aside class="side-col">
         <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-2 text-[10px] tracking-[2px]">MASTER LEDGER</div>
-        <div id="list-target" class="overflow-y-auto h-full custom-scroll"></div>
+        <div id="list-target" class="overflow-y-auto h-full"></div>
     </aside>
 </div>
 
 <audio id="main-audio-engine" preload="auto"></audio>
 
 <script>
-    // CORRECTED MASTER TRACKLIST
     const assets = [
         { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
         { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
@@ -119,10 +126,6 @@
         { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
         { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
         { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
-        { name: "LET'S GO BACK", audio: "#" },
-        { name: "I DESERVE", audio: "#" },
-        { name: "THAT GIRL FROM THE GHETTO", audio: "#" },
-        { name: "MIDNIGHT SMOKE", audio: "#" },
         { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
 
@@ -133,18 +136,15 @@
 
     window.onload = () => {
         renderLedger();
-        setInterval(rotateMsgs, 5000);
-        setInterval(simulateMarket, 1800);
+        setInterval(rotateMsgs, 6000);
+        setInterval(simulateMarket, 1500);
         audio.onended = () => next();
         sync(0);
     };
 
     function renderLedger() {
         const list = document.getElementById('list-target');
-        list.innerHTML = '';
-        assets.forEach((a, i) => {
-            list.innerHTML += `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500">$1.00</div></div>`;
-        });
+        list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`).join('');
     }
 
     function rotateMsgs() {
@@ -166,29 +166,36 @@
         currentIdx = idx;
         const row = document.getElementById(`row-${idx}`);
         if(row) row.classList.add('playing');
-        
         document.getElementById('radio-track').innerText = assets[idx].name;
-        if(assets[idx].audio !== "#") {
-            audio.src = assets[idx].audio; 
-            audio.play().catch(() => { document.getElementById('play-pause').innerText = '▶'; });
-        }
+        audio.src = assets[idx].audio; 
+        audio.play().catch(() => {});
     }
 
     function simulateMarket() {
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
-        const impact = (Math.random() * 0.40).toFixed(2);
+        const impact = (Math.random() * 0.4).toFixed(2);
         price = side === "BUY" ? price + parseFloat(impact) : Math.max(1.00, price - parseFloat(impact));
+        
         document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
         const arrow = document.getElementById('price-arrow');
         arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
-        arrow.style.color = side === "BUY" ? "var(--neon)" : "#ff3333";
+        arrow.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
+
+        // Restored Candle Logic
+        const container = document.getElementById('candle-container');
+        const c = document.createElement('div');
+        c.className = "candle";
+        c.style.height = (impact * 400) + "px";
+        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
+        container.appendChild(c);
+        if (container.children.length > 50) container.removeChild(container.firstChild);
 
         const flow = document.getElementById('flow-content');
         const line = document.createElement('div');
-        line.className = "flex justify-between py-1 border-b border-white/5 opacity-60";
-        line.innerHTML = `<span>TRADE_${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} +${impact}</span>`;
+        line.className = "flex justify-between py-1 border-b border-white/5 opacity-50";
+        line.innerHTML = `<span>EXECUTE_${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} ${impact}</span>`;
         flow.prepend(line);
-        if (flow.children.length > 6) flow.removeChild(flow.lastChild);
+        if (flow.children.length > 5) flow.removeChild(flow.lastChild);
     }
 </script>
 </body>
