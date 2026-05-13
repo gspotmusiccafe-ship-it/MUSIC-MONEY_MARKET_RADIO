@@ -10,20 +10,37 @@
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
         * { box-sizing: border-box; }
         html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
+        
         #prospectus-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; padding: 20px; display: flex; align-items: center; justify-content: center; }
         .prospectus-container { max-width: 750px; width: 100%; border: 1px solid #222; background: #080808; padding: 25px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
+        
+        /* THE DASHBOARD - ANTI-BUNCHING GRID */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: 100vh; display: none; width: 100%; }
-        @media (max-width: 1024px) { .dashboard { display: flex; flex-direction: column; } .side-col { width: 100% !important; border-bottom: 1px solid #222; } }
+        
+        @media (max-width: 1024px) { 
+            .dashboard { display: flex; flex-direction: column; height: auto; } 
+            .side-col { width: 100% !important; border-bottom: 1px solid #222; }
+            .oscillator-main { font-size: 3rem !important; }
+        }
+
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 15px; }
+        .main-col { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 20px; background: #000; }
+        
         .glass-btn { background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; padding: 14px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.7rem; }
-        .chart-box { background: #000; border: 1px solid #222; height: 300px; position: relative; overflow: hidden; margin: 10px 0; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 40px 10px; }
-        .candle { width: 8px; position: relative; transition: 0.3s; }
-        .wick { position: absolute; width: 2px; height: 160%; left: 3px; top: -30%; z-index: -1; }
+        
+        /* CHART BOX WITH FORCED WICK SPACING */
+        .chart-box { background: #050505; border: 1px solid #222; height: 320px; position: relative; overflow: hidden; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 60px 10px; }
+        .candle { width: 8px; position: relative; transition: 0.3s; z-index: 10; }
+        .wick { position: absolute; width: 2px; height: 180%; left: 3px; top: -40%; z-index: -1; opacity: 0.7; }
+        
         .oscillator-main { font-size: 4rem; color: #fff; font-weight: 900; letter-spacing: -3px; line-height: 1; }
         .album-art { width: 100%; max-width: 320px; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin: 0 auto 15px auto; }
-        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 10px; margin-bottom: 10px; }
-        #order-flow { height: 150px; background: #000; border: 1px solid #222; overflow: hidden; font-size: 0.6rem; padding: 10px; line-height: 1.5; }
+        
+        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 10px; }
+        
+        /* ORDER FLOW - FORCED HEIGHT TO PREVENT BUNCHING */
+        #order-flow { height: 180px; background: #0a0a0a; border: 1px solid #222; overflow: hidden; font-size: 0.65rem; padding: 12px; line-height: 1.8; color: #fff; }
     </style>
 </head>
 <body>
@@ -66,11 +83,13 @@
             </div>
         </div>
     </aside>
-    <main class="p-4 space-y-4">
+
+    <main class="main-col">
         <div id="ticker-box"><div class="text-white font-bold text-[10px]" id="market-msg">QUEEN BUTTA GLOBAL PRE-RELEASE ACTIVE</div></div>
         <div class="chart-box"><div id="candle-layer"></div></div>
         <div id="order-flow"></div>
     </main>
+
     <aside class="side-col">
         <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-[10px] text-center">MARKET LEDGER</div>
         <div id="list-target" class="text-[9px] space-y-1"></div>
@@ -95,10 +114,13 @@
         { n: "MIDNIGHT SMOKE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
         { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
+
     let current = 0, started = false, albumPrice = 9.99;
     const player = document.getElementById('player');
     const msgs = ["LIQUIDITY RISING", "PARTNERS EARN 50% PROFIT", "50 SHARES AVAILABLE", "90 DAYS TO RELEASE"];
+
     player.onended = () => { nextTrack(); };
+
     function startEngine() {
         if (started) return; started = true;
         document.getElementById('prospectus-overlay').style.display = 'none';
@@ -106,22 +128,29 @@
         const list = document.getElementById('list-target');
         assets.forEach((a, i) => list.innerHTML += `<div class='p-2 border-b border-zinc-800' onclick='sync(${i})'>${a.n} <span class='float-right text-yellow-500'>$1.00</span></div>`);
         setInterval(marketLoop, 1200);
-        setInterval(() => { document.getElementById('market-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)]; }, 4000);
+        setInterval(() => {
+            document.getElementById('market-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        }, 4000);
         sync(0);
     }
+
     function marketLoop() {
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
         const impact = (Math.random() * 8.50) + 0.50; 
         albumPrice = side === "BUY" ? Math.min(100, albumPrice + impact) : Math.max(9.99, albumPrice - impact);
+        
         document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
         document.getElementById('price-arrow').innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
         document.getElementById('price-arrow').style.color = side === "BUY" ? "#0f0" : "#f00";
+        
         const candle = document.createElement('div');
-        candle.className = "candle"; candle.style.height = (impact * 15 + 5) + "px";
+        candle.className = "candle";
+        candle.style.height = (impact * 15 + 10) + "px";
         candle.style.background = side === "BUY" ? "#0f0" : "#f00";
         candle.innerHTML = `<div class='wick' style='background:${side === "BUY" ? "#0f0" : "#f00"}'></div>`;
         document.getElementById('candle-layer').appendChild(candle);
-        if(document.getElementById('candle-layer').children.length > 25) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+        if(document.getElementById('candle-layer').children.length > 20) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+
         const flow = document.getElementById('order-flow');
         const entry = document.createElement('div');
         entry.style.color = side === "BUY" ? "#0f0" : "#f00";
@@ -129,12 +158,14 @@
         flow.prepend(entry);
         if(flow.children.length > 8) flow.removeChild(flow.lastChild);
     }
+
     function sync(i) {
         current = i; const a = assets[i];
         document.getElementById('radio-track').innerText = a.n;
         player.src = a.src; player.play().catch(()=>{});
         document.getElementById('p-btn').innerText = "⏸";
     }
+
     function toggleAudio() {
         if(player.paused) { player.play(); document.getElementById('p-btn').innerText = "⏸"; }
         else { player.pause(); document.getElementById('p-btn').innerText = "▶"; }
