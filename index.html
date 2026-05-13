@@ -14,81 +14,81 @@
             --glass-border: rgba(255, 255, 255, 0.2);
         }
 
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; width: 100vw; }
         
-        /* THE FIX: RIGID POSITIONS & Z-INDEX */
+        /* THE NUCLEAR FIX: FULL OVERLAY WITH RIGID BUTTON */
         #landing-page { 
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-            background: #000; z-index: 9999999; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 10000; 
             display: flex; align-items: center; justify-content: center;
         }
 
         .login-box { 
-            background: rgba(15, 15, 15, 0.98); 
-            border: 1px solid var(--glass-border); 
-            padding: 30px; width: 380px; border-radius: 8px;
-            box-shadow: 0 0 100px rgba(0, 102, 255, 0.3);
+            background: #0a0a0a; border: 1px solid #333; 
+            padding: 40px; width: 400px; border-radius: 4px;
+            box-shadow: 0 0 50px rgba(0, 102, 255, 0.2);
             text-align: center;
         }
 
         .input-terminal { 
-            background: #111; border: 1px solid #333; color: var(--bloomberg-blue); 
-            width: 100%; padding: 12px; margin-bottom: 10px; font-family: 'JetBrains Mono'; 
-            font-size: 13px; outline: none;
+            background: #111; border: 1px solid #222; color: #fff; 
+            width: 100%; padding: 15px; margin-bottom: 12px; font-family: 'JetBrains Mono'; 
+            font-size: 14px; outline: none; border-radius: 2px;
         }
 
-        /* HIGH VISIBILITY BUTTON */
         #init-btn {
             background: var(--bloomberg-blue);
-            color: white; font-weight: 900; padding: 16px; width: 100%;
-            border-radius: 4px; cursor: pointer; border: none;
-            box-shadow: 0 0 20px rgba(0, 102, 255, 0.6);
-            transition: 0.2s; text-transform: uppercase; letter-spacing: 2px;
-            margin-top: 10px;
+            color: #fff; font-weight: 900; padding: 20px; width: 100%;
+            border-radius: 2px; cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 3px;
+            font-size: 16px; margin-top: 10px;
+            display: block; visibility: visible; opacity: 1;
         }
-        #init-btn:hover { background: #0052cc; transform: scale(1.02); }
+        #init-btn:hover { background: #0052cc; box-shadow: 0 0 20px var(--bloomberg-blue); }
 
         .dashboard { display: none; grid-template-columns: 350px 1fr 320px; height: 100vh; }
         .dashboard.active { display: grid; }
         
-        /* QUICK STYLES FOR THE REST */
-        .side { background: #080808; border-right: 1px solid #222; padding: 20px; }
-        header { padding: 10px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 10px; }
+        .side { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
+        header { padding: 12px 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 11px; font-family: 'JetBrains Mono'; background: #000; }
+        .ledger-row { padding: 15px; border-bottom: 1px solid #1a1a1a; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; color: #777; }
+        .ledger-row:hover { color: #fff; background: rgba(0, 102, 255, 0.1); }
+        .playing { border-left: 3px solid var(--bloomberg-blue); color: #fff; background: rgba(0, 102, 255, 0.05); }
     </style>
 </head>
 <body>
 
 <div id="landing-page">
     <div class="login-box">
-        <h1 class="text-xl font-black mb-1">97.7 THE FLAME</h1>
-        <p class="text-[9px] text-blue-500 font-bold tracking-[3px] mb-6">TERMINAL ACCESS SQUAD</p>
+        <h1 class="text-2xl font-black mb-1">97.7 THE FLAME</h1>
+        <p class="text-[10px] text-blue-500 font-bold tracking-[4px] mb-8">MUSIC MARKET TERMINAL ACCESS</p>
         
         <input type="text" placeholder="TERMINAL_ID" class="input-terminal">
         <input type="password" placeholder="ACCESS_KEY" class="input-terminal">
         <input type="text" placeholder="SYNC_MOBILE" class="input-terminal">
         
-        <button onclick="launch()" id="init-btn">INITIALIZE SYSTEM</button>
-        <p class="text-[8px] text-gray-500 mt-4">ENCRYPTED CONNECTION STABLE</p>
+        <button type="button" onclick="launchTerminal()" id="init-btn">INITIALIZE SYSTEM</button>
+        <p class="text-[9px] text-gray-600 mt-6 font-mono">CONNECTION: ENCRYPTED // NO BOTS</p>
     </div>
 </div>
 
 <header>
-    <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET TERMINAL</div>
-    <div class="text-green-500">SYSTEM_STABLE_V4.07</div>
+    <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET APP ACCESS</div>
+    <div class="text-green-500 font-bold">● SYSTEM_STABLE_V4.08</div>
 </header>
 
 <div id="main-dash" class="dashboard">
     <div class="side">
-        <div class="w-full aspect-square bg-gray-900 border border-gray-800 mb-4"></div>
-        <div class="p-4 bg-gray-900/50 rounded border border-gray-800">
-            <div class="text-center text-4xl font-black mb-2">$3.09</div>
-            <div class="text-center text-green-500 text-xs font-bold mb-4">▲ KINETIC GAINS</div>
-            <button class="w-full bg-blue-600 p-3 rounded font-bold text-xs mb-2">OPEN MARKET</button>
-            <button class="w-full bg-green-600 p-3 rounded font-bold text-xs">BUY SONG $1.00</button>
-        </div>
-    </div>
-    <div class="p-8">
-        <div class="h-64 border-b border-gray-800 flex items-end gap-1 mb-8" id="chart"></div>
-    </div>
-    <div class="side" id="ledger">
-        <div class="text-blue-500 font
+        <div id="cover-art" class="w-full aspect-square bg-gray-900 border border-gray-800 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="p-6 bg-[#111] rounded border border-gray-800">
+            <div id="track-name" class="text-center text-blue-500 font-mono text-[10px] mb-2 font-bold tracking-widest">---</div>
+            <div id="price" class="text-center text-5xl font-black mb-2">$3.09</div>
+            <div class="text-center text-green-500 text-xs font-bold mb-6">▲ KINETIC GAINS</div>
+            
+            <div class="flex gap-2 mb-4">
+                <button onclick="toggleAudio()" id="p-btn" class="flex-1 bg-white/5 border border-white/10 p-3 text-[10px] font-bold rounded">PAUSE</button>
+                <button onclick="stopAudio()" class="flex-1 bg-white/5 border border-white/10 p-3 text-[10px] font-bold rounded">STOP</button>
+            </div>
+
+            <div class="space-y-3">
+                <a href="https://aitify-music-
