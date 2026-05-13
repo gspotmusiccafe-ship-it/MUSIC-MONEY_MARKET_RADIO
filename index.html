@@ -14,9 +14,9 @@
             --glass-border: rgba(255, 255, 255, 0.2);
         }
 
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; width: 100vw; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; }
         
-        /* THE NUCLEAR FIX: FULL OVERLAY WITH RIGID BUTTON */
+        /* FIXING OVERLAY INTERACTION */
         #landing-page { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: #000; z-index: 10000; 
@@ -42,15 +42,26 @@
             border-radius: 2px; cursor: pointer; border: none;
             text-transform: uppercase; letter-spacing: 3px;
             font-size: 16px; margin-top: 10px;
-            display: block; visibility: visible; opacity: 1;
         }
-        #init-btn:hover { background: #0052cc; box-shadow: 0 0 20px var(--bloomberg-blue); }
 
         .dashboard { display: none; grid-template-columns: 350px 1fr 320px; height: 100vh; }
         .dashboard.active { display: grid; }
         
         .side { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
         header { padding: 12px 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 11px; font-family: 'JetBrains Mono'; background: #000; }
+        
+        /* RIGID BUTTON STYLES */
+        .market-btn {
+            display: block; width: 100%; text-align: center; padding: 14px;
+            font-weight: 900; font-size: 11px; border-radius: 4px; 
+            cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
+            text-decoration: none; margin-bottom: 10px;
+        }
+        .btn-blue { background: var(--bloomberg-blue); color: #fff; }
+        .btn-green { background: var(--bloomberg-green); color: #000; }
+        .btn-outline { background: transparent; border-color: #444; color: #aaa; }
+        .btn-outline:hover { border-color: #fff; color: #fff; }
+
         .ledger-row { padding: 15px; border-bottom: 1px solid #1a1a1a; cursor: pointer; display: flex; justify-content: space-between; font-size: 12px; color: #777; }
         .ledger-row:hover { color: #fff; background: rgba(0, 102, 255, 0.1); }
         .playing { border-left: 3px solid var(--bloomberg-blue); color: #fff; background: rgba(0, 102, 255, 0.05); }
@@ -62,33 +73,62 @@
     <div class="login-box">
         <h1 class="text-2xl font-black mb-1">97.7 THE FLAME</h1>
         <p class="text-[10px] text-blue-500 font-bold tracking-[4px] mb-8">MUSIC MARKET TERMINAL ACCESS</p>
-        
         <input type="text" placeholder="TERMINAL_ID" class="input-terminal">
         <input type="password" placeholder="ACCESS_KEY" class="input-terminal">
         <input type="text" placeholder="SYNC_MOBILE" class="input-terminal">
-        
         <button type="button" onclick="launchTerminal()" id="init-btn">INITIALIZE SYSTEM</button>
-        <p class="text-[9px] text-gray-600 mt-6 font-mono">CONNECTION: ENCRYPTED // NO BOTS</p>
     </div>
 </div>
 
 <header>
     <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET APP ACCESS</div>
-    <div class="text-green-500 font-bold">● SYSTEM_STABLE_V4.08</div>
+    <div class="text-green-500 font-bold">● SYSTEM_STABLE_V4.10</div>
 </header>
 
 <div id="main-dash" class="dashboard">
     <div class="side">
-        <div id="cover-art" class="w-full aspect-square bg-gray-900 border border-gray-800 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="w-full aspect-square border border-gray-800 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         <div class="p-6 bg-[#111] rounded border border-gray-800">
             <div id="track-name" class="text-center text-blue-500 font-mono text-[10px] mb-2 font-bold tracking-widest">---</div>
             <div id="price" class="text-center text-5xl font-black mb-2">$3.09</div>
             <div class="text-center text-green-500 text-xs font-bold mb-6">▲ KINETIC GAINS</div>
             
             <div class="flex gap-2 mb-4">
-                <button onclick="toggleAudio()" id="p-btn" class="flex-1 bg-white/5 border border-white/10 p-3 text-[10px] font-bold rounded">PAUSE</button>
-                <button onclick="stopAudio()" class="flex-1 bg-white/5 border border-white/10 p-3 text-[10px] font-bold rounded">STOP</button>
+                <button onclick="toggleAudio()" id="p-btn" class="market-btn btn-outline flex-1">PAUSE</button>
+                <button onclick="stopAudio()" class="market-btn btn-outline flex-1">STOP</button>
             </div>
 
-            <div class="space-y-3">
-                <a href="https://aitify-music-
+            <div class="space-y-2">
+                <button onclick="window.open('https://aitify-music-stream.replit.app/', '_blank')" class="market-btn btn-outline">OPEN MARKET TERMINAL</button>
+                <button onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4', '_blank')" class="market-btn btn-green">BUY SINGLE SONG $1.00</button>
+                <button onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC', '_blank')" class="market-btn btn-outline">BUY FULL ALBUM $9.99</button>
+                <button onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl', '_blank')" class="market-btn btn-blue">SONGSHARE PARTNER $100</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-8 overflow-y-auto">
+        <h2 class="text-gray-500 font-bold text-[10px] mb-4 tracking-widest">REAL-TIME_KINETIC_CHART</h2>
+        <div class="h-64 border-b border-gray-800 flex items-end gap-1 mb-12" id="chart"></div>
+        
+        <div class="bg-blue-900/10 border border-blue-900/30 p-6 rounded">
+            <div class="text-blue-500 font-bold text-xs mb-3">MUSIC MARKET APP ACCESS_BENEFITS</div>
+            <div class="space-y-2 text-[10px] text-gray-400 font-mono">
+                <div class="flex justify-between"><span>RETAIL COMMISSION:</span><span class="text-white">50%</span></div>
+                <div class="flex justify-between"><span>APP ACCESS:</span><span class="text-white">MUSIC MARKET SYNC</span></div>
+                <div class="flex justify-between"><span>GLOBAL REVENUE:</span><span class="text-white">25% ENGAGEMENT</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="side" id="ledger">
+        <div class="text-blue-500 font-bold text-[10px] mb-4 border-b border-blue-900/30 pb-2 font-mono">MARKET_LEDGER_SELECTOR</div>
+        <div id="ledger-list"></div>
+    </div>
+</div>
+
+<audio id="audio-engine"></audio>
+
+<script>
+    const playlist = [
+        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
