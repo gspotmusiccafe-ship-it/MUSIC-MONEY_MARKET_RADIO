@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // MASTER PARTNER TERMINAL</title>
+    <title>97.7 THE FLAME // FULL ASSET TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -17,6 +17,7 @@
         
         body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow: hidden; height: 100vh; }
         
+        /* THE GLASS MESSAGE CENTER */
         #info-center { 
             height: 110px; background: var(--glass); backdrop-filter: blur(25px);
             border: 1px solid rgba(0, 210, 255, 0.4);
@@ -33,6 +34,7 @@
         }
         .flash-msg.active { display: block; }
 
+        /* THE COMMAND ROW */
         .command-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
         .glass-btn {
             background: var(--glass); backdrop-filter: blur(10px);
@@ -40,18 +42,22 @@
             color: var(--gold); font-family: 'Syncopate', sans-serif;
             font-size: 0.6rem; padding: 15px 5px; text-align: center; cursor: pointer;
         }
+        .glass-btn:hover { background: rgba(255, 204, 0, 0.1); border-color: var(--gold); }
 
+        /* KINETIC CANDLES */
         #candle-container { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 100%; width: 100%; padding: 20px; }
         .candle { width: 10px; border-radius: 2px 2px 0 0; transition: all 0.6s ease; }
 
+        /* LAYOUT */
         .dashboard { display: grid; grid-template-columns: 360px 1fr 340px; height: calc(100vh - 60px); gap: 10px; padding: 10px; }
         .side-col { background: rgba(5, 5, 5, 0.95); border: 1px solid #1a1a1a; padding: 20px; display: flex; flex-direction: column; }
         .oscillator-main { font-size: 4.2rem; color: white; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -4px; margin-top: 10px; }
         .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; }
         
-        .ledger-row { display: grid; grid-template-columns: 1fr 60px; padding: 14px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.65rem; }
+        /* MASTER LEDGER */
+        .ledger-row { display: grid; grid-template-columns: 1fr 60px; padding: 12px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.6rem; transition: 0.2s; }
         .ledger-row.playing { border-left: 4px solid var(--neon); background: rgba(0, 255, 0, 0.05); color: #fff; }
-        .ledger-row.pending { opacity: 0.4; font-style: italic; }
+        .ledger-row:hover { background: rgba(255,255,255,0.05); }
 
         .media-ctrl { display: flex; justify-content: center; gap: 25px; margin-top: 15px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid #222; }
     </style>
@@ -59,7 +65,7 @@
 <body>
 
 <header class="p-3 border-b border-white/5 flex justify-between items-center bg-black">
-    <div class="text-[9px] tracking-[4px] font-bold opacity-50">PARTNER TERMINAL // 13-TRACK MASTER LEDGER</div>
+    <div class="text-[9px] tracking-[4px] font-bold opacity-50">13-TRACK MASTER ASSET LEDGER // LIVE</div>
     <div class="text-yellow-500 font-black animate-pulse text-[9px] tracking-[3px]">● LIVE MARKET FEED</div>
 </header>
 
@@ -75,7 +81,7 @@
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
         <div class="text-center mt-4">
-            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] tracking-widest">SYNCHRONIZING...</div>
+            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] tracking-widest">ASSET ACTIVE</div>
             <div id="main-osc" class="oscillator-main">$1.00</div>
             <div id="price-arrow" class="font-black text-xl mb-4">▲ +0.00</div>
             
@@ -106,7 +112,7 @@
     </main>
 
     <aside class="side-col">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-2 text-[10px] tracking-[2px]">MASTER LEDGER (13)</div>
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-2 text-[10px] tracking-[2px]">MASTER LEDGER</div>
         <div id="list-target" class="overflow-y-auto h-full"></div>
     </aside>
 </div>
@@ -116,17 +122,17 @@
 <script>
     const assets = [
         { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
         { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
         { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
         { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
         { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
         { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
         { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
-        { name: "LET'S GO BACK", audio: "#" },
-        { name: "I DESERVE", audio: "#" },
-        { name: "THAT GIRL FROM THE GHETTO", audio: "#" },
-        { name: "MIDNIGHT SMOKE", audio: "#" },
+        { name: "LET'S GO BACK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
+        { name: "I DESERVE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
+        { name: "THAT GIRL FROM THE GHETTO", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+        { name: "MIDNIGHT SMOKE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
         { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
 
@@ -138,20 +144,14 @@
     window.onload = () => {
         renderLedger();
         setInterval(rotateMsgs, 6000);
-        setInterval(simulateMarket, 1400);
+        setInterval(simulateMarket, 1300);
         audio.onended = () => next();
         sync(0);
     };
 
     function renderLedger() {
         const list = document.getElementById('list-target');
-        list.innerHTML = assets.map((a, i) => {
-            const isPending = a.audio === "#";
-            return `<div id="row-${i}" class="ledger-row ${isPending ? 'pending' : ''}" onclick="sync(${i})">
-                <div>${a.name} ${isPending ? '[PENDING]' : ''}</div>
-                <div class="text-right text-yellow-500 font-bold">$1.00</div>
-            </div>`;
-        }).join('');
+        list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`).join('');
     }
 
     function rotateMsgs() {
@@ -165,21 +165,10 @@
         else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
     }
 
-    function next() { 
-        let nextIdx = (currentIdx + 1) % assets.length;
-        // Skip pending tracks for continuous play
-        while (assets[nextIdx].audio === "#") { nextIdx = (nextIdx + 1) % assets.length; if(nextIdx === currentIdx) break; }
-        sync(nextIdx); 
-    }
-    
-    function prev() { 
-        let prevIdx = (currentIdx - 1 + assets.length) % assets.length;
-        while (assets[prevIdx].audio === "#") { prevIdx = (prevIdx - 1 + assets.length) % assets.length; if(prevIdx === currentIdx) break; }
-        sync(prevIdx); 
-    }
+    function next() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prev() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
 
     function sync(idx) {
-        if(assets[idx].audio === "#") return; // Don't sync empty assets
         document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
         currentIdx = idx;
         const row = document.getElementById(`row-${idx}`);
@@ -191,7 +180,7 @@
 
     function simulateMarket() {
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
-        const impact = (Math.random() * 0.5).toFixed(2);
+        const impact = (Math.random() * 0.6).toFixed(2);
         price = side === "BUY" ? price + parseFloat(impact) : Math.max(1.00, price - parseFloat(impact));
         
         document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
@@ -202,10 +191,17 @@
         const container = document.getElementById('candle-container');
         const c = document.createElement('div');
         c.className = "candle";
-        c.style.height = (impact * 350) + "px";
+        c.style.height = (impact * 300) + "px";
         c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
         container.appendChild(c);
-        if (container.children.length > 40) container.removeChild(container.firstChild);
+        if (container.children.length > 50) container.removeChild(container.firstChild);
+
+        const flow = document.getElementById('flow-content');
+        const line = document.createElement('div');
+        line.className = "flex justify-between py-1 border-b border-white/5 opacity-50";
+        line.innerHTML = `<span>EXEC_TRADE_${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} +${impact}</span>`;
+        flow.prepend(line);
+        if (flow.children.length > 5) flow.removeChild(flow.lastChild);
     }
 </script>
 </body>
