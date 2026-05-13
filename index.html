@@ -3,193 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // QUEEN BUTTA SHOWCASE</title>
+    <title>97.7 THE FLAME // MUSIC MARKET TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap');
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; --red: #ff3333; --cash: #00d632; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root { 
+            --bloomberg-green: #00ff33; 
+            --bloomberg-red: #ff3333; 
+            --bloomberg-blue: #0066ff;
+            --bg: #050505; 
+            --panel: #0f0f0f;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
         * { box-sizing: border-box; }
-        html, body { min-height: 100%; margin: 0; background: #000; color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; text-transform: uppercase; margin: 0; }
         
-        /* LANDING PAGE / CREATE ACCOUNT */
+        /* BLOOMBERG STYLE MARQUEE */
+        marquee { background: #000; border-bottom: 1px solid #333; color: var(--bloomberg-green); font-family: 'JetBrains Mono'; font-weight: bold; padding: 8px; font-size: 13px; }
+
+        /* AUTH LANDING */
         #landing-page { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { border: 4px double var(--gold); background: #0a0a0a; padding: 40px; width: 100%; max-width: 450px; text-align: center; }
-        .input-field { background: #111; border: 1px solid #333; color: white; width: 100%; padding: 12px; margin-bottom: 15px; font-family: 'JetBrains Mono'; }
-        
-        /* LAYOUT */
-        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 60px); display: none; }
+        .glass-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid var(--glass-border); 
+            padding: 40px; 
+            width: 100%; max-width: 450px; 
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* GRADIENT GLASS BUTTONS */
+        .btn-glass {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            font-weight: 800;
+            padding: 16px;
+            border-radius: 8px;
+            display: block;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+        .btn-glass:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .btn-green { color: var(--bloomberg-green); border-color: var(--bloomberg-green); }
+        .btn-blue { background: linear-gradient(135deg, rgba(0,102,255,0.3), rgba(0,102,255,0.1)); border-color: var(--bloomberg-blue); }
+
+        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 85px); display: none; }
         .dashboard.active { display: grid; }
 
-        header { padding: 12px 20px; background: var(--panel); border-bottom: 2px solid #333; display: flex; justify-content: space-between; align-items: center; }
-        .side-col { background: #0a0a0a; border-right: 1px solid #333; padding: 20px; overflow-y: auto; }
-        .main-col { background: var(--bg); border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+        header { padding: 15px 25px; background: #000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono'; }
+        .side-col { background: var(--panel); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
+        .main-col { background: var(--bg); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
 
-        /* MARKET LEDGER (SONG SELECTOR) */
-        .ledger-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; font-size: 11px; }
-        .ledger-row:hover { background: var(--gold); color: #000; font-weight: 900; }
-        .ledger-row.playing { border-left: 4px solid var(--neon); color: var(--neon); }
+        /* LEDGER SELECTOR */
+        .ledger-row { display: flex; justify-content: space-between; padding: 14px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono'; color: #888; }
+        .ledger-row:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .ledger-row.playing { border-left: 3px solid var(--bloomberg-blue); color: var(--bloomberg-blue); background: rgba(0,102,255,0.05); }
 
-        /* BUTTONS */
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 15px; width: 100%; text-align: center; border: none; display: block; cursor: pointer; }
-        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 18px; width: 100%; text-align: center; border: none; display: block; }
-        .btn-control { border: 1px solid var(--neon); color: var(--neon); padding: 10px; flex: 1; font-size: 10px; font-weight: 900; background: transparent; }
-        .btn-control:hover { background: var(--neon); color: #000; }
+        /* OSCILLATOR */
+        .oscillator { font-size: 4rem; font-weight: 900; letter-spacing: -4px; line-height: 1; text-align: center; font-family: 'Inter'; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #333; background-size: cover; border-radius: 4px; margin-bottom: 20px; }
 
-        /* VISUALS */
-        .album-art { width: 100%; aspect-ratio: 1; border: 3px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 15px; }
-        .oscillator { font-size: 3.5rem; color: white; font-weight: 900; letter-spacing: -3px; text-align: center; line-height: 1; }
-        
-        marquee { background: var(--gold); color: #000; font-weight: 900; padding: 5px; font-size: 12px; }
-
-        /* SONGSHARE BLOCK */
-        .songshare-card { background: #000; border: 2px solid var(--gold); margin-top: 20px; }
-        .card-header { background: var(--gold); color: #000; padding: 10px; font-family: 'Archivo Black'; text-align: center; font-size: 14px; }
-        .card-body { padding: 15px; font-size: 11px; color: #fff; }
+        .input-field { background: #111; border: 1px solid #333; color: white; width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; }
     </style>
 </head>
 <body>
 
 <div id="landing-page">
-    <div class="auth-card">
-        <h1 class="text-yellow-500 font-black text-2xl mb-2">97.7 THE FLAME</h1>
-        <p class="text-white text-[10px] mb-6 tracking-widest">PRE-RELEASE SHOWCASE: QUEEN BUTTA</p>
+    <div class="glass-card">
+        <h1 class="text-white font-black text-2xl mb-1">97.7 THE FLAME</h1>
+        <p class="text-blue-500 text-[10px] mb-8 tracking-[3px] font-bold">MUSIC MARKET APP ACCESS</p>
         
-        <input type="email" placeholder="EMAIL ADDRESS" class="input-field">
-        <input type="password" placeholder="PASSWORD" class="input-field">
-        <input type="text" placeholder="MOBILE NUMBER" class="input-field">
+        <input type="email" placeholder="TERMINAL ID (EMAIL)" class="input-field">
+        <input type="password" placeholder="ACCESS KEY" class="input-field">
+        <input type="text" placeholder="MOBILE SYNC NUMBER" class="input-field">
         
-        <button onclick="enterMarket()" class="btn-gold mt-4">CREATE ACCOUNT & ENTER MARKET</button>
-        <p class="text-gray-500 text-[9px] mt-4">BY ENTERING YOU AGREE TO DIGITAL ASSET TERMS</p>
+        <button onclick="enterTerminal()" class="btn-glass btn-blue mt-4 w-full">INITIALIZE TERMINAL</button>
     </div>
 </div>
 
-<marquee>THE MUSIC MARKET IS THE MARQUEE /// OWN A PIECE OF THE MUSIC BEFORE GLOBAL LAUNCH /// QUEEN BUTTA "LOVE MAKE OVER" PRE-RELEASE SHOWCASE ACTIVE</marquee>
+<marquee id="market-ticker">LOADING MARKET DATA... QUEEN BUTTA "LOVE MAKE OVER" TRADING AT $3.09 (+12.4%) ... SONGSHARE OPPORTUNITY OPEN ... 50 RETAILER SLOTS REMAINING ...</marquee>
 
 <header>
-    <div class="font-bold text-[10px]">AITIFY // PERSONAL ID TRACKING APP</div>
-    <div class="text-yellow-500 font-black animate-pulse text-[10px]">● LIVE MARKET CONNECTION</div>
+    <div class="text-[10px] font-bold text-gray-400">AITIFY // <span class="text-blue-500">MUSIC MARKET APP ACCESS</span></div>
+    <div class="text-[10px] font-bold tracking-widest"><span class="text-green-500">●</span> SYSTEM_STABLE // 2026_V4</div>
 </header>
 
 <div id="market-dashboard" class="dashboard">
     <aside class="side-col">
-        <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div id="art-box" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
-        <div class="bg-[#111] p-4 border border-[#333] mb-4">
-            <div id="now-playing" class="text-yellow-500 text-center text-[10px] mb-2 font-bold">--</div>
-            <div id="price-main" class="oscillator mb-2">$3.09</div>
-            <div class="text-center text-green-500 font-bold text-sm mb-4">▲ KINETIC GAIN</div>
+        <div class="glass-card p-4 mb-6">
+            <div id="now-playing" class="text-gray-500 text-center text-[10px] mb-2 font-bold font-mono">--</div>
+            <div id="price-main" class="oscillator text-white mb-2">$1.00</div>
+            <div id="market-status" class="text-center text-green-500 font-bold text-xs mb-6">▲ MARKET OPEN</div>
             
             <div class="flex gap-2 mb-4">
-                <button onclick="togglePlay()" id="play-pause-btn" class="btn-control">PAUSE</button>
-                <button onclick="stopAudio()" class="btn-control">STOP</button>
+                <button onclick="togglePlay()" id="play-btn" class="btn-glass flex-1 text-[10px]">PAUSE</button>
+                <button onclick="stopAudio()" class="btn-glass flex-1 text-[10px]">STOP</button>
             </div>
 
-            <a href="#" class="btn-cash mb-3">BUY ALBUM: $9.99</a>
-            <a href="#" class="btn-gold">SONGSHARE PARTNER: $100</a>
+            <div class="space-y-3">
+                <a href="#" class="btn-glass btn-green">BUY SONG: $1.00</a>
+                <a href="#" class="btn-glass">BUY ALBUM: $9.99</a>
+                <a href="#" class="btn-glass btn-blue">SONGSHARE PARTNER: $100</a>
+            </div>
         </div>
     </aside>
 
     <main class="main-col">
-        <div class="bg-[#111] p-4 border border-[#333]">
-            <h2 class="text-white font-bold text-xs mb-4">PRE-RELEASE ASSET VALUE</h2>
-            <div id="chart-container" class="h-48 flex items-end justify-around gap-1 px-2 border-b border-[#333] pb-2">
-                </div>
+        <div class="glass-card p-6 mb-6">
+            <h2 class="text-gray-400 font-bold text-[10px] mb-4 tracking-widest">ASSET_KINETIC_FLOW</h2>
+            <div id="chart-container" class="h-64 flex items-end justify-around gap-1 px-2 border-b border-[#222] pb-2"></div>
         </div>
 
-        <div class="songshare-card">
-            <div class="card-header">SONGSHARE OPPORTUNITY</div>
-            <div class="card-body">
-                <div class="flex justify-between mb-2"><span class="text-yellow-500">OFFERED:</span><span>QUEEN BUTTA</span></div>
-                <div class="flex justify-between mb-2"><span class="text-yellow-500">ASSET:</span><span>LOVE MAKE OVER</span></div>
-                <div class="flex justify-between mb-4"><span class="text-yellow-500">INVESTMENT:</span><span>$100.00</span></div>
-                <div class="border-t border-[#333] pt-3">
-                    <div class="text-[#00ff00] text-[9px] mb-1">▶ 50% RETAIL SALES EARNINGS</div>
-                    <div class="text-[#00ff00] text-[9px] mb-1">▶ PERSONAL ID TRACKING APP ACCESS</div>
-                    <div class="text-[#00ff00] text-[9px]">▶ 25% GLOBAL MARKET ENGAGEMENT</div>
-                </div>
+        <div class="glass-card overflow-hidden">
+            <div class="bg-blue-600/20 p-3 text-blue-400 font-bold text-[10px] text-center border-b border-blue-500/30">SONGSHARE_OPPORTUNITY_ALERT</div>
+            <div class="p-5">
+                <div class="flex justify-between text-xs mb-2 text-gray-400"><span>PARTNER RETAIL SHARE:</span><span class="text-white font-bold">50%</span></div>
+                <div class="flex justify-between text-xs mb-2 text-gray-400"><span>APP ACCESS LEVEL:</span><span class="text-white font-bold">PERSONAL ID TRACKING</span></div>
+                <div class="flex justify-between text-xs text-gray-400"><span>GLOBAL ENGAGEMENT:</span><span class="text-white font-bold">25% SHARED</span></div>
             </div>
         </div>
     </main>
 
-    <aside class="side-col" style="border-left: 1px solid #333;">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-[10px]">MARKET LEDGER</div>
-        <div id="ledger-list">
-            </div>
+    <aside class="side-col">
+        <div class="text-blue-500 font-bold border-b border-blue-900/50 pb-2 mb-4 text-[10px] font-mono">MARKET_LEDGER</div>
+        <div id="ledger-list"></div>
     </aside>
 </div>
 
-<audio id="audio-engine" preload="auto"></audio>
+<audio id="audio-engine"></audio>
 
 <script>
     const playlist = [
-        { name: "LOVE MAKE OVER", file: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
-        { name: "SUPERFLY", file: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "TIMES UP", file: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" }
-    ];
-
-    const audio = document.getElementById('audio-engine');
-    let currentTrack = 0;
-
-    function enterMarket() {
-        document.getElementById('landing-page').style.display = 'none';
-        document.getElementById('market-dashboard').classList.add('active');
-        initLedger();
-        selectSong(0);
-        setInterval(genCandle, 2000);
-    }
-
-    function initLedger() {
-        const list = document.getElementById('ledger-list');
-        list.innerHTML = "";
-        playlist.forEach((song, i) => {
-            const row = document.createElement('div');
-            row.className = `ledger-row row-${i}`;
-            row.innerHTML = `<span>${song.name}</span><span class="text-yellow-500">$1.00</span>`;
-            row.onclick = () => selectSong(i);
-            list.appendChild(row);
-        });
-    }
-
-    function selectSong(i) {
-        currentTrack = i;
-        const song = playlist[i];
-        document.getElementById('now-playing').innerText = song.name;
-        audio.src = song.file;
-        audio.play();
-        document.getElementById('play-pause-btn').innerText = "PAUSE";
-        
-        // Highlight in Ledger
-        document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
-        document.querySelector(`.row-${i}`).classList.add('playing');
-    }
-
-    function togglePlay() {
-        if (audio.paused) {
-            audio.play();
-            document.getElementById('play-pause-btn').innerText = "PAUSE";
-        } else {
-            audio.pause();
-            document.getElementById('play-pause-btn').innerText = "PLAY";
-        }
-    }
-
-    function stopAudio() {
-        audio.pause();
-        audio.currentTime = 0;
-        document.getElementById('play-pause-btn').innerText = "PLAY";
-    }
-
-    function genCandle() {
-        const container = document.getElementById('chart-container');
-        const up = Math.random() > 0.4;
-        const h = Math.floor(Math.random() * 80) + 10;
-        const candle = document.createElement('div');
-        candle.style.width = "12px";
-        candle.style.height = h + "%";
-        candle.style.background = up ? "var(--neon)" : "var(--red)";
-        container.appendChild(candle);
-        if(container.children.length > 25) container.removeChild(container.firstChild);
-    }
-</script>
-</body>
-</html>
+        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+        { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+        { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+        { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
+        { name: "IT'S FRIDAY NIGHT", audio: "
