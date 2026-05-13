@@ -10,9 +10,11 @@
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
         * { box-sizing: border-box; }
         html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+        
         #prospectus-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; padding: 20px; display: flex; align-items: center; justify-content: center; }
-        .prospectus-container { max-width: 750px; width: 100%; border: 1px solid #222; background: #080808; padding: 30px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
+        .prospectus-container { max-width: 800px; width: 100%; border: 1px solid #222; background: #080808; padding: 30px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .prospectus-header { border-bottom: 3px solid var(--neon); margin-bottom: 20px; padding-bottom: 10px; }
+        
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: 100vh; display: none; }
         @media (max-width: 1024px) { .dashboard { display: flex; flex-direction: column; } }
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 15px; }
@@ -31,15 +33,20 @@
     <div class="prospectus-container">
         <div class="prospectus-header">
             <h1 class="text-2xl font-black text-white">WELCOME TO THE MUSIC MARKET</h1>
-            <p class="text-yellow-500 text-[10px]">50 SONGSHARES AVAILABLE // 90 DAYS TO RELEASE</p>
+            <p class="text-yellow-500 text-[10px]">OWN A PIECE OF THE MUSIC // ASSET FRACTIONALIZATION</p>
         </div>
         <div class="flex flex-col md:flex-row gap-6 mb-6">
-            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full md:w-52 h-52 object-cover border border-zinc-700">
-            <div class="flex-1 text-[10px] space-y-4">
-                <p class="text-white font-bold">ASSET: LOVE MAKE OVER // QUEEN BUTTA</p>
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full md:w-64 h-64 object-cover border border-zinc-700">
+            <div class="flex-1 space-y-4">
+                <p class="text-white font-bold text-sm">ASSET: LOVE MAKE OVER // QUEEN BUTTA</p>
                 <div class="grid grid-cols-2 gap-2">
-                    <div class="border border-zinc-800 p-2">SHARES AVAILABLE<br><span class="text-white text-lg font-bold">50 AVAILABLE</span></div>
-                    <div class="border border-zinc-800 p-2">RELEASE WINDOW<br><span class="text-white text-lg font-bold">90 DAYS</span></div>
+                    <div class="border border-zinc-800 p-2 text-center text-[9px]">SHARES ISSUED<br><span class="text-white text-lg font-bold">50 AVAILABLE</span></div>
+                    <div class="border border-zinc-800 p-2 text-center text-[9px]">RELEASE WINDOW<br><span class="text-white text-lg font-bold">90 DAYS</span></div>
+                </div>
+                <div class="p-3 border border-zinc-800 text-[10px] space-y-2">
+                    <p><span class="text-yellow-500 font-bold">$1.00 RETAIL:</span> SINGLE SONG ASSET.</p>
+                    <p><span class="text-yellow-500 font-bold">$9.99 ALBUM:</span> FULL 13-TRACK ASSET.</p>
+                    <p class="text-green-500 font-bold">$100 RESELLER: EARN 50% RETAIL PROFIT SHARE.</p>
                 </div>
             </div>
         </div>
@@ -106,3 +113,43 @@
         if (started) return; started = true;
         document.getElementById('prospectus-overlay').style.display = 'none';
         document.getElementById('main-ui').style.display = 'grid';
+        const list = document.getElementById('list-target');
+        assets.forEach((a, i) => list.innerHTML += `<div class='p-2 border-b border-zinc-800' onclick='sync(${i})'>${a.n} <span class='float-right text-yellow-500'>$1.00</span></div>`);
+        setInterval(marketLoop, 1500);
+        setInterval(() => {
+            document.getElementById('market-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        }, 4000);
+        sync(0);
+    }
+
+    function marketLoop() {
+        const side = Math.random() > 0.45 ? "BUY" : "SELL";
+        const impact = (Math.random() * 8.50) + 0.50; 
+        albumPrice = side === "BUY" ? Math.min(100, albumPrice + impact) : Math.max(9.99, albumPrice - impact);
+        document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
+        document.getElementById('price-arrow').innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
+        document.getElementById('price-arrow').style.color = side === "BUY" ? "#0f0" : "#f00";
+        const candle = document.createElement('div');
+        candle.className = "candle";
+        candle.style.height = (impact * 15 + 10) + "px";
+        candle.style.background = side === "BUY" ? "#0f0" : "#f00";
+        document.getElementById('candle-layer').appendChild(candle);
+        if(document.getElementById('candle-layer').children.length > 28) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+    }
+
+    function sync(i) {
+        current = i; const a = assets[i];
+        document.getElementById('radio-track').innerText = a.n;
+        player.src = a.src; player.play().catch(()=>{});
+        document.getElementById('p-btn').innerText = "⏸";
+    }
+
+    function toggleAudio() {
+        if(player.paused) { player.play(); document.getElementById('p-btn').innerText = "⏸"; }
+        else { player.pause(); document.getElementById('p-btn').innerText = "▶"; }
+    }
+    function nextTrack() { current = (current + 1) % assets.length; sync(current); }
+    function prevTrack() { current = (current - 1 + assets.length) % assets.length; sync(current); }
+</script>
+</body>
+</html>
