@@ -33,7 +33,7 @@
         .flash-msg.active { display: block; }
 
         /* GLASS BUTTONS */
-        .glass-btn { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; transition: 0.3s; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .glass-btn { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; transition: 0.3s; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; }
         .glass-btn:hover { background: rgba(0, 255, 0, 0.2); border-color: var(--neon); }
         
         .chart-box { background: #000; border: 1px solid #333; height: 300px; position: relative; border-radius: 4px; overflow: hidden; }
@@ -56,7 +56,7 @@
 <div id="init-overlay">
     <div class="radio-console">
         <h1 class="text-yellow-500 font-black text-2xl tracking-widest mb-6">97.7 THE FLAME</h1>
-        <button onclick="startEngine()" class="glass-btn w-full py-6 text-xl border-2 border-yellow-500 text-yellow-500">QUEEN BUTTA INITIALIZE</button>
+        <button id="master-init" onclick="startEngine()" class="glass-btn w-full py-6 text-xl border-2 border-yellow-500 text-yellow-500">QUEEN BUTTA INITIALIZE</button>
     </div>
 </div>
 
@@ -120,4 +120,83 @@
         { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
         { name: "LET'S GO BACK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
         { name: "I DESERVE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
-        { name: "THAT GIRL FROM THE GHETTO", audio: "
+        { name: "THAT GIRL FROM THE GHETTO", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+        { name: "MIDNIGHT SMOKE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
+        { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
+    ];
+
+    let currentIdx = 0; let engineStarted = false; let price = 1.00;
+    const audio = document.getElementById('main-audio-engine');
+    const msgs = document.querySelectorAll('.flash-msg');
+    let msgIdx = 0;
+
+    audio.onended = () => { nextAsset(); };
+
+    function startEngine() {
+        if (engineStarted) return;
+        engineStarted = true;
+        document.getElementById('init-overlay').style.display = 'none';
+        const list = document.getElementById('list-target');
+        assets.forEach((a, i) => {
+            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`;
+        });
+        setInterval(() => {
+            msgs[msgIdx].classList.remove('active');
+            msgIdx = (msgIdx + 1) % msgs.length;
+            msgs[msgIdx].classList.add('active');
+        }, 5000);
+        setInterval(simulateMarket, 1200); 
+        sync(0);
+    }
+
+    function simulateMarket() {
+        const side = Math.random() > 0.45 ? "BUY" : "SELL";
+        const impact = (Math.random() * 0.40) + 0.05;
+        const candleLayer = document.getElementById('candle-layer');
+        if (side === "BUY") price = Math.min(5.00, price + impact);
+        else price = Math.max(1.00, price - impact);
+
+        const osc = document.getElementById('main-osc');
+        const arrow = document.getElementById('price-arrow');
+        osc.innerText = `$${price.toFixed(2)}`;
+        osc.className = `oscillator-main ${side === "BUY" ? "text-green-500" : "text-red-500"}`;
+        arrow.innerHTML = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
+        arrow.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
+
+        const c = document.createElement('div');
+        c.className = "candle";
+        c.style.height = (impact * 250) + "px";
+        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
+        c.innerHTML = `<div class="wick" style="background:${side === "BUY" ? "var(--neon)" : "var(--red)"}"></div>`;
+        candleLayer.appendChild(c);
+        if (candleLayer.children.length > 28) candleLayer.removeChild(candleLayer.firstChild);
+
+        const flow = document.getElementById('order-flow');
+        const row = document.createElement('div');
+        row.className = 'trade-row';
+        row.style.color = side === "BUY" ? "#00ff00" : "#ff3333";
+        row.innerHTML = `<span>${side} RETAIL ORDER</span> <span>$${price.toFixed(2)}</span>`;
+        flow.prepend(row);
+        if(flow.children.length > 10) flow.removeChild(flow.lastChild);
+    }
+
+    function sync(idx) {
+        currentIdx = idx; const a = assets[idx];
+        document.getElementById('radio-track').innerText = a.name;
+        audio.src = a.audio; 
+        audio.play().catch(e => { console.log("Handshake needed"); });
+        document.getElementById('play-pause-btn').innerText = '⏸';
+    }
+
+    function togglePlay() {
+        const btn = document.getElementById('play-pause-btn');
+        if (audio.paused) { audio.play(); btn.innerText = '⏸'; }
+        else { audio.pause(); btn.innerText = '▶'; }
+    }
+
+    function nextAsset() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prevAsset() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+    document.addEventListener('touchstart', () => { if (audio.paused && engineStarted) audio.play(); }, {once: false});
+</script>
+</body>
+</html>
