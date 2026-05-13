@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // QUEEN BUTTA SHOWCASE</title>
+    <title>THE MUSIC MONEY MARKET // QUEEN BUTTA PROSPECTUS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
         :root { --bloomberg-green: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
         * { box-sizing: border-box; }
         
-        html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--bloomberg-green); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
+        html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--bloomberg-green); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
         
-        /* INITIALIZE RADIO INTERFACE */
-        #init-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
-        .radio-console { width: 90%; max-width: 450px; padding: 40px; border: 2px solid var(--bloomberg-green); background: #000; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 0, 0.1); }
+        /* THE PROSPECTUS LANDING PAGE */
+        #prospectus-overlay { 
+            position: fixed; inset: 0; background: #000; z-index: 9999; 
+            overflow-y: auto; padding: 60px 20px; display: flex; flex-direction: column; align-items: center;
+        }
+        .prospectus-container { max-width: 900px; width: 100%; border: 1px solid #333; background: #080808; padding: 50px; position: relative; }
+        .prospectus-header { border-bottom: 4px solid var(--bloomberg-green); margin-bottom: 40px; padding-bottom: 20px; }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+        .stat-box { border: 1px solid #222; padding: 20px; background: #000; text-align: center; }
 
         header { padding: 12px 20px; background: #111; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 100; }
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: calc(100vh - 60px); }
@@ -27,107 +34,66 @@
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 20px; }
         .main-col { background: var(--bg); border-right: 1px solid #222; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
 
-        /* BLOOMBERG INFO TICKER */
-        #info-center { height: 75px; background: rgba(0, 255, 0, 0.03); border: 1px solid rgba(0, 255, 0, 0.2); border-left: 5px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; margin-bottom: 5px; }
-        .flash-msg { font-size: 0.75rem; color: #fff; font-weight: 700; display: none; line-height: 1.3; }
-        .flash-msg.active { display: block; animation: ticker-fade 1.5s infinite alternate; }
-        @keyframes ticker-fade { from { opacity: 1; } to { opacity: 0.6; color: var(--bloomberg-green); } }
-
-        /* THE GLASS BUTTONS (KILLING THE UGLY YELLOW) */
+        /* TERMINAL UI ELEMENTS */
         .glass-btn { 
-            background: rgba(0, 255, 0, 0.05); 
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(0, 255, 0, 0.3); 
-            color: #fff; font-weight: 900; 
-            padding: 15px; width: 100%; 
-            transition: 0.3s; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center;
-            text-decoration: none; font-size: 0.75rem;
+            background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); 
+            border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; 
+            padding: 18px; width: 100%; transition: 0.3s; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; text-decoration: none;
         }
-        .glass-btn:hover { background: rgba(0, 255, 0, 0.15); border-color: var(--bloomberg-green); box-shadow: 0 0 15px rgba(0, 255, 0, 0.2); }
-        .btn-gold-glass { border-color: rgba(255, 204, 0, 0.4); color: var(--gold); }
+        .glass-btn:hover { background: rgba(0, 255, 0, 0.15); border-color: var(--bloomberg-green); box-shadow: 0 0 15px rgba(0,255,0,0.2); }
+        .btn-gold { border-color: var(--gold); color: var(--gold); }
 
-        /* CHART & DATA */
-        .chart-box { background: #000; border: 1px solid #222; height: 300px; position: relative; border-radius: 4px; overflow: hidden; }
+        .chart-box { background: #000; border: 1px solid #222; height: 300px; position: relative; overflow: hidden; }
         #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; z-index: 1; }
         .candle { width: 10px; border-radius: 1px; position: relative; }
         .wick { position: absolute; width: 2px; height: 140%; left: 4px; top: -20%; z-index: -1; }
 
-        .ledger-row { display: grid; grid-template-columns: 1fr 80px; gap: 10px; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.7rem; }
-        .ledger-row:hover { background: #111; border-left: 3px solid var(--bloomberg-green); }
-
         .oscillator-main { font-size: 4rem; color: #fff; font-weight: 900; letter-spacing: -4px; line-height: 0.9; }
         .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin-bottom: 20px; }
-        
         #order-flow { background: #080808; border: 1px solid #222; height: 180px; overflow: hidden; font-size: 0.7rem; padding: 12px; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 6px; border-bottom: 1px solid #111; padding-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div id="init-overlay">
-    <div class="radio-console">
-        <h1 class="text-white font-black text-2xl tracking-widest mb-6">97.7 THE FLAME</h1>
-        <button onclick="startEngine()" class="glass-btn btn-gold-glass py-6 text-xl">QUEEN BUTTA INITIALIZE</button>
-        <p class="text-[8px] mt-4 opacity-50">ESTABLISHING GLOBAL PRE-RELEASE CONNECTION...</p>
-    </div>
-</div>
+<div id="prospectus-overlay">
+    <div class="prospectus-container">
+        <div class="prospectus-header text-center md:text-left">
+            <h1 class="text-4xl font-black text-white mb-2">WELCOME TO THE MUSIC MARKET</h1>
+            <p class="text-yellow-500 tracking-[0.2em] font-bold text-sm">WHERE YOU OWN A PIECE OF THE MUSIC</p>
+        </div>
 
-<header class="flex justify-between items-center">
-    <div class="font-bold text-[10px]">BLOOMBERG TERMINAL // MUSIC MONEY MARKET</div>
-    <div class="text-yellow-500 font-black animate-pulse text-[10px] tracking-widest">● LIVE</div>
-</header>
-
-<div class="dashboard">
-    <aside class="side-col">
-        <a href="https://aitify-music-stream.replit.app/" class="glass-btn btn-gold-glass mb-4">OPEN MARKET TERMINAL</a>
-        <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        <div class="bg-black/40 p-6 border border-[#222] text-center">
-            <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold">--</div>
-            <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
-            <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
+        <div class="flex flex-col md:flex-row gap-10 mb-10">
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" 
+                 class="w-full md:w-80 h-80 object-cover border border-white shadow-2xl">
             
-            <div class="flex flex-col gap-3">
-                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="glass-btn btn-gold-glass">SONGSHARE PARTNER: $100</a>
-                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="glass-btn">BUY ALBUM: $9.99</a>
-                <a id="buy-btn" href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="glass-btn">BUY SONGSHARE: $1.00</a>
-            </div>
-
-            <div class="flex gap-2 mt-6 h-14">
-                <button onclick="prevAsset()" class="glass-btn flex-1 text-2xl">⏮</button>
-                <button onclick="togglePlay()" id="play-pause-btn" class="glass-btn flex-1 text-2xl">⏸</button>
-                <button onclick="nextAsset()" class="glass-btn flex-1 text-2xl">⏭</button>
+            <div class="flex-1">
+                <h2 class="text-white text-2xl font-black mb-4">ASSET: LOVE MAKE OVER // QUEEN BUTTA</h2>
+                <p class="text-xs text-gray-400 mb-8 leading-relaxed">
+                    SONGSHARES REPRESENT DIRECT FRACTIONAL OWNERSHIP IN MUSIC ASSETS. THIS IS A PRE-RELEASE LIQUIDITY EVENT. SECURE YOUR POSITION BEFORE GLOBAL DISTRIBUTION COMMENCES.
+                </p>
+                
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <div class="text-gray-500 text-[10px] mb-1">SONGSHARES OPEN</div>
+                        <div class="text-white font-bold text-2xl">50 UNITS</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="text-gray-500 text-[10px] mb-1">GLOBAL RELEASE</div>
+                        <div class="text-white font-bold text-2xl">IN 90 DAYS</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </aside>
 
-    <main class="main-col">
-        <div id="info-center">
-            <div class="flash-msg active">PRE-RELEASE OPPORTUNITY: OWN A PIECE OF THE MUSIC BEFORE GLOBAL LAUNCH.</div>
-            <div class="flash-msg">EXECUTIVE PARTNER ($100): 1 OF 50 SLOTS. 50% STORE REVENUE + RESALE RIGHTS.</div>
-            <div class="flash-msg">ASSET HOLDER ($9.99): OWN THE ALBUM ASSET. SELL BACK TO MARKET FOR PROFIT.</div>
-            <div class="flash-msg">RETAIL POSITION ($1.00): SINGLE SONG ASSET. PROFIT FROM PRICE SURGES.</div>
-            <div class="flash-msg">THE WAVE: ROYALTY SHARE INCLUSION. $1.00 ENTRY VALUED AT $1.25 (25% YIELD).</div>
-        </div>
-        <div class="chart-box"><div id="candle-layer"></div></div>
-        <div id="order-flow"></div>
-    </main>
-
-    <aside class="side-col" style="border-left:1px solid #222;">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-3 mb-4 text-[10px] tracking-widest">MARKET LEDGER</div>
-        <div id="list-target"></div>
-    </aside>
-</div>
-
-<audio id="main-audio-engine" preload="auto" playsinline></audio>
-
-<script>
-    const assets = [
-        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-        { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
-        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
-        { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
-        { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
-        { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
-        { name: "HEARTBREAK MOTEL REMIX", audio: "
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+            <div class="border border-zinc-800 p-4 text-[10px] text-gray-300">
+                <span class="text-yellow-500 font-bold block mb-2">RETAIL POSITION: $1.00</span>
+                SINGLE SONG FRACTIONAL ASSET WITH KINETIC PRICE POTENTIAL.
+            </div>
+            <div class="border border-zinc-800 p-4 text-[10px] text-gray-300">
+                <span class="text-yellow-500 font-bold block mb-2">ASSET HOLDER: $9.99</span>
+                FULL 13-TRACK ALBUM OWNERSHIP. ELIGIBLE FOR MARKET RESALE.
+            </div>
+            <div class="border border-zinc-800 p-4 text-[10px] text-gray-300">
+                <span class="text-yellow-5
