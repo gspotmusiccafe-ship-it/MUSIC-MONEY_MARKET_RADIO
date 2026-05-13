@@ -3,124 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // QUEEN BUTTA SHOWCASE</title>
+    <title>97.7 THE FLAME // QUEEN BUTTA DIGITAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root { 
-            --neon: #00ff00; 
-            --gold: #ffcc00; 
-            --bg: #000; 
-            --electric-blue: #00d2ff;
+            --neon: #00ff00; --gold: #ffcc00; --bg: #000; 
             --glass: rgba(255, 255, 255, 0.05);
-            --red: #ff3333; 
-            --cash: #00d632;
+            --electric-blue: rgba(0, 210, 255, 0.15);
         }
         
         * { box-sizing: border-box; }
-        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow: hidden; height: 100vh; }
         
-        /* THE GLASS INFO CENTER - FROSTED DEPTH */
+        /* DIGITAL GLASS INFO CENTER - NO MORE CONSTRUCTION PAPER */
         #info-center { 
-            min-height: 140px; 
-            background: var(--electric-blue); 
+            height: 100px; 
+            background: var(--glass);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 30px; 
-            text-align: center; 
-            box-shadow: 12px 12px 0px var(--gold);
-            margin-bottom: 20px;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.1);
+            margin-bottom: 15px;
         }
 
         .flash-msg { 
-            font-family: 'Syncopate', sans-serif;
-            font-size: 0.85rem; 
-            color: #000; 
-            font-weight: 900; 
-            display: none; 
-            line-height: 1.5; 
+            font-family: 'Syncopate', sans-serif; font-size: 0.75rem; 
+            color: #fff; font-weight: 900; display: none; letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
         }
         .flash-msg.active { display: block; }
 
-        /* THE GLASS BUTTONS - REAL DEPTH */
+        /* THE 4-BUTTON COMMAND ROW */
+        .command-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 15px; }
         .glass-btn {
-            display: block; width: 100%; padding: 22px; margin-bottom: 18px;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 204, 0, 0.4);
-            color: var(--gold);
-            font-family: 'Syncopate', sans-serif;
-            font-weight: 900; font-size: 0.75rem; text-align: center; cursor: pointer;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            color: var(--gold); font-family: 'Syncopate', sans-serif;
+            font-size: 0.6rem; padding: 15px 5px; text-align: center; cursor: pointer;
             transition: 0.2s;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
-        .glass-btn:hover {
-            background: rgba(255, 204, 0, 0.1);
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-            transform: translateY(-2px);
-        }
+        .glass-btn:hover { background: rgba(255, 204, 0, 0.1); border-color: var(--gold); }
 
-        .btn-cash { border: 1px solid var(--cash); color: var(--cash); }
+        /* MEDIA CONTROLS */
+        .media-ctrl { display: flex; justify-content: center; gap: 20px; margin-top: 15px; padding: 10px; background: rgba(255,255,255,0.03); border: 1px solid #222; }
+        .ctrl-btn { cursor: pointer; font-size: 1.2rem; color: #fff; transition: 0.2s; }
+        .ctrl-btn:hover { color: var(--gold); transform: scale(1.1); }
 
-        /* DASHBOARD LAYOUT SCALING */
-        .dashboard { display: grid; grid-template-columns: 380px 1fr 340px; height: calc(100vh - 70px); gap: 15px; padding: 15px; }
-        .side-col { background: rgba(10, 10, 10, 0.9); border: 1px solid #1a1a1a; padding: 25px; overflow-y: auto; }
+        /* LAYOUT */
+        .dashboard { display: grid; grid-template-columns: 360px 1fr 340px; height: calc(100vh - 60px); gap: 10px; padding: 10px; }
+        .side-col { background: rgba(5, 5, 5, 0.8); border: 1px solid #111; padding: 20px; display: flex; flex-direction: column; }
+        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; font-family: 'Syncopate', sans-serif; line-height: 1; margin: 10px 0; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; background-position: center; }
         
-        .oscillator-main { font-size: 4.8rem; color: white; font-weight: 900; letter-spacing: -6px; line-height: 1; font-family: 'Syncopate', sans-serif; margin: 15px 0; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 4px solid var(--gold); background-size: cover; background-position: center; }
-        
-        .ledger-row { display: grid; grid-template-columns: 1fr 80px; padding: 20px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 0.85rem; font-weight: 700; transition: 0.2s; }
-        .ledger-row:hover { background: rgba(255,204,0,0.05); border-left: 6px solid var(--gold); color: #fff; }
-        
-        /* ORDER FLOW */
-        #order-flow { background: rgba(5,5,5,0.95); border: 1px solid #222; height: 180px; padding: 20px; overflow: hidden; font-size: 0.75rem; }
-        .flow-line { border-bottom: 1px solid #111; padding: 8px 0; display: flex; justify-content: space-between; }
+        .ledger-row { display: grid; grid-template-columns: 1fr 60px; padding: 15px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.75rem; }
+        .ledger-row:hover { background: rgba(255,204,0,0.05); color: #fff; }
     </style>
 </head>
 <body>
 
-<header class="p-4 border-b border-white/10 flex justify-between items-center bg-black">
-    <div class="text-[10px] tracking-[5px] font-bold opacity-50">SYSTEM: OPERATIONAL // KINETIC VALUATION ACTIVE</div>
-    <div class="text-yellow-500 font-black animate-pulse text-[10px] tracking-[4px]">● LIVE MARKET FEED</div>
+<header class="p-3 border-b border-white/5 flex justify-between items-center bg-black">
+    <div class="text-[9px] tracking-[4px] font-bold opacity-40">DIGITAL ASSET TERMINAL // CONTINUOUS STREAM ACTIVE</div>
+    <div class="text-yellow-500 font-black animate-pulse text-[9px] tracking-[3px]">● LIVE FEED</div>
 </header>
 
 <div class="dashboard">
     <aside class="side-col">
-        <button onclick="window.open('https://aitify-music-stream.replit.app/', '_blank')" class="glass-btn">MARKET TERMINAL</button>
+        <div class="command-row">
+            <div onclick="window.open('https://aitify-music-stream.replit.app/')" class="glass-btn">MARKET</div>
+            <div onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC')" class="glass-btn">ALBUM</div>
+            <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
+            <div onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4')" class="glass-btn">SONG</div>
+        </div>
+
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        <div class="text-center">
-            <div id="radio-track" class="text-yellow-500 font-bold text-xs tracking-widest mt-6">STANDBY...</div>
+        
+        <div class="text-center mt-4">
+            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] tracking-widest">INITIALIZING...</div>
             <div id="main-osc" class="oscillator-main">$1.00</div>
-            <div id="price-arrow" class="font-black text-2xl mb-8">▲ +0.00</div>
-            <button onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl', '_blank')" class="glass-btn">SONGSHARE PARTNER: $100</button>
-            <button onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC', '_blank')" class="glass-btn btn-cash">BUY ALBUM: $9.99</button>
+            <div id="price-arrow" class="font-black text-xl mb-4">▲ +0.00</div>
+            
+            <div class="media-ctrl">
+                <span class="ctrl-btn" onclick="prev()">⏮</span>
+                <span id="play-pause" class="ctrl-btn" onclick="togglePlay()">⏸</span>
+                <span class="ctrl-btn" onclick="next()">⏭</span>
+            </div>
         </div>
     </aside>
 
-    <main class="flex flex-col gap-4">
+    <main class="flex flex-col gap-3">
         <div id="info-center">
-            <div class="flash-msg active">"THIS IS A COMPLIANT COMMUNITY DRIVEN BY HUMAN ENERGY, EMOTION, AND ENGAGEMENT. NO TALK OR MENTION OF BOTTING PERMITTED."</div>
-            <div class="flash-msg">SONGSHARE PARTNERS ($100): EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT.</div>
-            <div class="flash-msg">GLOBAL PRE-RELEASE: OWN A PIECE OF THE MUSIC BEFORE GLOBAL LAUNCH.</div>
-            <div class="flash-msg">KINETIC VALUATION: 0.00165% REAL-TIME ROI TRACKING ENABLED.</div>
+            <div class="flash-msg active">COMPLIANT COMMUNITY: HUMAN ENERGY // NO BOTTING</div>
+            <div class="flash-msg">SONGSHARE PARTNERS: 50% COMMISSION + 25% MARKET POOL</div>
+            <div class="flash-msg">KINETIC VALUATION: 0.00165% REAL-TIME ROI ACTIVE</div>
         </div>
-        <div class="flex-1 bg-black border border-white/5 relative overflow-hidden">
-             <div id="candle-layer" class="flex items-end justify-around h-full p-10"></div>
+        
+        <div class="flex-1 bg-black/50 border border-white/5 relative overflow-hidden">
+             <div id="candle-layer" class="flex items-end justify-around h-full p-8"></div>
         </div>
-        <div id="order-flow">
-            <div class="text-white font-bold mb-4 border-b border-white/10 pb-2 tracking-widest">LIVE EXECUTION LOG</div>
+
+        <div id="order-flow" class="h-32 bg-black border border-white/5 p-4 overflow-hidden text-[10px]">
+            <div class="text-white border-b border-white/10 pb-1 mb-2">LIVE EXECUTION</div>
             <div id="flow-content"></div>
         </div>
     </main>
 
     <aside class="side-col">
-        <div class="text-yellow-500 font-bold border-b-2 border-yellow-500 pb-4 mb-4 text-[11px] tracking-[4px]">MARKET LEDGER</div>
-        <div id="list-target"></div>
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-2 text-[10px] tracking-[2px]">MARKET LEDGER</div>
+        <div id="list-target" class="overflow-y-auto h-full"></div>
     </aside>
 </div>
 
@@ -151,10 +143,11 @@
     window.onload = () => {
         const list = document.getElementById('list-target');
         assets.forEach((a, i) => {
-            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`;
+            list.innerHTML += `<div class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500">$1.00</div></div>`;
         });
-        setInterval(rotateMsgs, 6000);
-        setInterval(simulateMarket, 1600);
+        setInterval(rotateMsgs, 5000);
+        setInterval(simulateMarket, 2000);
+        audio.onended = () => next(); // CONTINUOUS PLAY LOGIC
         sync(0);
     };
 
@@ -164,37 +157,29 @@
         msgs[msgIdx].classList.add('active');
     }
 
-    function simulateMarket() {
-        const side = Math.random() > 0.45 ? "BUY" : "SELL";
-        const impact = (Math.random() * 0.40).toFixed(2);
-        price = side === "BUY" ? price + parseFloat(impact) : Math.max(1.00, price - parseFloat(impact));
-        document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
-        const arrow = document.getElementById('price-arrow');
-        arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
-        arrow.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
-
-        const flow = document.getElementById('flow-content');
-        const line = document.createElement('div');
-        line.className = "flow-line";
-        line.innerHTML = `<span class="opacity-40">TRADING_${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} +${impact}</span>`;
-        flow.prepend(line);
-        if (flow.children.length > 7) flow.removeChild(flow.lastChild);
-
-        const c = document.createElement('div');
-        c.className = "w-2 rounded-t transition-all duration-700";
-        c.style.height = (impact * 450) + "px";
-        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
-        c.style.boxShadow = `0 0 15px ${side === "BUY" ? 'rgba(0,255,0,0.3)' : 'rgba(255,51,51,0.3)'}`;
-        const layer = document.getElementById('candle-layer');
-        layer.appendChild(c);
-        if (layer.children.length > 40) layer.removeChild(layer.firstChild);
+    function togglePlay() {
+        if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
+        else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
     }
+
+    function next() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prev() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
 
     function sync(idx) {
         currentIdx = idx;
         document.getElementById('radio-track').innerText = assets[idx].name;
         audio.src = assets[idx].audio; 
-        audio.play().catch(() => {});
+        audio.play().catch(() => { document.getElementById('play-pause').innerText = '▶'; });
+    }
+
+    function simulateMarket() {
+        const side = Math.random() > 0.4 ? "BUY" : "SELL";
+        const impact = (Math.random() * 0.40).toFixed(2);
+        price = side === "BUY" ? price + parseFloat(impact) : Math.max(1.00, price - parseFloat(impact));
+        document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
+        const arrow = document.getElementById('price-arrow');
+        arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
+        arrow.style.color = side === "BUY" ? "var(--neon)" : "#ff3333";
     }
 </script>
 </body>
