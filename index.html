@@ -18,16 +18,13 @@
         body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; text-transform: uppercase; }
         
         /* AUTH OVERLAY */
-        #lock-screen { 
-            position: fixed; inset: 0; background: #000; 
-            z-index: 999999; display: flex; align-items: center; justify-content: center;
-        }
-        .glass-card { 
-            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); 
-            padding: 40px; width: 400px; border-radius: 8px; text-align: center;
-        }
+        #lock-screen { position: fixed; inset: 0; background: #000; z-index: 999999; display: flex; align-items: center; justify-content: center; }
+        .glass-card { background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(20px); border: 1px solid var(--glass-border); padding: 40px; width: 400px; border-radius: 8px; text-align: center; }
 
-        /* BLOOMBERG GLASS BUTTONS */
+        /* TICKER STYLES */
+        marquee { background: #000; border-bottom: 1px solid #222; color: var(--bloomberg-green); font-family: 'JetBrains Mono'; padding: 10px; font-size: 11px; font-weight: bold; letter-spacing: 2px; }
+
+        /* THE SIGNATURE BUTTONS */
         .btn-glass {
             background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
             backdrop-filter: blur(10px); border: 1px solid var(--glass-border);
@@ -64,9 +61,13 @@
 </div>
 
 <div id="terminal-wrapper">
+    <marquee scrollamount="8">
+        OWN A PIECE OF THE MUSIC // QUEEN BUTTA "LOVE MAKE OVER" PRE-RELEASE SHOWCASE // MUSIC MARKET TERMINAL IS THE MARQUEE // NO BOT REGISTRATION PERMITTED // HUMAN ENERGY ONLY // 0.00165% KINETIC VALUATION ACTIVE...
+    </marquee>
+
     <header>
         <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET APP ACCESS</div>
-        <div class="text-green-500">● SYSTEM_STABLE_V4.25</div>
+        <div class="text-green-500">● SYSTEM_STABLE_V4.30</div>
     </header>
 
     <div id="main-content">
@@ -93,6 +94,11 @@
         <div class="p-8">
             <div class="text-[9px] text-zinc-500 font-bold mb-4 tracking-widest">REAL-TIME_KINETIC_FLOW</div>
             <div class="h-64 border-b border-zinc-800 flex items-end gap-1" id="chart"></div>
+            <div class="mt-8 p-6 border border-blue-900/30 bg-blue-900/5 rounded">
+                <p class="text-[10px] text-zinc-400 leading-relaxed italic">
+                    "THIS IS A COMPLIANT COMMUNITY DRIVEN BY THREE FACTORS: HUMAN ENERGY, HUMAN EMOTION, AND HUMAN ENGAGEMENT. NO TALK OR MENTION OF BOTTING PERMITTED."
+                </p>
+            </div>
         </div>
 
         <div class="panel" id="ledger">
@@ -102,61 +108,10 @@
     </div>
 </div>
 
-<audio id="engine"></audio>
+<audio id="engine" preload="auto"></audio>
 
 <script>
     const playlist = [
         { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
         { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-        { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
-        { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
-        { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
-        { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
-        { name: "BLAME IT ON THE HUSTLE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBLAME%20IT%20ON%20THE%20HUSTLE.mp3?alt=media&token=60f15c10-e591-497d-b6a4-e757f49556bc" },
-        { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" }
-    ];
-
-    const audio = document.getElementById('engine');
-
-    function bootSystem() {
-        document.getElementById('lock-screen').remove();
-        document.getElementById('terminal-wrapper').style.display = 'flex';
-        
-        const list = document.getElementById('ledger-list');
-        playlist.forEach((s, i) => {
-            const row = document.createElement('div');
-            row.className = `ledger-row row-${i}`;
-            row.innerHTML = `<span>${s.name}</span><span>$1.00</span>`;
-            row.onclick = () => playSong(i);
-            list.appendChild(row);
-        });
-
-        playSong(0);
-        setInterval(() => {
-            const bar = document.createElement('div');
-            bar.className = Math.random() > 0.4 ? "bg-green-500 w-2" : "bg-red-500 w-2";
-            bar.style.height = (Math.random() * 80 + 10) + "%";
-            const chart = document.getElementById('chart');
-            chart.appendChild(bar);
-            if(chart.children.length > 50) chart.firstChild.remove();
-        }, 1000);
-    }
-
-    function playSong(i) {
-        document.getElementById('active-title').innerText = playlist[i].name;
-        audio.src = playlist[i].audio;
-        audio.play();
-        document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
-        document.querySelector(`.row-${i}`).classList.add('playing');
-        document.getElementById('p-btn').innerText = "PAUSE";
-    }
-
-    function toggleAudio() {
-        if(audio.paused) { audio.play(); document.getElementById('p-btn').innerText = "PAUSE"; }
-        else { audio.pause(); document.getElementById('p-btn').innerText = "PLAY"; }
-    }
-    function stopAudio() { audio.pause(); audio.currentTime = 0; document.getElementById('p-btn').innerText = "PLAY"; }
-</script>
-</body>
-</html>
+        { name: "YOU'RE MY ADDICTION", audio: "
