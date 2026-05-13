@@ -3,127 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // MUSIC MARKET TERMINAL</title>
+    <title>97.7 THE FLAME // TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         
-        :root { 
-            --bloomberg-blue: #0066ff;
-            --bloomberg-green: #00ff33;
-        }
-
-        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; height: 100vh; width: 100vw; }
-        
-        /* THE FIX: RIGID OVERLAY THAT DOES NOT BLOCK CLICKS */
-        #landing-page { 
+        /* THE LOCK SCREEN - ABSOLUTE TOP */
+        #lock-screen { 
             position: fixed; inset: 0; background: #000; 
             z-index: 999999; display: flex; align-items: center; justify-content: center;
         }
 
-        .login-box { 
+        .login-card { 
             background: #0a0a0a; border: 1px solid #333; 
-            padding: 40px; width: 400px; border-radius: 4px;
+            padding: 40px; width: 380px; text-align: center;
             box-shadow: 0 0 50px rgba(0, 102, 255, 0.2);
-            text-align: center;
-            position: relative; z-index: 1000000; /* Ensure this is above the background */
         }
 
-        /* THE "NUKE" BUTTON: SOLID, NO TRANSPARENCY, HIGH PRIORITY */
+        /* THE BUTTON: NO COMPLEX CODE, JUST A HARD TRIGGER */
         #init-btn {
-            background: var(--bloomberg-blue) !important;
-            color: #fff !important; font-weight: 900; padding: 20px; width: 100%;
-            border-radius: 2px; cursor: pointer !important; border: none;
-            text-transform: uppercase; letter-spacing: 3px;
-            font-size: 16px; margin-top: 15px;
-            display: block; position: relative; z-index: 1000001;
-            pointer-events: auto !important; /* Forces clickability */
+            background: #0066ff; color: #fff; font-weight: 900; 
+            padding: 20px; width: 100%; cursor: pointer; border: none;
+            text-transform: uppercase; letter-spacing: 3px; font-size: 16px;
+            display: block;
         }
-        #init-btn:hover { background: #0052cc !important; box-shadow: 0 0 20px var(--bloomberg-blue); }
+        #init-btn:hover { background: #0052cc; }
 
-        .input-terminal { 
+        .input-box { 
             background: #111; border: 1px solid #222; color: #fff; 
-            width: 100%; padding: 15px; margin-bottom: 12px; font-family: 'JetBrains Mono'; 
-            font-size: 14px; outline: none;
+            width: 100%; padding: 15px; margin-bottom: 12px; font-size: 14px;
+            font-family: monospace; outline: none;
         }
 
-        .dashboard { display: none; grid-template-columns: 350px 1fr 320px; height: 100vh; width: 100vw; }
-        .dashboard.active { display: grid; }
+        /* TERMINAL LAYOUT (HIDDEN UNTIL CLICK) */
+        #terminal-wrapper { display: none; height: 100vh; flex-direction: column; }
+        #main-content { display: grid; grid-template-columns: 350px 1fr 320px; flex-grow: 1; overflow: hidden; }
         
-        .side { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
-        header { padding: 12px 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; background: #000; }
+        header { padding: 12px 25px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 11px; font-family: monospace; background: #000; }
+        .panel { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
         
         .market-btn {
-            display: block; width: 100%; text-align: center; padding: 14px;
+            display: block; width: 100%; text-align: center; padding: 15px;
             font-weight: 900; font-size: 11px; border-radius: 4px; 
-            cursor: pointer; transition: 0.2s; border: 1px solid rgba(255,255,255,0.1);
-            text-decoration: none; margin-bottom: 10px;
+            cursor: pointer; text-decoration: none; margin-bottom: 10px; border: none;
+            text-transform: uppercase;
         }
-        .btn-green { background: var(--bloomberg-green); color: #000; }
-        .btn-blue { background: var(--bloomberg-blue); color: #fff; }
+        .btn-blue { background: #0066ff; color: #fff; }
+        .btn-green { background: #00ff33; color: #000; }
     </style>
 </head>
 <body>
 
-<div id="landing-page">
-    <div class="login-box">
+<div id="lock-screen">
+    <div class="login-card">
         <h1 class="text-2xl font-black mb-1">97.7 THE FLAME</h1>
-        <p class="text-[10px] text-blue-500 font-bold tracking-[4px] mb-8">MUSIC MARKET TERMINAL ACCESS</p>
+        <p class="text-[10px] text-blue-500 font-bold tracking-[4px] mb-8 uppercase">Music Market Terminal</p>
         
-        <input type="text" placeholder="TERMINAL_ID" class="input-terminal">
-        <input type="password" placeholder="ACCESS_KEY" class="input-terminal">
-        <input type="text" placeholder="SYNC_MOBILE" class="input-terminal">
+        <input type="text" placeholder="TERMINAL_ID" class="input-box">
+        <input type="password" placeholder="ACCESS_KEY" class="input-box">
         
-        <button type="button" onclick="launchTerminal();" id="init-btn">INITIALIZE SYSTEM</button>
-        <p class="text-[9px] text-gray-600 mt-6 font-mono">CONNECTION: SECURE // NO BOTS</p>
+        <button type="button" onclick="revealTerminal()" id="init-btn">INITIALIZE SYSTEM</button>
+        <p class="text-[9px] text-gray-600 mt-6 font-mono uppercase">Secure Connection Verified</p>
     </div>
 </div>
 
-<header>
-    <div class="text-blue-500 font-bold text-[10px]">AITIFY // MUSIC MARKET TERMINAL</div>
-    <div class="text-green-500 font-bold text-[10px]">● SYSTEM_STABLE_V4.12</div>
-</header>
+<div id="terminal-wrapper">
+    <header>
+        <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET APP ACCESS</div>
+        <div class="text-green-500">● SYSTEM_STABLE_V4.20</div>
+    </header>
 
-<div id="main-dash" class="dashboard">
-    <div class="side">
-        <div class="w-full aspect-square border border-gray-800 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        <div class="p-6 bg-[#111] rounded border border-gray-800">
-            <div id="price" class="text-center text-5xl font-black mb-2">$3.09</div>
-            <div class="text-center text-green-500 text-xs font-bold mb-6">▲ KINETIC GAINS</div>
-            <button onclick="window.open('https://aitify-music-stream.replit.app/', '_blank')" class="market-btn btn-blue">OPEN MARKET TERMINAL</button>
-            <button onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4', '_blank')" class="market-btn btn-green">BUY SINGLE SONG $1.00</button>
+    <div id="main-content">
+        <div class="panel">
+            <div class="w-full aspect-square bg-zinc-900 border border-zinc-800 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+            
+            <div class="p-6 bg-zinc-900/50 border border-zinc-800 rounded">
+                <div class="text-center text-5xl font-black mb-2 tracking-tighter">$3.09</div>
+                <div class="text-center text-green-500 text-[10px] font-bold mb-8 uppercase">▲ Kinetic Gains</div>
+                
+                <button onclick="window.open('https://aitify-music-stream.replit.app/', '_blank')" class="market-btn btn-blue">Open Market Terminal</button>
+                <button onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4', '_blank')" class="market-btn btn-green">Buy Single Song $1.00</button>
+                <button onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC', '_blank')" class="market-btn border border-zinc-700 text-zinc-400">Full Album $9.99</button>
+            </div>
+        </div>
+        
+        <div class="p-8">
+            <div class="h-64 border-b border-zinc-800 flex items-end gap-1" id="chart"></div>
+            <div class="mt-8 bg-blue-900/10 border border-blue-900/30 p-6 rounded">
+                <div class="text-blue-500 font-bold text-xs mb-3 uppercase">Market Benefits</div>
+                <div class="space-y-2 text-[10px] text-zinc-400 font-mono uppercase">
+                    <div class="flex justify-between"><span>Retail Commission:</span><span class="text-white">50%</span></div>
+                    <div class="flex justify-between"><span>Global Revenue:</span><span class="text-white">25% Engagement</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="ledger">
+            <div class="text-blue-500 font-bold text-[10px] mb-4 border-b border-blue-900/20 pb-2 uppercase font-mono">Market Ledger</div>
+            <div id="ledger-list"></div>
         </div>
     </div>
-    <div class="p-8"><div class="h-64 border-b border-gray-800 flex items-end gap-1" id="chart"></div></div>
-    <div class="side" id="ledger"><div class="text-blue-500 font-bold text-[10px] mb-4 font-mono">MARKET_LEDGER</div><div id="list"></div></div>
 </div>
 
 <script>
-    function launchTerminal() {
-        console.log("Button Pressed - Launching...");
-        const landing = document.getElementById('landing-page');
-        const dash = document.getElementById('main-dash');
-        
-        if (landing) landing.style.display = 'none';
-        if (dash) dash.classList.add('active');
+    function revealTerminal() {
+        // 1. Kill the lock screen immediately
+        const lock = document.getElementById('lock-screen');
+        if (lock) lock.remove();
 
-        // Populate Ledger
-        const songs = ["LOVE MAKE OVER", "SUPERFLY", "TIMES UP", "GANSTA CHICK"];
+        // 2. Reveal the UI
+        const wrapper = document.getElementById('terminal-wrapper');
+        if (wrapper) wrapper.style.display = 'flex';
+
+        // 3. Load Data AFTER reveal to prevent hanging
+        loadLedger();
+        startChart();
+    }
+
+    function loadLedger() {
+        const songs = ["LOVE MAKE OVER", "SUPERFLY", "TIMES UP", "YOU'RE MY ADDICTION", "GANSTA CHICK"];
+        const list = document.getElementById('ledger-list');
         songs.forEach(s => {
             const div = document.createElement('div');
-            div.className = "p-4 border-b border-gray-900 text-[11px] text-gray-500 flex justify-between";
+            div.className = "p-4 border-b border-zinc-900 text-[11px] text-zinc-500 flex justify-between hover:text-white cursor-pointer";
             div.innerHTML = `<span>${s}</span><span>$1.00</span>`;
-            document.getElementById('list').appendChild(div);
+            list.appendChild(div);
         });
+    }
 
-        // Start Chart
+    function startChart() {
         setInterval(() => {
             const bar = document.createElement('div');
             bar.className = Math.random() > 0.4 ? "bg-green-500 w-2" : "bg-red-500 w-2";
-            bar.style.height = (Math.random() * 80 + 10) + "%";
-            document.getElementById('chart').appendChild(bar);
-            if(document.getElementById('chart').children.length > 40) document.getElementById('chart').firstChild.remove();
-        }, 1000);
+            bar.style.height = (Math.random() * 85 + 5) + "%";
+            const chart = document.getElementById('chart');
+            if(chart) {
+                chart.appendChild(bar);
+                if(chart.children.length > 45) chart.firstChild.remove();
+            }
+        }, 1200);
     }
 </script>
 </body>
