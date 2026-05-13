@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // FULL ASSET TERMINAL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>97.7 THE FLAME // PARTNER TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -11,84 +11,91 @@
         :root { 
             --neon: #00ff00; --gold: #ffcc00; --bg: #000; 
             --glass: rgba(255, 255, 255, 0.05);
-            --electric-blue: rgba(0, 210, 255, 0.25);
+            --electric-blue: rgba(0, 210, 255, 0.3);
             --red: #ff3333;
         }
         
-        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; min-height: 100vh; }
+        body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; overflow-x: hidden; }
         
-        /* THE GLASS MESSAGE CENTER */
+        /* RESPONSIVE GRID SYSTEM */
+        .dashboard { 
+            display: grid; 
+            grid-template-columns: 1fr; /* Default to 1 column for mobile */
+            gap: 10px; padding: 10px;
+        }
+
+        /* Desktop Switch */
+        @media (min-width: 1024px) {
+            .dashboard { 
+                grid-template-columns: 360px 1fr 340px; 
+                height: calc(100vh - 50px); 
+                overflow: hidden;
+            }
+        }
+
+        .side-col { 
+            background: rgba(5, 5, 5, 0.95); 
+            border: 1px solid #1a1a1a; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* MESSAGE CENTER */
         #info-center { 
-            min-height: 110px; background: var(--glass); backdrop-filter: blur(25px);
-            border: 1px solid rgba(0, 210, 255, 0.4);
+            min-height: 100px; background: var(--glass); backdrop-filter: blur(20px);
+            border: 1px solid var(--electric-blue);
             display: flex; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.15);
-            margin-bottom: 10px;
+            padding: 15px; text-align: center; margin-bottom: 5px;
         }
 
         .flash-msg { 
-            font-family: 'Syncopate', sans-serif; font-size: 0.75rem; 
+            font-family: 'Syncopate', sans-serif; font-size: 0.7rem; 
             color: #fff; font-weight: 900; display: none; letter-spacing: 1px;
-            text-shadow: 0 0 15px rgba(0, 210, 255, 0.9);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
         }
         .flash-msg.active { display: block; }
 
-        /* RESPONSIVE LAYOUT FIX */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 360px 1fr 340px; 
-            height: calc(100vh - 60px); 
-            gap: 10px; padding: 10px; 
+        /* MARKET CHART */
+        .chart-frame { 
+            height: 350px; background: #050505; border: 1px solid #111; 
+            position: relative; overflow: hidden; display: flex; align-items: flex-end; 
+            justify-content: center; padding-bottom: 10px;
         }
+        #candle-container { display: flex; align-items: flex-end; gap: 3px; height: 100%; width: 100%; justify-content: center; }
+        .candle { width: 8px; border-radius: 1px; transition: height 0.5s ease; }
 
-        @media (max-width: 1024px) {
-            .dashboard { 
-                grid-template-columns: 1fr; 
-                height: auto; 
-                overflow-y: auto; 
-            }
-            body { overflow-y: auto; }
-        }
-
-        .side-col { background: rgba(5, 5, 5, 0.95); border: 1px solid #1a1a1a; padding: 20px; display: flex; flex-direction: column; }
-        
-        /* CANDLE CONTAINER FIX FOR MOBILE */
-        .chart-container { 
-            height: 400px; 
-            background: black; 
-            border: 1px solid rgba(255,255,255,0.05); 
-            position: relative; 
-            overflow: hidden; 
-        }
-
-        #candle-container { display: flex; align-items: flex-end; justify-content: center; gap: 3px; height: 100%; width: 100%; padding-bottom: 10px; }
-        .candle { width: 8px; border-radius: 1px; transition: all 0.6s ease; }
-
-        .oscillator-main { font-size: 4rem; color: white; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -4px; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; margin-bottom: 15px; }
-        
-        .ledger-row { display: grid; grid-template-columns: 1fr 80px; padding: 14px; border-bottom: 1px solid #111; cursor: pointer; font-size: 0.65rem; }
-        .ledger-row.playing { border-left: 4px solid var(--neon); background: rgba(0, 255, 0, 0.05); color: #fff; }
-
-        .media-ctrl { display: flex; justify-content: center; gap: 30px; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.03); border: 1px solid #222; }
-        .command-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px; }
+        /* ART & BUTTONS */
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; margin-bottom: 10px; }
+        .command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .glass-btn {
-            background: var(--glass); backdrop-filter: blur(10px); border: 1px solid rgba(255, 204, 0, 0.4);
-            color: var(--gold); font-family: 'Syncopate', sans-serif; font-size: 0.55rem; padding: 12px 5px; text-align: center;
+            background: var(--glass); border: 1px solid rgba(255, 204, 0, 0.3);
+            color: var(--gold); font-family: 'Syncopate', sans-serif;
+            font-size: 0.6rem; padding: 12px; text-align: center; cursor: pointer;
         }
+
+        .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; }
+        
+        /* LEDGER LIST */
+        .ledger-container { height: 400px; overflow-y: auto; }
+        @media (min-width: 1024px) { .ledger-container { height: 100%; } }
+
+        .ledger-row { display: grid; grid-template-columns: 1fr 70px; padding: 12px; border-bottom: 1px solid #111; font-size: 0.6rem; cursor: pointer; }
+        .ledger-row.playing { border-left: 3px solid var(--neon); background: rgba(0, 255, 0, 0.05); color: #fff; }
+
+        .media-ctrl { display: flex; justify-content: center; gap: 40px; padding: 15px; background: #0a0a0a; border: 1px solid #222; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<header class="p-3 border-b border-white/5 flex justify-between items-center bg-black">
-    <div class="text-[8px] tracking-[2px] font-bold opacity-50">MASTER ASSET LEDGER</div>
-    <div class="text-yellow-500 font-black animate-pulse text-[8px] tracking-[2px]">● LIVE FEED</div>
+<header class="p-2 border-b border-white/5 flex justify-between items-center bg-black">
+    <div class="text-[8px] tracking-[2px] opacity-60">97.7 THE FLAME // PARTNER ENGINE</div>
+    <div class="text-yellow-500 font-bold text-[8px] animate-pulse">● LIVE ASSET FEED</div>
 </header>
 
 <div class="dashboard">
     <aside class="side-col">
-        <div class="command-row">
+        <div class="command-grid">
             <div onclick="window.open('https://aitify-music-stream.replit.app/')" class="glass-btn">MARKET</div>
             <div onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC')" class="glass-btn">ALBUM</div>
             <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
@@ -98,10 +105,9 @@
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
         <div class="text-center">
-            <div id="radio-track" class="text-yellow-500 font-bold text-[10px] mb-1">INITIALIZING...</div>
-            <div id="main-osc" class="oscillator-main">$1.00</div>
-            <div id="price-arrow" class="font-black text-xl mb-2">▲ +0.00</div>
-            
+            <div id="radio-track" class="text-yellow-500 text-[9px] mb-1">CONNECTING...</div>
+            <div id="main-osc" class="oscillator-main">$10.00</div>
+            <div id="price-arrow" class="font-bold text-lg mb-2">▲ +0.00</div>
             <div class="media-ctrl">
                 <span class="cursor-pointer" onclick="prev()">⏮</span>
                 <span id="play-pause" class="cursor-pointer text-white" onclick="togglePlay()">⏸</span>
@@ -113,23 +119,19 @@
     <main class="flex flex-col gap-2">
         <div id="info-center">
             <div class="flash-msg active">"SONGSHARE PARTNERS: EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT."</div>
-            <div class="flash-msg">"BENEFITS: OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
-            <div class="flash-msg">"MONETIZE YOUR ENGAGEMENT: TRANSFORM LISTENS INTO KINETIC TRADING PROFITS."</div>
-            <div class="flash-msg">"BECOME A DIGITAL ASSET BANKER: SECURE YOUR POSITION IN THE MUSIC ECONOMY."</div>
+            <div class="flash-msg">"OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
+            <div class="flash-msg">"MONETIZE YOUR ENGAGEMENT: TRANSFORM LISTENS INTO KINETIC PROFITS."</div>
+            <div class="flash-msg">"BECOME A DIGITAL ASSET BANKER: SECURE YOUR POSITION."</div>
         </div>
         
-        <div class="chart-container">
+        <div class="chart-frame">
              <div id="candle-container"></div>
-        </div>
-
-        <div id="order-flow" class="h-24 bg-black border border-white/5 p-3 overflow-hidden text-[9px]">
-            <div id="flow-content"></div>
         </div>
     </main>
 
     <aside class="side-col">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-2 text-[10px] tracking-[2px]">MASTER LEDGER</div>
-        <div id="list-target" class="flex-1 overflow-y-auto"></div>
+        <div class="text-yellow-500 font-bold border-b border-yellow-500/20 pb-2 mb-2 text-[9px]">MASTER LEDGER</div>
+        <div id="list-target" class="ledger-container"></div>
     </aside>
 </div>
 
@@ -173,4 +175,45 @@
     function rotateMsgs() {
         msgs[msgIdx].classList.remove('active');
         msgIdx = (msgIdx + 1) % msgs.length;
-        msgs
+        msgs[msgIdx].classList.add('active');
+    }
+
+    function togglePlay() {
+        if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
+        else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
+    }
+
+    function next() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prev() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+
+    function sync(idx) {
+        document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
+        currentIdx = idx;
+        const row = document.getElementById(`row-${idx}`);
+        if(row) row.classList.add('playing');
+        document.getElementById('radio-track').innerText = assets[idx].name;
+        audio.src = assets[idx].audio; 
+        audio.play().catch(() => {});
+    }
+
+    function simulateMarket() {
+        const side = Math.random() > 0.45 ? "BUY" : "SELL";
+        const impact = (Math.random() * 0.8).toFixed(2);
+        price = side === "BUY" ? price + parseFloat(impact) : Math.max(10.00, price - parseFloat(impact));
+        
+        document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
+        const arrow = document.getElementById('price-arrow');
+        arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
+        arrow.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
+
+        const container = document.getElementById('candle-container');
+        const c = document.createElement('div');
+        c.className = "candle";
+        c.style.height = (impact * 250) + "px";
+        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
+        container.appendChild(c);
+        if (container.children.length > 35) container.removeChild(container.firstChild);
+    }
+</script>
+</body>
+</html>
