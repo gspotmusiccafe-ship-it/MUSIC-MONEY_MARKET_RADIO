@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>97.7 THE FLAME // PARTNER TERMINAL</title>
+    <title>97.7 THE FLAME // HD KINETIC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
@@ -11,53 +11,49 @@
         :root { 
             --neon: #00ff00; --gold: #ffcc00; --bg: #000; 
             --glass: rgba(255, 255, 255, 0.05);
-            --electric-blue: rgba(0, 210, 255, 0.3);
             --red: #ff3333;
         }
         
         body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; overflow-x: hidden; }
         
+        /* RESPONSIVE GRID */
         .dashboard { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 10px; }
-
         @media (min-width: 1024px) {
             .dashboard { grid-template-columns: 360px 1fr 340px; height: calc(100vh - 50px); overflow: hidden; }
         }
 
         .side-col { background: rgba(5, 5, 5, 0.95); border: 1px solid #1a1a1a; padding: 15px; display: flex; flex-direction: column; }
 
-        /* MESSAGE CENTER - DIGITAL GREEN TEXT */
+        /* DIGITAL GREEN MESSAGE CENTER */
         #info-center { 
-            min-height: 100px; background: var(--glass); backdrop-filter: blur(20px);
-            border: 1px solid var(--neon);
-            display: flex; align-items: center; justify-content: center;
+            min-height: 90px; background: var(--glass); backdrop-filter: blur(20px);
+            border: 1px solid var(--neon); display: flex; align-items: center; justify-content: center;
             padding: 15px; text-align: center; margin-bottom: 5px;
         }
-
         .flash-msg { 
-            font-family: 'Syncopate', sans-serif; font-size: 0.7rem; 
-            color: var(--neon); font-weight: 900; display: none; letter-spacing: 1px;
-            text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+            font-family: 'Syncopate', sans-serif; font-size: 0.7rem; color: var(--neon); 
+            font-weight: 900; display: none; text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
         }
         .flash-msg.active { display: block; }
 
-        /* MARKET CHART */
+        /* POINTED CANDLE ENGINE - FIXED WIDTH TO PREVENT DISTORTION */
         .chart-frame { 
-            height: 300px; background: #050505; border: 1px solid #111; 
-            position: relative; overflow: hidden; display: flex; align-items: flex-end; 
-            justify-content: center; padding-bottom: 10px;
+            height: 280px; background: #050505; border: 1px solid #111; 
+            position: relative; overflow: hidden;
         }
-        #candle-container { display: flex; align-items: flex-end; gap: 3px; height: 100%; width: 100%; justify-content: center; }
-        .candle { width: 8px; border-radius: 1px; transition: height 0.5s ease; }
+        #candle-container { 
+            display: flex; align-items: center; gap: 8px; height: 100%; 
+            width: 100%; justify-content: flex-end; padding-right: 10px;
+        }
+        .candle-box { position: relative; width: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .wick { width: 2px; height: 100px; position: absolute; z-index: 1; }
+        .body { width: 10px; z-index: 2; border-radius: 1px; min-height: 4px; }
 
-        /* BUY/SELL DATA LOG */
-        #order-flow {
-            height: 120px; background: #080808; border: 1px solid #1a1a1a;
-            padding: 10px; overflow-y: hidden; font-size: 0.65rem; color: #aaa;
-        }
+        /* DATA LOG */
+        #order-flow { height: 100px; background: #080808; border: 1px solid #1a1a1a; padding: 10px; overflow: hidden; font-size: 0.6rem; }
         .log-entry { display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 4px 0; }
 
-        /* ART & BUTTONS - NEW GOLD STYLE */
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; margin-bottom: 10px; }
+        /* GOLD COMMANDS */
         .command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .glass-btn {
             background: rgba(255, 204, 0, 0.05); border: 1px solid var(--gold);
@@ -66,22 +62,15 @@
         }
 
         .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; margin-bottom: 10px; }
         
-        .ledger-container { height: 400px; overflow-y: auto; }
-        @media (min-width: 1024px) { .ledger-container { height: 100%; } }
-
         .ledger-row { display: grid; grid-template-columns: 1fr 70px; padding: 12px; border-bottom: 1px solid #111; font-size: 0.6rem; cursor: pointer; }
         .ledger-row.playing { border-left: 3px solid var(--neon); background: rgba(0, 255, 0, 0.05); color: #fff; }
 
-        .media-ctrl { display: flex; justify-content: center; gap: 40px; padding: 15px; background: #0a0a0a; border: 1px solid #222; margin-top: 10px; }
+        .media-ctrl { display: flex; justify-content: center; gap: 40px; padding: 15px; background: #0a0a0a; border: 1px solid #222; }
     </style>
 </head>
 <body>
-
-<header class="p-2 border-b border-white/5 flex justify-between items-center bg-black">
-    <div class="text-[8px] tracking-[2px] opacity-60">97.7 THE FLAME // ALBUM PRICE OSCILLATOR</div>
-    <div class="text-yellow-500 font-bold text-[8px] animate-pulse">● LIVE ASSET FEED</div>
-</header>
 
 <div class="dashboard">
     <aside class="side-col">
@@ -91,14 +80,11 @@
             <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
             <div onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4')" class="glass-btn">SONG</div>
         </div>
-
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        
         <div class="text-center">
-            <div class="text-white text-[8px] mb-1 opacity-50">FULL ALBUM ASSET PRICE:</div>
+            <div class="text-white text-[8px] opacity-50">ALBUM ASSET PRICE:</div>
             <div id="main-osc" class="oscillator-main">$9.99</div>
             <div id="price-arrow" class="font-bold text-lg mb-2">▲ +0.00</div>
-            <div id="radio-track" class="text-yellow-500 text-[9px] mb-2">TRACK ACTIVE</div>
             <div class="media-ctrl">
                 <span class="cursor-pointer" onclick="prev()">⏮</span>
                 <span id="play-pause" class="cursor-pointer text-white" onclick="togglePlay()">⏸</span>
@@ -110,7 +96,7 @@
     <main class="flex flex-col gap-2">
         <div id="info-center">
             <div class="flash-msg active">"SONGSHARE PARTNERS: EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT."</div>
-            <div class="flash-msg">"OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
+            <div class="flash-msg">"BENEFITS: OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
             <div class="flash-msg">"MONETIZE YOUR ENGAGEMENT: TRANSFORM LISTENS INTO KINETIC PROFITS."</div>
             <div class="flash-msg">"ALBUM STARTING PRICE: $9.99 - CEILING: $100.00"</div>
         </div>
@@ -120,14 +106,13 @@
         </div>
 
         <div id="order-flow">
-            <div class="text-white font-bold text-[8px] border-b border-white/10 mb-2">LIVE EXECUTION LOG</div>
             <div id="flow-content"></div>
         </div>
     </main>
 
     <aside class="side-col">
         <div class="text-yellow-500 font-bold border-b border-yellow-500/20 pb-2 mb-2 text-[9px]">MASTER LEDGER (SINGLES $1.00)</div>
-        <div id="list-target" class="ledger-container"></div>
+        <div id="list-target" class="flex-1 overflow-y-auto"></div>
     </aside>
 </div>
 
@@ -187,40 +172,39 @@
         currentIdx = idx;
         const row = document.getElementById(`row-${idx}`);
         if(row) row.classList.add('playing');
-        document.getElementById('radio-track').innerText = assets[idx].name;
         audio.src = assets[idx].audio; 
         audio.play().catch(() => {});
     }
 
     function simulateMarket() {
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
-        const impact = (Math.random() * 2.5).toFixed(2); // Album price moves faster
-        albumPrice = side === "BUY" ? albumPrice + parseFloat(impact) : Math.max(9.99, albumPrice - parseFloat(impact));
-        if (albumPrice > 100) albumPrice = 100;
-
+        const impact = (Math.random() * 2.5).toFixed(2);
+        albumPrice = side === "BUY" ? Math.min(100, albumPrice + parseFloat(impact)) : Math.max(9.99, albumPrice - parseFloat(impact));
+        
         document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
         const arrow = document.getElementById('price-arrow');
         arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
         arrow.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
 
-        // Candle logic
+        // RESTORED POINTED CANDLES
         const container = document.getElementById('candle-container');
-        const c = document.createElement('div');
-        c.className = "candle";
-        c.style.height = (impact * 40) + "px";
-        c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
-        container.appendChild(c);
-        if (container.children.length > 45) container.removeChild(container.firstChild);
+        const box = document.createElement('div');
+        box.className = "candle-box";
+        
+        const wick = document.createElement('div');
+        wick.className = "wick";
+        wick.style.background = side === "BUY" ? "rgba(0,255,0,0.3)" : "rgba(255,51,51,0.3)";
+        
+        const body = document.createElement('div');
+        body.className = "body";
+        body.style.height = (impact * 40) + "px";
+        body.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
+        
+        box.appendChild(wick);
+        box.appendChild(body);
+        container.appendChild(box);
+        
+        if (container.children.length > 25) container.removeChild(container.firstChild);
 
-        // DATA LOG CONTENT
         const log = document.getElementById('flow-content');
-        const entry = document.createElement('div');
-        entry.className = "log-entry";
-        const timestamp = new Date().toLocaleTimeString([], {hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit'});
-        entry.innerHTML = `<span>${timestamp} - ${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} EXEC @ $1.00</span>`;
-        log.prepend(entry);
-        if (log.children.length > 4) log.removeChild(log.lastChild);
-    }
-</script>
-</body>
-</html>
+        const
