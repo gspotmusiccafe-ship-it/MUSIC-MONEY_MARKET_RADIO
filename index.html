@@ -12,7 +12,7 @@
         
         html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--bloomberg-green); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
         
-        /* FULL SCREEN PROSPECTUS LANDING PAGE */
+        /* PROSPECTUS LANDING PAGE */
         #prospectus-overlay { 
             position: fixed; inset: 0; background: #000; z-index: 9999; 
             overflow-y: auto; padding: 60px 20px; display: flex; flex-direction: column; align-items: center;
@@ -67,16 +67,16 @@
             <div class="flex-1">
                 <h2 class="text-white text-2xl font-black mb-4">ASSET: LOVE MAKE OVER // QUEEN BUTTA</h2>
                 <p class="text-xs text-gray-400 mb-8 leading-relaxed">
-                    THIS IS A GLOBAL PRE-RELEASE LIQUIDITY EVENT. SECURE DIRECT FRACTIONAL OWNERSHIP PRIOR TO MASS MARKET DISTRIBUTION.
+                    SONGSHARES OPEN: 50 SHARES AVAILABLE. PRE-RELEASE WINDOW: 90 DAYS TO GLOBAL RELEASE. SECURE YOUR CLAIM.
                 </p>
                 <div class="grid grid-cols-2 gap-4">
                     <div class="stat-box">
-                        <div class="text-gray-500 text-[10px] mb-1">GLOBAL RELEASE</div>
-                        <div class="text-white font-bold text-2xl">IN 90 DAYS</div>
+                        <div class="text-gray-500 text-[10px] mb-1">SHARES AVAILABLE</div>
+                        <div class="text-white font-bold text-2xl">50 / 50</div>
                     </div>
                     <div class="stat-box">
-                        <div class="text-gray-500 text-[10px] mb-1">SHARES ISSUED</div>
-                        <div class="text-white font-bold text-2xl">50 UNITS</div>
+                        <div class="text-gray-500 text-[10px] mb-1">GLOBAL RELEASE</div>
+                        <div class="text-white font-bold text-2xl">90 DAYS</div>
                     </div>
                 </div>
             </div>
@@ -85,26 +85,26 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
             <div class="border border-zinc-800 p-6 text-[10px] text-gray-300">
                 <span class="text-yellow-500 font-black block mb-2 text-xs">RETAIL POSITION: $1.00</span>
-                SINGLE SONG FRACTIONAL ASSET. PROFIT FROM KINETIC PRICE SURGES IN THE OPEN MARKET.
+                SINGLE SONG FRACTIONAL ASSET. PROFIT FROM OPEN MARKET SURGES.
             </div>
             <div class="border border-zinc-800 p-6 text-[10px] text-gray-300">
                 <span class="text-yellow-500 font-black block mb-2 text-xs">ASSET HOLDER: $9.99</span>
-                FULL 13-TRACK ALBUM OWNERSHIP. ELIGIBLE FOR DIRECT MARKET RESALE AND TRADE.
+                FULL 13-TRACK ALBUM OWNERSHIP. ELIGIBLE FOR DIRECT MARKET TRADE.
             </div>
             <div class="border border-green-900/30 bg-green-900/10 p-6 text-[10px] text-gray-300">
                 <span class="text-green-500 font-black block mb-2 text-xs">SONGSHARE RESELLER: $100</span>
-                ONLY 1 OF 50 SLOTS AVAILABLE. EXCLUSIVE RIGHT TO SELL THE ALBUM. EARN 50% OF ALL RETAIL SALES GENERATED.
+                1 OF 50 SLOTS. RIGHT TO SELL THE ALBUM. EARN 50% OF ALL GENERATED RETAIL SALES.
             </div>
         </div>
 
-        <button onclick="startEngine()" class="glass-btn border-2 border-green-500 text-green-500 py-8 text-2xl animate-pulse">ENTER THE MARKET FLOOR</button>
+        <button id="enter-market-btn" onclick="startEngine()" class="glass-btn border-2 border-green-500 text-green-500 py-8 text-2xl animate-pulse">ENTER THE MARKET FLOOR</button>
         <p class="text-center text-[9px] mt-8 text-zinc-600">OFFICIAL PROSPECTUS // AITIFY MUSIC RADIO // GLOBAL DISTRIBUTION RIGHTS RESERVED</p>
     </div>
 </div>
 
 <header class="flex justify-between items-center">
     <div class="font-bold text-[10px]">BLOOMBERG TERMINAL // MUSIC MONEY MARKET</div>
-    <div class="text-yellow-500 font-black animate-pulse text-[10px]">● LIVE CONNECTION</div>
+    <div class="text-yellow-500 font-black animate-pulse text-[10px]">● LIVE</div>
 </header>
 
 <div class="dashboard">
@@ -113,41 +113,3 @@
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         <div class="bg-black/40 p-6 border border-[#222] text-center">
             <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold tracking-widest">--</div>
-            <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
-            <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
-            <div class="flex flex-col gap-3">
-                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="glass-btn border-yellow-500 text-yellow-500">PARTNER: $100</a>
-                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="glass-btn">ALBUM: $9.99</a>
-                <a id="buy-btn" href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="glass-btn">SONGSHARE: $1.00</a>
-            </div>
-            <div class="flex gap-2 mt-6 h-14">
-                <button onclick="prevAsset()" class="glass-btn flex-1 text-2xl">⏮</button>
-                <button onclick="togglePlay()" id="play-pause-btn" class="glass-btn flex-1 text-2xl">⏸</button>
-                <button onclick="nextAsset()" class="glass-btn flex-1 text-2xl">⏭</button>
-            </div>
-        </div>
-    </aside>
-
-    <main class="main-col">
-        <div id="info-center" class="h-[75px] bg-zinc-900/50 border border-zinc-800 border-l-4 border-l-yellow-500 flex items-center justify-center p-4 text-center">
-            <div class="flash-msg active text-white font-bold text-xs">PRE-RELEASE OPPORTUNITY: OWN A PIECE OF THE MUSIC BEFORE GLOBAL LAUNCH.</div>
-        </div>
-        <div class="chart-box"><div id="candle-layer"></div></div>
-        <div id="order-flow"></div>
-    </main>
-
-    <aside class="side-col" style="border-left:1px solid #222;">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-3 mb-4 text-[10px] tracking-widest text-center">MARKET LEDGER</div>
-        <div id="list-target"></div>
-    </aside>
-</div>
-
-<audio id="main-audio-engine" preload="auto" playsinline></audio>
-
-<script>
-    const assets = [
-        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-        { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
-        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
-        { name: "I'M NOT HER", audio: "
