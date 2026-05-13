@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <button onclick="startEngine()" class="glass-btn border-2 border-green-500 text-green-500 py-5 text-lg animate-pulse">ENTER THE MARKET FLOOR</button>
+        <button id="enter-market-btn" onclick="startEngine()" class="glass-btn border-2 border-green-500 text-green-500 py-5 text-lg animate-pulse">ENTER THE MARKET FLOOR</button>
     </div>
 </div>
 
@@ -92,4 +92,30 @@
 <div class="dashboard">
     <aside class="side-col">
         <a href="https://aitify-music-stream.replit.app/" class="glass-btn mb-4 text-yellow-500 border-yellow-500">OPEN DEX FLOOR</a>
-        <div id="art-frame" class="album-art" style="background-image: url('
+        <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="bg-black/40 p-4 border border-[#222] text-center">
+            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold tracking-widest">--</div>
+            <div id="main-osc" class="oscillator-main mb-1">$1.00</div>
+            <div id="price-arrow" class="font-bold text-xl mb-4">▲ +0.00</div>
+            <div class="flex flex-col gap-2">
+                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="glass-btn border-yellow-500 text-yellow-500">PARTNER: $100</a>
+                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="glass-btn">ALBUM: $9.99</a>
+                <a id="buy-btn" href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="glass-btn">SONGSHARE: $1.00</a>
+            </div>
+            <div class="flex gap-2 mt-4 h-12">
+                <button onclick="prevAsset()" class="glass-btn flex-1 text-xl">⏮</button>
+                <button onclick="togglePlay()" id="play-pause-btn" class="glass-btn flex-1 text-xl">⏸</button>
+                <button onclick="nextAsset()" class="glass-btn flex-1 text-xl">⏭</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-col">
+        <div class="chart-box"><div id="candle-layer"></div></div>
+        <div id="order-flow"></div>
+    </main>
+
+    <aside class="side-col" style="border-left:1px solid #222;">
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-3 text-[9px] tracking-widest text-center">MARKET LEDGER</div>
+        <div id="list-target"></div>
+    </aside>
