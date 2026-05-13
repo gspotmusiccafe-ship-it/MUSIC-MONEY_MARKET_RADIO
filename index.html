@@ -12,67 +12,60 @@
             --bloomberg-green: #00ff33; 
             --bloomberg-red: #ff3333; 
             --bloomberg-blue: #0066ff;
-            --bg: #050505; 
-            --panel: #0f0f0f;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --bg: #030303; 
+            --panel: rgba(15, 15, 15, 0.8);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.12);
         }
 
         * { box-sizing: border-box; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; text-transform: uppercase; margin: 0; }
+        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; text-transform: uppercase; margin: 0; overflow: hidden; }
         
-        /* BLOOMBERG STYLE MARQUEE */
-        marquee { background: #000; border-bottom: 1px solid #333; color: var(--bloomberg-green); font-family: 'JetBrains Mono'; font-weight: bold; padding: 8px; font-size: 13px; }
-
-        /* AUTH LANDING */
-        #landing-page { position: fixed; inset: 0; background: #000; z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        /* AUTH LANDING - HIGHEST Z-INDEX */
+        #landing-page { 
+            position: fixed; inset: 0; background: #000; z-index: 999999; 
+            display: flex; align-items: center; justify-content: center; padding: 20px; 
+        }
         .glass-card { 
-            background: var(--glass); 
-            backdrop-filter: blur(15px); 
+            background: rgba(20, 20, 20, 0.8); 
+            backdrop-filter: blur(20px); 
             border: 1px solid var(--glass-border); 
-            padding: 40px; 
-            width: 100%; max-width: 450px; 
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 40px; width: 100%; max-width: 450px; 
+            border-radius: 16px;
+            box-shadow: 0 0 40px rgba(0, 102, 255, 0.15);
         }
 
-        /* GRADIENT GLASS BUTTONS */
+        /* GRANDULANT GLASS BUTTONS */
         .btn-glass {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
-            backdrop-filter: blur(10px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.01));
+            backdrop-filter: blur(12px);
             border: 1px solid var(--glass-border);
-            color: #fff;
-            font-weight: 800;
-            padding: 16px;
-            border-radius: 8px;
-            display: block;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-            text-decoration: none;
-            letter-spacing: 1px;
+            color: #fff; font-weight: 800; padding: 16px; border-radius: 8px;
+            display: block; text-align: center; transition: all 0.2s ease;
+            cursor: pointer; text-decoration: none; letter-spacing: 1px;
+            box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
         }
-        .btn-glass:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
-        .btn-green { color: var(--bloomberg-green); border-color: var(--bloomberg-green); }
-        .btn-blue { background: linear-gradient(135deg, rgba(0,102,255,0.3), rgba(0,102,255,0.1)); border-color: var(--bloomberg-blue); }
+        .btn-glass:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); transform: scale(1.02); }
+        .btn-green { color: var(--bloomberg-green); border-color: var(--bloomberg-green); text-shadow: 0 0 10px rgba(0,255,51,0.3); }
+        .btn-blue { background: linear-gradient(135deg, rgba(0,102,255,0.2), rgba(0,102,255,0.05)); border-color: var(--bloomberg-blue); color: var(--bloomberg-blue); }
 
-        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 85px); display: none; }
-        .dashboard.active { display: grid; }
+        /* TERMINAL LAYOUT */
+        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 40px); opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+        .dashboard.active { opacity: 1; pointer-events: auto; }
 
-        header { padding: 15px 25px; background: #000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono'; }
-        .side-col { background: var(--panel); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
+        header { padding: 12px 25px; background: #000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono'; }
+        .side-col { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
         .main-col { background: var(--bg); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
 
-        /* LEDGER SELECTOR */
-        .ledger-row { display: flex; justify-content: space-between; padding: 14px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono'; color: #888; }
-        .ledger-row:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .ledger-row.playing { border-left: 3px solid var(--bloomberg-blue); color: var(--bloomberg-blue); background: rgba(0,102,255,0.05); }
+        /* MARKET SELECTOR */
+        .ledger-row { display: flex; justify-content: space-between; padding: 14px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono'; color: #666; }
+        .ledger-row:hover { background: rgba(255,255,255,0.03); color: #fff; }
+        .ledger-row.playing { border-left: 3px solid var(--bloomberg-blue); color: #fff; background: rgba(0,102,255,0.08); }
 
-        /* OSCILLATOR */
-        .oscillator { font-size: 4rem; font-weight: 900; letter-spacing: -4px; line-height: 1; text-align: center; font-family: 'Inter'; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #333; background-size: cover; border-radius: 4px; margin-bottom: 20px; }
-
-        .input-field { background: #111; border: 1px solid #333; color: white; width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; }
+        .oscillator { font-size: 4.5rem; font-weight: 900; letter-spacing: -4px; line-height: 1; text-align: center; }
+        .input-field { background: #111; border: 1px solid #333; color: white; width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 6px; font-family: 'JetBrains Mono'; font-size: 12px; }
+        
+        marquee { background: #000; border-bottom: 1px solid #222; color: var(--bloomberg-green); font-family: 'JetBrains Mono'; padding: 8px; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -80,68 +73,68 @@
 <div id="landing-page">
     <div class="glass-card">
         <h1 class="text-white font-black text-2xl mb-1">97.7 THE FLAME</h1>
-        <p class="text-blue-500 text-[10px] mb-8 tracking-[3px] font-bold">MUSIC MARKET APP ACCESS</p>
+        <p class="text-blue-500 text-[9px] mb-8 tracking-[4px] font-bold">MUSIC MARKET TERMINAL ACCESS</p>
         
-        <input type="email" placeholder="TERMINAL ID (EMAIL)" class="input-field">
-        <input type="password" placeholder="ACCESS KEY" class="input-field">
-        <input type="text" placeholder="MOBILE SYNC NUMBER" class="input-field">
+        <input type="email" placeholder="TERMINAL_ID" class="input-field">
+        <input type="password" placeholder="ACCESS_KEY" class="input-field">
+        <input type="text" placeholder="SYNC_MOBILE_NOD" class="input-field">
         
-        <button onclick="enterTerminal()" class="btn-glass btn-blue mt-4 w-full">INITIALIZE TERMINAL</button>
+        <button onclick="initializeTerminal()" class="btn-glass btn-blue w-full">INITIALIZE_SYSTEM</button>
     </div>
 </div>
 
-<marquee id="market-ticker">LOADING MARKET DATA... QUEEN BUTTA "LOVE MAKE OVER" TRADING AT $3.09 (+12.4%) ... SONGSHARE OPPORTUNITY OPEN ... 50 RETAILER SLOTS REMAINING ...</marquee>
+<marquee>OWN A PIECE OF THE MUSIC // QUEEN BUTTA "LOVE MAKE OVER" PRE-RELEASE SHOWCASE // RETAILER OPPORTUNITIES LIVE // NO BOT REGISTRATION PERMITTED...</marquee>
 
 <header>
-    <div class="text-[10px] font-bold text-gray-400">AITIFY // <span class="text-blue-500">MUSIC MARKET APP ACCESS</span></div>
-    <div class="text-[10px] font-bold tracking-widest"><span class="text-green-500">●</span> SYSTEM_STABLE // 2026_V4</div>
+    <div class="text-[10px] font-bold text-gray-500">AITIFY // <span class="text-blue-500">MUSIC MARKET TERMINAL</span></div>
+    <div class="text-[10px] font-bold tracking-widest text-green-500">SYSTEM_STABLE_V4.02</div>
 </header>
 
-<div id="market-dashboard" class="dashboard">
+<div id="market-terminal" class="dashboard">
     <aside class="side-col">
-        <div id="art-box" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div id="art" class="w-full aspect-square border border-[#333] mb-6 rounded bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
-        <div class="glass-card p-4 mb-6">
-            <div id="now-playing" class="text-gray-500 text-center text-[10px] mb-2 font-bold font-mono">--</div>
-            <div id="price-main" class="oscillator text-white mb-2">$1.00</div>
-            <div id="market-status" class="text-center text-green-500 font-bold text-xs mb-6">▲ MARKET OPEN</div>
+        <div class="bg-[#111]/50 border border-[#222] p-5 rounded-lg mb-6">
+            <div id="track-name" class="text-gray-500 text-center text-[9px] mb-2 font-mono">--</div>
+            <div id="price-display" class="oscillator text-white mb-2">$1.00</div>
+            <div id="market-pulse" class="text-center text-green-500 font-black text-xs mb-6">▲ KINETIC_GAINS</div>
             
             <div class="flex gap-2 mb-4">
-                <button onclick="togglePlay()" id="play-btn" class="btn-glass flex-1 text-[10px]">PAUSE</button>
+                <button onclick="toggleAudio()" id="p-btn" class="btn-glass flex-1 text-[10px]">PAUSE</button>
                 <button onclick="stopAudio()" class="btn-glass flex-1 text-[10px]">STOP</button>
             </div>
 
             <div class="space-y-3">
-                <a href="#" class="btn-glass btn-green">BUY SONG: $1.00</a>
-                <a href="#" class="btn-glass">BUY ALBUM: $9.99</a>
-                <a href="#" class="btn-glass btn-blue">SONGSHARE PARTNER: $100</a>
+                <a href="#" class="btn-glass btn-green text-xs">BUY SINGLE SONG: $1.00</a>
+                <a href="#" class="btn-glass text-xs">BUY FULL ALBUM: $9.99</a>
+                <a href="#" class="btn-glass btn-blue text-xs">SONGSHARE PARTNER: $100</a>
             </div>
         </div>
     </aside>
 
     <main class="main-col">
-        <div class="glass-card p-6 mb-6">
-            <h2 class="text-gray-400 font-bold text-[10px] mb-4 tracking-widest">ASSET_KINETIC_FLOW</h2>
-            <div id="chart-container" class="h-64 flex items-end justify-around gap-1 px-2 border-b border-[#222] pb-2"></div>
+        <div class="bg-[#111]/30 border border-[#222] p-6 rounded-lg mb-6">
+            <h2 class="text-gray-500 font-bold text-[10px] mb-4 tracking-widest">REAL-TIME_KINETIC_CHART</h2>
+            <div id="chart" class="h-64 flex items-end justify-around gap-1 border-b border-[#222] pb-2"></div>
         </div>
 
-        <div class="glass-card overflow-hidden">
-            <div class="bg-blue-600/20 p-3 text-blue-400 font-bold text-[10px] text-center border-b border-blue-500/30">SONGSHARE_OPPORTUNITY_ALERT</div>
-            <div class="p-5">
-                <div class="flex justify-between text-xs mb-2 text-gray-400"><span>PARTNER RETAIL SHARE:</span><span class="text-white font-bold">50%</span></div>
-                <div class="flex justify-between text-xs mb-2 text-gray-400"><span>APP ACCESS LEVEL:</span><span class="text-white font-bold">PERSONAL ID TRACKING</span></div>
-                <div class="flex justify-between text-xs text-gray-400"><span>GLOBAL ENGAGEMENT:</span><span class="text-white font-bold">25% SHARED</span></div>
+        <div class="border border-blue-900/30 bg-blue-900/10 p-6 rounded-lg">
+            <div class="text-blue-500 font-bold text-xs mb-3">SONGSHARE_PARTNER_BENEFITS</div>
+            <div class="space-y-2 text-[10px] text-gray-300">
+                <div class="flex justify-between"><span>RETAIL COMMISSION:</span><span class="text-white">50%</span></div>
+                <div class="flex justify-between"><span>APP ACCESS:</span><span class="text-white">MUSIC MARKET SYNC</span></div>
+                <div class="flex justify-between"><span>GLOBAL REVENUE:</span><span class="text-white">25% ENGAGEMENT</span></div>
             </div>
         </div>
     </main>
 
     <aside class="side-col">
-        <div class="text-blue-500 font-bold border-b border-blue-900/50 pb-2 mb-4 text-[10px] font-mono">MARKET_LEDGER</div>
-        <div id="ledger-list"></div>
+        <div class="text-blue-500 font-bold border-b border-blue-900/30 pb-2 mb-4 text-[10px]">MARKET_LEDGER_SELECTOR</div>
+        <div id="ledger"></div>
     </aside>
 </div>
 
-<audio id="audio-engine"></audio>
+<audio id="engine"></audio>
 
 <script>
     const playlist = [
@@ -151,4 +144,63 @@
         { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
         { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
         { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
-        { name: "IT'S FRIDAY NIGHT", audio: "
+        { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" }
+    ];
+
+    const audio = document.getElementById('engine');
+    let price = 3.09;
+
+    function initializeTerminal() {
+        document.getElementById('landing-page').style.display = 'none';
+        document.getElementById('market-terminal').classList.add('active');
+        
+        const ledger = document.getElementById('ledger');
+        playlist.forEach((s, i) => {
+            const row = document.createElement('div');
+            row.className = `ledger-row row-${i}`;
+            row.innerHTML = `<span>${s.name}</span><span>$1.00</span>`;
+            row.onclick = () => playSong(i);
+            ledger.appendChild(row);
+        });
+        
+        playSong(0);
+        setInterval(marketTick, 2500);
+    }
+
+    function playSong(i) {
+        document.getElementById('track-name').innerText = playlist[i].name;
+        audio.src = playlist[i].audio;
+        audio.play();
+        document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
+        document.querySelector(`.row-${i}`).classList.add('playing');
+        document.getElementById('p-btn').innerText = "PAUSE";
+    }
+
+    function marketTick() {
+        const up = Math.random() > 0.45;
+        const move = (Math.random() * 0.12).toFixed(2);
+        price = up ? price + parseFloat(move) : Math.max(1, price - parseFloat(move));
+        
+        document.getElementById('price-display').innerText = `$${price.toFixed(2)}`;
+        const pulse = document.getElementById('market-pulse');
+        pulse.innerText = up ? `▲ +${move}` : `▼ -${move}`;
+        pulse.style.color = up ? "var(--bloomberg-green)" : "var(--bloomberg-red)";
+
+        const chart = document.getElementById('chart');
+        const candle = document.createElement('div');
+        candle.style.width = "12px";
+        candle.style.height = (Math.random() * 80 + 10) + "%";
+        candle.style.background = up ? "var(--bloomberg-green)" : "var(--bloomberg-red)";
+        candle.style.borderRadius = "2px";
+        chart.appendChild(candle);
+        if(chart.children.length > 35) chart.removeChild(chart.firstChild);
+    }
+
+    function toggleAudio() { 
+        if(audio.paused) { audio.play(); document.getElementById('p-btn').innerText = "PAUSE"; }
+        else { audio.pause(); document.getElementById('p-btn').innerText = "PLAY"; }
+    }
+    function stopAudio() { audio.pause(); audio.currentTime = 0; document.getElementById('p-btn').innerText = "PLAY"; }
+</script>
+</body>
+</html>
