@@ -14,7 +14,6 @@
         #prospectus-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; padding: 20px; display: flex; align-items: center; justify-content: center; }
         .prospectus-container { max-width: 750px; width: 100%; border: 1px solid #222; background: #080808; padding: 25px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         
-        /* THE DASHBOARD - ANTI-BUNCHING GRID */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: 100vh; display: none; width: 100%; }
         
         @media (max-width: 1024px) { 
@@ -28,19 +27,20 @@
         
         .glass-btn { background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; padding: 14px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.7rem; }
         
-        /* CHART BOX WITH FORCED WICK SPACING */
-        .chart-box { background: #050505; border: 1px solid #222; height: 320px; position: relative; overflow: hidden; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 60px 10px; }
-        .candle { width: 8px; position: relative; transition: 0.3s; z-index: 10; }
-        .wick { position: absolute; width: 2px; height: 180%; left: 3px; top: -40%; z-index: -1; opacity: 0.7; }
+        /* CHART STRETCH LOGIC */
+        .chart-box { background: #050505; border: 1px solid #222; height: 320px; position: relative; overflow: hidden; width: 100%; }
+        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-between; padding: 60px 20px; width: 100%; }
+        .candle { flex: 1; max-width: 12px; margin: 0 4px; position: relative; transition: 0.3s; z-index: 10; }
+        .wick { position: absolute; width: 2px; height: 180%; left: 50%; transform: translateX(-50%); top: -40%; z-index: -1; opacity: 0.7; }
         
         .oscillator-main { font-size: 4rem; color: #fff; font-weight: 900; letter-spacing: -3px; line-height: 1; }
         .album-art { width: 100%; max-width: 320px; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin: 0 auto 15px auto; }
         
-        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 10px; }
+        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 10px; width: 100%; }
         
-        /* ORDER FLOW - FORCED HEIGHT TO PREVENT BUNCHING */
-        #order-flow { height: 180px; background: #0a0a0a; border: 1px solid #222; overflow: hidden; font-size: 0.65rem; padding: 12px; line-height: 1.8; color: #fff; }
+        /* FULL WIDTH ORDER FLOW */
+        #order-flow { height: 220px; background: #0a0a0a; border: 1px solid #222; overflow: hidden; font-size: 0.7rem; padding: 15px; line-height: 2; color: #fff; width: 100%; }
+        .flow-entry { display: flex; justify-content: space-between; width: 100%; border-bottom: 1px solid #111; padding: 2px 0; }
     </style>
 </head>
 <body>
@@ -149,12 +149,13 @@
         candle.style.background = side === "BUY" ? "#0f0" : "#f00";
         candle.innerHTML = `<div class='wick' style='background:${side === "BUY" ? "#0f0" : "#f00"}'></div>`;
         document.getElementById('candle-layer').appendChild(candle);
-        if(document.getElementById('candle-layer').children.length > 20) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+        if(document.getElementById('candle-layer').children.length > 30) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
 
         const flow = document.getElementById('order-flow');
         const entry = document.createElement('div');
+        entry.className = "flow-entry";
         entry.style.color = side === "BUY" ? "#0f0" : "#f00";
-        entry.innerText = `${side} ORDER: ${impact.toFixed(4)} UNITS @ $${albumPrice.toFixed(2)} [EXECUTED]`;
+        entry.innerHTML = `<span>${side} ORDER EXECUTED</span> <span>${impact.toFixed(4)} UNITS @ $${albumPrice.toFixed(2)}</span>`;
         flow.prepend(entry);
         if(flow.children.length > 8) flow.removeChild(flow.lastChild);
     }
