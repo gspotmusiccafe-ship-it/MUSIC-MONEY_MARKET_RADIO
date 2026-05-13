@@ -17,66 +17,56 @@
         
         body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; overflow-x: hidden; }
         
-        /* RESPONSIVE GRID SYSTEM */
-        .dashboard { 
-            display: grid; 
-            grid-template-columns: 1fr; /* Default to 1 column for mobile */
-            gap: 10px; padding: 10px;
-        }
+        .dashboard { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 10px; }
 
-        /* Desktop Switch */
         @media (min-width: 1024px) {
-            .dashboard { 
-                grid-template-columns: 360px 1fr 340px; 
-                height: calc(100vh - 50px); 
-                overflow: hidden;
-            }
+            .dashboard { grid-template-columns: 360px 1fr 340px; height: calc(100vh - 50px); overflow: hidden; }
         }
 
-        .side-col { 
-            background: rgba(5, 5, 5, 0.95); 
-            border: 1px solid #1a1a1a; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column;
-        }
+        .side-col { background: rgba(5, 5, 5, 0.95); border: 1px solid #1a1a1a; padding: 15px; display: flex; flex-direction: column; }
 
-        /* MESSAGE CENTER */
+        /* MESSAGE CENTER - DIGITAL GREEN TEXT */
         #info-center { 
             min-height: 100px; background: var(--glass); backdrop-filter: blur(20px);
-            border: 1px solid var(--electric-blue);
+            border: 1px solid var(--neon);
             display: flex; align-items: center; justify-content: center;
             padding: 15px; text-align: center; margin-bottom: 5px;
         }
 
         .flash-msg { 
             font-family: 'Syncopate', sans-serif; font-size: 0.7rem; 
-            color: #fff; font-weight: 900; display: none; letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.8);
+            color: var(--neon); font-weight: 900; display: none; letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
         }
         .flash-msg.active { display: block; }
 
         /* MARKET CHART */
         .chart-frame { 
-            height: 350px; background: #050505; border: 1px solid #111; 
+            height: 300px; background: #050505; border: 1px solid #111; 
             position: relative; overflow: hidden; display: flex; align-items: flex-end; 
             justify-content: center; padding-bottom: 10px;
         }
         #candle-container { display: flex; align-items: flex-end; gap: 3px; height: 100%; width: 100%; justify-content: center; }
         .candle { width: 8px; border-radius: 1px; transition: height 0.5s ease; }
 
-        /* ART & BUTTONS */
+        /* BUY/SELL DATA LOG */
+        #order-flow {
+            height: 120px; background: #080808; border: 1px solid #1a1a1a;
+            padding: 10px; overflow-y: hidden; font-size: 0.65rem; color: #aaa;
+        }
+        .log-entry { display: flex; justify-content: space-between; border-bottom: 1px solid #111; padding: 4px 0; }
+
+        /* ART & BUTTONS - NEW GOLD STYLE */
         .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--gold); background-size: cover; margin-bottom: 10px; }
         .command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
         .glass-btn {
-            background: var(--glass); border: 1px solid rgba(255, 204, 0, 0.3);
+            background: rgba(255, 204, 0, 0.05); border: 1px solid var(--gold);
             color: var(--gold); font-family: 'Syncopate', sans-serif;
             font-size: 0.6rem; padding: 12px; text-align: center; cursor: pointer;
         }
 
         .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; }
         
-        /* LEDGER LIST */
         .ledger-container { height: 400px; overflow-y: auto; }
         @media (min-width: 1024px) { .ledger-container { height: 100%; } }
 
@@ -89,7 +79,7 @@
 <body>
 
 <header class="p-2 border-b border-white/5 flex justify-between items-center bg-black">
-    <div class="text-[8px] tracking-[2px] opacity-60">97.7 THE FLAME // PARTNER ENGINE</div>
+    <div class="text-[8px] tracking-[2px] opacity-60">97.7 THE FLAME // ALBUM PRICE OSCILLATOR</div>
     <div class="text-yellow-500 font-bold text-[8px] animate-pulse">● LIVE ASSET FEED</div>
 </header>
 
@@ -105,9 +95,10 @@
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         
         <div class="text-center">
-            <div id="radio-track" class="text-yellow-500 text-[9px] mb-1">CONNECTING...</div>
-            <div id="main-osc" class="oscillator-main">$10.00</div>
+            <div class="text-white text-[8px] mb-1 opacity-50">FULL ALBUM ASSET PRICE:</div>
+            <div id="main-osc" class="oscillator-main">$9.99</div>
             <div id="price-arrow" class="font-bold text-lg mb-2">▲ +0.00</div>
+            <div id="radio-track" class="text-yellow-500 text-[9px] mb-2">TRACK ACTIVE</div>
             <div class="media-ctrl">
                 <span class="cursor-pointer" onclick="prev()">⏮</span>
                 <span id="play-pause" class="cursor-pointer text-white" onclick="togglePlay()">⏸</span>
@@ -121,16 +112,21 @@
             <div class="flash-msg active">"SONGSHARE PARTNERS: EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT."</div>
             <div class="flash-msg">"OWN A PIECE OF THE MUSIC ASSET BEFORE GLOBAL RELEASE."</div>
             <div class="flash-msg">"MONETIZE YOUR ENGAGEMENT: TRANSFORM LISTENS INTO KINETIC PROFITS."</div>
-            <div class="flash-msg">"BECOME A DIGITAL ASSET BANKER: SECURE YOUR POSITION."</div>
+            <div class="flash-msg">"ALBUM STARTING PRICE: $9.99 - CEILING: $100.00"</div>
         </div>
         
         <div class="chart-frame">
              <div id="candle-container"></div>
         </div>
+
+        <div id="order-flow">
+            <div class="text-white font-bold text-[8px] border-b border-white/10 mb-2">LIVE EXECUTION LOG</div>
+            <div id="flow-content"></div>
+        </div>
     </main>
 
     <aside class="side-col">
-        <div class="text-yellow-500 font-bold border-b border-yellow-500/20 pb-2 mb-2 text-[9px]">MASTER LEDGER</div>
+        <div class="text-yellow-500 font-bold border-b border-yellow-500/20 pb-2 mb-2 text-[9px]">MASTER LEDGER (SINGLES $1.00)</div>
         <div id="list-target" class="ledger-container"></div>
     </aside>
 </div>
@@ -154,7 +150,7 @@
         { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
     ];
 
-    let currentIdx = 0; let price = 10.00;
+    let currentIdx = 0; let albumPrice = 9.99;
     const audio = document.getElementById('main-audio-engine');
     const msgs = document.querySelectorAll('.flash-msg');
     let msgIdx = 0;
@@ -162,14 +158,14 @@
     window.onload = () => {
         renderLedger();
         setInterval(rotateMsgs, 5000);
-        setInterval(simulateMarket, 1200);
+        setInterval(simulateMarket, 1500);
         audio.onended = () => next();
         sync(0);
     };
 
     function renderLedger() {
         const list = document.getElementById('list-target');
-        list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$10.00</div></div>`).join('');
+        list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-yellow-500 font-bold">$1.00</div></div>`).join('');
     }
 
     function rotateMsgs() {
@@ -198,21 +194,32 @@
 
     function simulateMarket() {
         const side = Math.random() > 0.45 ? "BUY" : "SELL";
-        const impact = (Math.random() * 0.8).toFixed(2);
-        price = side === "BUY" ? price + parseFloat(impact) : Math.max(10.00, price - parseFloat(impact));
-        
-        document.getElementById('main-osc').innerText = `$${price.toFixed(2)}`;
+        const impact = (Math.random() * 2.5).toFixed(2); // Album price moves faster
+        albumPrice = side === "BUY" ? albumPrice + parseFloat(impact) : Math.max(9.99, albumPrice - parseFloat(impact));
+        if (albumPrice > 100) albumPrice = 100;
+
+        document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
         const arrow = document.getElementById('price-arrow');
         arrow.innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact}`;
         arrow.style.color = side === "BUY" ? "var(--neon)" : "var(--red)";
 
+        // Candle logic
         const container = document.getElementById('candle-container');
         const c = document.createElement('div');
         c.className = "candle";
-        c.style.height = (impact * 250) + "px";
+        c.style.height = (impact * 40) + "px";
         c.style.background = side === "BUY" ? "var(--neon)" : "var(--red)";
         container.appendChild(c);
-        if (container.children.length > 35) container.removeChild(container.firstChild);
+        if (container.children.length > 45) container.removeChild(container.firstChild);
+
+        // DATA LOG CONTENT
+        const log = document.getElementById('flow-content');
+        const entry = document.createElement('div');
+        entry.className = "log-entry";
+        const timestamp = new Date().toLocaleTimeString([], {hour12:false, hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        entry.innerHTML = `<span>${timestamp} - ${assets[currentIdx].name}</span> <span style="color:${side==='BUY'?'#0f0':'#f33'}">${side} EXEC @ $1.00</span>`;
+        log.prepend(entry);
+        if (log.children.length > 4) log.removeChild(log.lastChild);
     }
 </script>
 </body>
