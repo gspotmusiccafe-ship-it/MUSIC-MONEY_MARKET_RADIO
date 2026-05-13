@@ -3,111 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>97.7 THE FLAME // MARKET TERMINAL</title>
+    <title>97.7 THE FLAME // MASTER TERMINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&display=swap');
         
-        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --panel: #111; }
+        :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
         * { box-sizing: border-box; }
         body { background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; overflow: hidden; }
 
-        /* --- THE UPGRADED MESSAGE BLOCK STYLE --- */
+        /* THE HIGH-IMPACT SONGSHARE BLOCK */
         .songshare-flash {
             background: #000;
-            border: 2px solid var(--gold);
-            margin: 15px 0;
+            border: 3px solid var(--gold);
+            margin: 20px 0;
             padding: 0;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.15);
+            box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+            animation: snap-in 0.2s ease-out;
         }
 
         .flash-header {
             background: var(--gold);
             color: #000;
             font-family: 'Archivo Black', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             text-align: center;
-            padding: 10px;
-            line-height: 1;
-            letter-spacing: -0.5px;
+            padding: 12px;
+            letter-spacing: -1px;
         }
 
-        .flash-content { padding: 15px; color: #fff; }
+        .flash-content { padding: 20px; color: #fff; }
         
         .flash-grid {
             display: grid;
-            grid-template-columns: 140px 1fr;
-            gap: 4px;
-            font-size: 0.7rem;
-            border-bottom: 1px solid #222;
-            padding-bottom: 12px;
-            margin-bottom: 12px;
+            grid-template-columns: 160px 1fr;
+            gap: 6px;
+            font-size: 0.8rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
         }
 
-        .label { color: var(--gold); font-weight: 900; }
-        .value { text-align: right; font-weight: 700; white-space: nowrap; }
+        .label { color: var(--gold); font-weight: 900; letter-spacing: 1px; }
+        .value { text-align: right; font-weight: 700; color: #fff; }
 
         .benefit-tag {
             background: #111;
-            color: #00ff00;
-            font-size: 0.65rem;
-            padding: 8px;
-            margin-bottom: 4px;
-            border-left: 3px solid #00ff00;
-            font-weight: 700;
+            color: var(--neon);
+            font-size: 0.7rem;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-left: 4px solid var(--neon);
+            font-weight: 900;
         }
 
-        /* --- LAYOUT WRAPPER --- */
+        /* LAYOUT TERMINAL */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: 100vh; }
-        .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
+        .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 25px; overflow-y: auto; }
         .main-col { padding: 20px; display: flex; flex-direction: column; gap: 20px; border-right: 1px solid #222; }
         
-        #order-flow { flex-grow: 1; overflow-y: hidden; display: flex; flex-direction: column-reverse; gap: 5px; }
-        .trade-row { display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid #111; opacity: 0.7; }
+        #order-flow { flex-grow: 1; overflow-y: hidden; display: flex; flex-direction: column-reverse; gap: 6px; }
+        .trade-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #111; opacity: 0.6; }
         
-        .oscillator { font-size: 5rem; font-weight: 900; color: #fff; letter-spacing: -4px; text-align: center; line-height: 0.9; }
-        .btn-gold { width: 100%; background: var(--gold); color: #000; font-weight: 900; padding: 15px; text-align: center; margin-bottom: 10px; cursor: pointer; border: none; font-size: 14px; }
+        .oscillator { font-size: 5.5rem; font-weight: 900; color: #fff; letter-spacing: -5px; text-align: center; line-height: 0.8; }
+        .btn-gold { width: 100%; background: var(--gold); color: #000; font-family: 'Archivo Black', sans-serif; padding: 18px; text-align: center; margin-bottom: 12px; cursor: pointer; border: none; font-size: 1rem; }
+
+        @keyframes snap-in { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
     <aside class="side-col">
-        <button class="btn-gold">OPEN MARKET TERMINAL</button>
-        <div class="w-full aspect-square border-2 border-yellow-500 mb-6 bg-cover bg-center" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        <div class="oscillator" id="price">$1.00</div>
-        <div id="status-line" class="text-center text-green-500 font-bold mt-2">▲ KINETIC PULSE</div>
+        <button class="btn-gold">TRADING ACTIVE</button>
+        <div class="w-full aspect-square border-2 border-yellow-500 mb-6 bg-cover bg-center shadow-[0_0_15px_rgba(255,204,0,0.2)]" 
+             style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');">
+        </div>
+        <div class="oscillator" id="price-osc">$1.00</div>
+        <div id="kinetic-status" class="text-center text-green-500 font-bold mt-4 tracking-tighter">▲ KINETIC PULSE ENGAGED</div>
     </aside>
 
     <main class="main-col">
-        <div class="bg-[#000] border border-[#222] h-[250px] relative">
-            <div class="absolute inset-0 flex items-center justify-center opacity-20 text-[10px]">KINETIC CHART ACTIVE</div>
+        <div class="bg-[#000] border border-[#222] h-[280px] relative overflow-hidden">
+            <svg width="100%" height="100%" viewBox="0 0 1000 300" preserveAspectRatio="none" class="absolute inset-0">
+                <path id="kinetic-line" d="" fill="none" stroke="#00ff00" stroke-width="3" style="filter: drop-shadow(0 0 8px #00ff00);"/>
+            </svg>
+            <div class="absolute top-2 left-2 text-[9px] text-gray-600 tracking-widest">LIVE_KINETIC_ALGO_FEED</div>
         </div>
         <div id="order-flow"></div>
     </main>
 
     <aside class="side-col" style="border-left: 1px solid #222;">
-        <div class="text-yellow-500 font-bold border-b border-[#222] pb-2 mb-4 text-xs">MARKET LEDGER</div>
-        <div id="ledger" class="space-y-4 text-[10px]">
-            <div class="flex justify-between"><span>SUPERFLY</span><span class="text-yellow-500">$1.00</span></div>
-            <div class="flex justify-between"><span>LOVE MAKE OVER</span><span class="text-yellow-500">$1.00</span></div>
+        <div class="text-yellow-500 font-black border-b border-[#222] pb-2 mb-4 text-xs tracking-widest">MASTER LEDGER</div>
+        <div id="ledger" class="space-y-4 text-[11px]">
+            <div class="flex justify-between"><span>SUPERFLY</span><span class="text-yellow-500 font-bold">$1.00</span></div>
+            <div class="flex justify-between"><span>LOVE MAKE OVER</span><span class="text-yellow-500 font-bold">$1.00</span></div>
         </div>
-        <div id="affiliate-status" class="mt-10 p-4 border border-dashed border-[#444] text-[9px] text-gray-500">
-            PARTNER ID: <span id="partner-id" class="text-white">NONE_DIRECT</span>
+        
+        <div class="mt-20 p-5 border border-dashed border-[#333] rounded">
+            <div class="text-[9px] text-gray-500 mb-1">RETAILER_TRACKING_ID:</div>
+            <div id="partner-id" class="text-white font-bold text-xs">NONE_DIRECT</div>
         </div>
     </aside>
 </div>
 
 <script>
-    // --- AFFILIATE TRACKING LOGIC ---
+    // --- AFFILIATE / RETAILER ID ---
     const urlParams = new URLSearchParams(window.location.search);
-    const refID = urlParams.get('ref') || localStorage.getItem('aitify_ref') || "DIRECT";
-    if (refID !== "DIRECT") {
+    const refID = urlParams.get('ref') || localStorage.getItem('aitify_ref') || "NONE_DIRECT";
+    if (refID !== "NONE_DIRECT") {
         localStorage.setItem('aitify_ref', refID);
-        document.getElementById('partner-id').innerText = refID;
     }
+    document.getElementById('partner-id').innerText = refID;
 
+    // --- SONGSHARE DATA ---
     const songshareData = {
         title: "SONGSHARE OPPORTUNITY",
         stats: [
@@ -120,23 +129,26 @@
             ["INVESTMENT", "$100.00"]
         ],
         benefits: [
-            "50% RETAIL SALES EARNINGS",
+            "50% RETAIL SALES COMMISSION",
             "PERSONAL ID TRACKING APP",
             "25% MARKET ENGAGEMENT EARNINGS",
             "GLOBAL ROYALTY QUALIFICATION"
         ]
     };
 
-    function inject() {
+    let price = 1.00;
+    let history = [1.00];
+
+    function update() {
         const flow = document.getElementById('order-flow');
-        const isLogic = Math.random() > 0.82;
+        const isLogic = Math.random() > 0.85;
 
         if (isLogic) {
             const flash = document.createElement('div');
             flash.className = 'songshare-flash';
             
             let statHtml = songshareData.stats.map(s => 
-                `<div class="label">${s[0]}:</div><div class="value">${s[1]}</div>`
+                `<div class="label">${s[0]}</div><div class="value">${s[1]}</div>`
             ).join('');
 
             let benefitHtml = songshareData.benefits.map(b => 
@@ -147,22 +159,43 @@
                 <div class="flash-header">${songshareData.title}</div>
                 <div class="flash-content">
                     <div class="flash-grid">${statHtml}</div>
-                    <div class="font-black text-[9px] text-yellow-500 mb-2 tracking-widest">PARTNER BENEFITS</div>
+                    <div class="font-black text-[9px] text-yellow-500 mb-3 tracking-widest">PARTNER_BENEFITS_ARRAY</div>
                     ${benefitHtml}
                 </div>`;
             flow.appendChild(flash);
         } else {
             const row = document.createElement('div');
             row.className = 'trade-row';
-            const up = Math.random() > 0.5;
+            const up = Math.random() > 0.48;
+            price = up ? price + (Math.random() * 0.1) : Math.max(1, price - (Math.random() * 0.08));
+            
             row.style.color = up ? "var(--neon)" : "var(--red)";
-            row.innerHTML = `<span>RETAIL_MARKET_TICKER</span><span>$1.${Math.floor(Math.random()*99)}</span>`;
+            row.innerHTML = `<span>RETAIL_ORDER_DEPL_${Math.floor(Math.random()*999)}</span><span>$${price.toFixed(2)}</span>`;
             flow.appendChild(row);
+
+            document.getElementById('price-osc').innerText = `$${price.toFixed(2)}`;
+            document.getElementById('price-osc').style.color = up ? "#fff" : "var(--red)";
+            
+            history.push(price);
+            if(history.length > 50) history.shift();
+            drawChart();
         }
-        if (flow.children.length > 10) flow.removeChild(flow.firstChild);
+        if (flow.children.length > 15) flow.removeChild(flow.firstChild);
     }
 
-    setInterval(inject, 2000);
+    function drawChart() {
+        const path = document.getElementById('kinetic-line');
+        if (history.length < 2) return;
+        let d = `M 0 ${280 - (history[0] * 30)}`;
+        history.forEach((p, i) => {
+            const x = (i / (history.length - 1)) * 1000;
+            const y = 280 - (p * 30);
+            d += ` L ${x} ${y}`;
+        });
+        path.setAttribute('d', d);
+    }
+
+    setInterval(update, 1800);
 </script>
 
 </body>
