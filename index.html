@@ -10,17 +10,14 @@
         :root { --neon: #00ff00; --gold: #ffcc00; --bg: #050505; --red: #ff3333; }
         * { box-sizing: border-box; }
         html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
-        
-        /* PROSPECTUS OVERLAY */
         #prospectus-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; padding: 20px; display: flex; align-items: center; justify-content: center; }
         .prospectus-container { max-width: 800px; width: 100%; border: 1px solid #222; background: #080808; padding: 30px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         .prospectus-header { border-bottom: 3px solid var(--neon); margin-bottom: 20px; padding-bottom: 10px; }
-        
-        /* TERMINAL UI */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: 100vh; display: none; }
         @media (max-width: 1024px) { .dashboard { display: flex; flex-direction: column; } }
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 15px; }
         .glass-btn { background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; padding: 14px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.7rem; }
+        .glass-btn:hover { background: rgba(0, 255, 0, 0.15); border-color: var(--neon); }
         .chart-box { background: #000; border: 1px solid #222; height: 300px; position: relative; overflow: hidden; }
         #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; }
         .candle { width: 8px; border-radius: 1px; transition: 0.3s; }
@@ -35,7 +32,7 @@
     <div class="prospectus-container">
         <div class="prospectus-header">
             <h1 class="text-2xl font-black text-white">WELCOME TO THE MUSIC MARKET</h1>
-            <p class="text-yellow-500 text-[10px]">OWN A PIECE OF THE MUSIC // ASSET FRACTIONALIZATION</p>
+            <p class="text-yellow-500 text-[10px]">50 SONGSHARES AVAILABLE // 90 DAYS TO RELEASE</p>
         </div>
         <div class="flex flex-col md:flex-row gap-6 mb-6">
             <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full md:w-64 h-64 object-cover border border-zinc-700">
@@ -58,4 +55,100 @@
 
 <div id="main-ui" class="dashboard">
     <aside class="side-col">
-        <a href="https://aitify-music-stream.replit.app/" class="glass-btn mb-4 text-yellow-500
+        <a href="https://aitify-music-stream.replit.app/" class="glass-btn mb-4 text-yellow-500 border-yellow-500">AITITRADE ACCESS</a>
+        <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="bg-black/40 p-4 border border-[#222] text-center">
+            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold tracking-widest">--</div>
+            <div id="main-osc" class="oscillator-main mb-1">$9.99</div>
+            <div id="price-arrow" class="font-bold text-xl mb-4 text-green-500">▲ +0.00</div>
+            <div class="flex flex-col gap-2 mb-4">
+                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="glass-btn border-yellow-500 text-yellow-500">PARTNER: $100</a>
+                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="glass-btn">ALBUM: $9.99</a>
+                <a href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="glass-btn">SONGSHARE: $1.00</a>
+            </div>
+            <div class="flex gap-2 h-12">
+                <button onclick="prevTrack()" class="glass-btn flex-1 text-xl">⏮</button>
+                <button onclick="toggleAudio()" id="p-btn" class="glass-btn flex-1 text-xl">⏸</button>
+                <button onclick="nextTrack()" class="glass-btn flex-1 text-xl">⏭</button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="p-4 space-y-4">
+        <div id="ticker-box"><div class="text-white font-bold text-[10px]" id="market-msg">QUEEN BUTTA GLOBAL PRE-RELEASE ACTIVE</div></div>
+        <div class="chart-box"><div id="candle-layer"></div></div>
+    </main>
+
+    <aside class="side-col">
+        <div class="text-yellow-500 font-bold border-b border-yellow-500 pb-2 mb-4 text-[10px] text-center">MARKET LEDGER</div>
+        <div id="list-target" class="text-[9px] space-y-1"></div>
+    </aside>
+</div>
+
+<audio id="player" playsinline></audio>
+
+<script>
+    const assets = [
+        { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+        { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+        { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+        { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+        { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+        { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
+        { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
+        { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
+        { n: "LET'S GO BACK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
+        { n: "I DESERVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
+        { n: "GHETTO GIRL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+        { n: "MIDNIGHT SMOKE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
+        { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
+    ];
+
+    let current = 0; let started = false; let albumPrice = 9.99;
+    const player = document.getElementById('player');
+    const msgs = ["ALBUM ASSET LIQUIDITY RISING", "PARTNERS EARN 50% PROFIT SHARE", "50 SHARES AVAILABLE", "90 DAYS TO RELEASE"];
+
+    function startEngine() {
+        if (started) return; started = true;
+        document.getElementById('prospectus-overlay').style.display = 'none';
+        document.getElementById('main-ui').style.display = 'grid';
+        const list = document.getElementById('list-target');
+        assets.forEach((a, i) => list.innerHTML += `<div class='p-2 border-b border-zinc-800 cursor-pointer' onclick='sync(${i})'>${a.n} <span class='float-right text-yellow-500 font-bold'>$1.00</span></div>`);
+        setInterval(marketLoop, 1500);
+        setInterval(() => {
+            document.getElementById('market-msg').innerText = msgs[Math.floor(Math.random()*msgs.length)];
+        }, 4000);
+        sync(0);
+    }
+
+    function marketLoop() {
+        const side = Math.random() > 0.45 ? "BUY" : "SELL";
+        const impact = (Math.random() * 8.50) + 0.50; 
+        albumPrice = side === "BUY" ? Math.min(100, albumPrice + impact) : Math.max(9.99, albumPrice - impact);
+        document.getElementById('main-osc').innerText = `$${albumPrice.toFixed(2)}`;
+        document.getElementById('price-arrow').innerText = `${side === "BUY" ? "▲ +" : "▼ -"}${impact.toFixed(2)}`;
+        document.getElementById('price-arrow').style.color = side === "BUY" ? "#0f0" : "#f00";
+        const candle = document.createElement('div');
+        candle.className = "candle";
+        candle.style.height = (impact * 15 + 10) + "px";
+        candle.style.background = side === "BUY" ? "#0f0" : "#f00";
+        document.getElementById('candle-layer').appendChild(candle);
+        if(document.getElementById('candle-layer').children.length > 28) document.getElementById('candle-layer').removeChild(document.getElementById('candle-layer').firstChild);
+    }
+
+    function sync(i) {
+        current = i; const a = assets[i];
+        document.getElementById('radio-track').innerText = a.n;
+        player.src = a.src; player.play().catch(()=>{});
+        document.getElementById('p-btn').innerText = "⏸";
+    }
+
+    function toggleAudio() {
+        if(player.paused) { player.play(); document.getElementById('p-btn').innerText = "⏸"; }
+        else { player.pause(); document.getElementById('p-btn').innerText = "▶"; }
+    }
+    function nextTrack() { current = (current + 1) % assets.length; sync(current); }
+    function prevTrack() { current = (current - 1 + assets.length) % assets.length; sync(current); }
+</script>
+</body>
+</html>
