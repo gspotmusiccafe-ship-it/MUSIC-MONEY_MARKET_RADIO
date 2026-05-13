@@ -9,65 +9,86 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
         
         :root { 
-            --bloomberg-green: #00ff33; 
-            --bloomberg-red: #ff3333; 
             --bloomberg-blue: #0066ff;
-            --bg: #030303; 
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.15);
+            --bloomberg-green: #00ff33;
+            --glass-border: rgba(255, 255, 255, 0.2);
         }
 
-        * { box-sizing: border-box; }
-        body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; text-transform: uppercase; margin: 0; overflow-x: hidden; }
+        body { background: #000; color: #fff; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         
-        /* AUTH LANDING - FORCE TOP LAYER */
+        /* THE FIX: RIGID POSITIONS & Z-INDEX */
         #landing-page { 
-            position: fixed; inset: 0; background: #000; z-index: 9999999 !important; 
-            display: flex; align-items: center; justify-content: center; padding: 20px; 
-        }
-        .glass-card { 
-            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(30px); border: 1px solid var(--glass-border); 
-            padding: 45px; width: 100%; max-width: 450px; border-radius: 12px; box-shadow: 0 0 60px rgba(0, 102, 255, 0.2);
-            position: relative; z-index: 10000000;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: #000; z-index: 9999999; 
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* BLOOMBERG GLASS BUTTONS */
-        .btn-glass {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
-            backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
-            color: #fff; font-weight: 800; padding: 18px; border-radius: 4px;
-            display: block; text-align: center; transition: 0.2s; cursor: pointer !important; text-decoration: none; letter-spacing: 2px;
-            width: 100%; position: relative; z-index: 10000001;
+        .login-box { 
+            background: rgba(15, 15, 15, 0.98); 
+            border: 1px solid var(--glass-border); 
+            padding: 30px; width: 380px; border-radius: 8px;
+            box-shadow: 0 0 100px rgba(0, 102, 255, 0.3);
+            text-align: center;
         }
-        .btn-glass:hover { background: rgba(255,255,255,0.15); border-color: #fff; transform: translateY(-2px); }
-        .btn-blue { color: var(--bloomberg-blue); border-color: var(--bloomberg-blue); background: rgba(0,102,255,0.1); }
-        .btn-green { color: var(--bloomberg-green); border-color: var(--bloomberg-green); }
 
-        /* LAYOUT */
-        .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; height: calc(100vh - 40px); visibility: hidden; opacity: 0; transition: opacity 0.5s ease; }
-        .dashboard.active { visibility: visible; opacity: 1; display: grid; }
+        .input-terminal { 
+            background: #111; border: 1px solid #333; color: var(--bloomberg-blue); 
+            width: 100%; padding: 12px; margin-bottom: 10px; font-family: 'JetBrains Mono'; 
+            font-size: 13px; outline: none;
+        }
 
-        header { padding: 12px 25px; background: #000; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; font-family: 'JetBrains Mono'; }
-        .side-col { background: #080808; border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
-        .main-col { background: var(--bg); border-right: 1px solid #222; padding: 20px; overflow-y: auto; }
+        /* HIGH VISIBILITY BUTTON */
+        #init-btn {
+            background: var(--bloomberg-blue);
+            color: white; font-weight: 900; padding: 16px; width: 100%;
+            border-radius: 4px; cursor: pointer; border: none;
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.6);
+            transition: 0.2s; text-transform: uppercase; letter-spacing: 2px;
+            margin-top: 10px;
+        }
+        #init-btn:hover { background: #0052cc; transform: scale(1.02); }
 
-        /* LEDGER SELECTOR */
-        .ledger-row { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #1a1a1a; cursor: pointer; font-size: 11px; font-family: 'JetBrains Mono'; color: #666; }
-        .ledger-row:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .ledger-row.playing { border-left: 3px solid var(--bloomberg-blue); color: #fff; background: rgba(0,102,255,0.1); }
-
-        .oscillator { font-size: 4.2rem; font-weight: 900; letter-spacing: -3px; line-height: 1; text-align: center; }
-        .input-field { background: #111; border: 1px solid #333; color: white; width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 4px; font-family: 'JetBrains Mono'; }
+        .dashboard { display: none; grid-template-columns: 350px 1fr 320px; height: 100vh; }
+        .dashboard.active { display: grid; }
         
-        marquee { background: #000; border-bottom: 1px solid #222; color: var(--bloomberg-green); font-family: 'JetBrains Mono'; padding: 8px; font-size: 11px; font-weight: bold; }
+        /* QUICK STYLES FOR THE REST */
+        .side { background: #080808; border-right: 1px solid #222; padding: 20px; }
+        header { padding: 10px 20px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; font-size: 10px; }
     </style>
 </head>
-<body onkeydown="if(event.key==='Enter') initializeTerminal()">
+<body>
 
 <div id="landing-page">
-    <div class="glass-card">
-        <h1 class="text-white font-black text-2xl mb-1">97.7 THE FLAME</h1>
-        <p class="text-blue-500 text-[9px] mb-8 tracking-[4px] font-bold">MUSIC MARKET TERMINAL ACCESS</p>
-        <input type="email" placeholder="TERMINAL_ID" class="input-field" id="t-id">
-        <input type="password" placeholder="ACCESS_KEY" class="input-field">
-        <input type="text
+    <div class="login-box">
+        <h1 class="text-xl font-black mb-1">97.7 THE FLAME</h1>
+        <p class="text-[9px] text-blue-500 font-bold tracking-[3px] mb-6">TERMINAL ACCESS SQUAD</p>
+        
+        <input type="text" placeholder="TERMINAL_ID" class="input-terminal">
+        <input type="password" placeholder="ACCESS_KEY" class="input-terminal">
+        <input type="text" placeholder="SYNC_MOBILE" class="input-terminal">
+        
+        <button onclick="launch()" id="init-btn">INITIALIZE SYSTEM</button>
+        <p class="text-[8px] text-gray-500 mt-4">ENCRYPTED CONNECTION STABLE</p>
+    </div>
+</div>
+
+<header>
+    <div class="text-blue-500 font-bold">AITIFY // MUSIC MARKET TERMINAL</div>
+    <div class="text-green-500">SYSTEM_STABLE_V4.07</div>
+</header>
+
+<div id="main-dash" class="dashboard">
+    <div class="side">
+        <div class="w-full aspect-square bg-gray-900 border border-gray-800 mb-4"></div>
+        <div class="p-4 bg-gray-900/50 rounded border border-gray-800">
+            <div class="text-center text-4xl font-black mb-2">$3.09</div>
+            <div class="text-center text-green-500 text-xs font-bold mb-4">▲ KINETIC GAINS</div>
+            <button class="w-full bg-blue-600 p-3 rounded font-bold text-xs mb-2">OPEN MARKET</button>
+            <button class="w-full bg-green-600 p-3 rounded font-bold text-xs">BUY SONG $1.00</button>
+        </div>
+    </div>
+    <div class="p-8">
+        <div class="h-64 border-b border-gray-800 flex items-end gap-1 mb-8" id="chart"></div>
+    </div>
+    <div class="side" id="ledger">
+        <div class="text-blue-500 font
