@@ -15,23 +15,29 @@
         #prospectus-overlay { position: fixed; inset: 0; background: #000; z-index: 9999; overflow-y: auto; padding: 20px; display: flex; align-items: center; justify-content: center; }
         .prospectus-container { max-width: 800px; width: 100%; border: 1px solid #222; background: #080808; padding: 25px; box-shadow: 0 0 40px rgba(0,0,0,0.9); }
         
-        /* TERMINAL UI - MOBILE STACK FIX */
+        /* TERMINAL UI - FULL MOBILE OPTIMIZATION */
         .dashboard { display: grid; grid-template-columns: 350px 1fr 320px; min-height: 100vh; display: none; width: 100%; }
         
         @media (max-width: 1024px) { 
-            .dashboard { display: flex; flex-direction: column; } 
+            .dashboard { display: flex; flex-direction: column; height: auto; } 
             .side-col { width: 100% !important; border-right: none; border-bottom: 1px solid #222; }
-            .oscillator-main { font-size: 2.5rem !important; }
+            .main-col { width: 100% !important; padding: 20px; }
+            .oscillator-main { font-size: 2.8rem !important; }
         }
 
         .side-col { background: #0a0a0a; border-right: 1px solid #222; padding: 15px; }
+        .main-col { background: var(--bg); padding: 15px; flex: 1; }
+        
         .glass-btn { background: rgba(0, 255, 0, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(0, 255, 0, 0.3); color: #fff; font-weight: 900; padding: 14px; width: 100%; cursor: pointer; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.7rem; }
-        .chart-box { background: #000; border: 1px solid #222; height: 250px; position: relative; overflow: hidden; }
+        .glass-btn:hover { background: rgba(0, 255, 0, 0.15); border-color: var(--neon); }
+        
+        .chart-box { background: #000; border: 1px solid #222; height: 250px; position: relative; overflow: hidden; margin: 10px 0; }
         #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 10px; }
         .candle { width: 6px; border-radius: 1px; transition: 0.3s; }
+        
         .oscillator-main { font-size: 4rem; color: #fff; font-weight: 900; letter-spacing: -3px; line-height: 1; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin-bottom: 15px; }
-        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 5px; text-align: center; }
+        .album-art { width: 100%; max-width: 320px; aspect-ratio: 1; border: 1px solid #333; background-size: cover; background-position: center; margin: 0 auto 15px auto; }
+        #ticker-box { height: 50px; background: rgba(0,255,0,0.05); border: 1px solid #222; border-left: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; padding: 10px; text-align: center; }
     </style>
 </head>
 <body>
@@ -40,9 +46,9 @@
     <div class="prospectus-container">
         <h1 class="text-xl font-black text-white border-b border-neon pb-2 mb-4 text-center">WELCOME TO THE MUSIC MARKET</h1>
         <div class="flex flex-col md:flex-row gap-6 mb-6">
-            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full md:w-64 h-64 object-cover border border-zinc-700">
+            <img src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full md:w-64 h-64 object-cover border border-zinc-700 mx-auto">
             <div class="flex-1 text-[10px] space-y-4">
-                <p class="text-white font-bold">ASSET: LOVE MAKE OVER // QUEEN BUTTA</p>
+                <p class="text-white font-bold text-center md:text-left">ASSET: LOVE MAKE OVER // QUEEN BUTTA</p>
                 <div class="grid grid-cols-2 gap-2 text-center">
                     <div class="border border-zinc-800 p-2">SHARES<br><span class="text-white text-lg font-bold">50 AVAILABLE</span></div>
                     <div class="border border-zinc-800 p-2">RELEASE<br><span class="text-white text-lg font-bold">90 DAYS</span></div>
@@ -63,7 +69,7 @@
         <a href="https://aitify-music-stream.replit.app/" class="glass-btn mb-4 text-yellow-500 border-yellow-500">AITITRADE ACCESS</a>
         <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
         <div class="bg-black/40 p-4 border border-[#222] text-center">
-            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold">--</div>
+            <div id="radio-track" class="text-yellow-500 text-[10px] mb-2 font-bold tracking-widest">--</div>
             <div id="main-osc" class="oscillator-main mb-1">$9.99</div>
             <div id="price-arrow" class="font-bold text-xl mb-4 text-green-500">▲ +0.00</div>
             <div class="flex flex-col gap-2 mb-4">
@@ -79,7 +85,7 @@
         </div>
     </aside>
 
-    <main class="p-4 space-y-4">
+    <main class="main-col">
         <div id="ticker-box"><div class="text-white font-bold text-[10px]" id="market-msg">QUEEN BUTTA GLOBAL PRE-RELEASE ACTIVE</div></div>
         <div class="chart-box"><div id="candle-layer"></div></div>
     </main>
@@ -111,7 +117,7 @@
 
     let current = 0; let started = false; let albumPrice = 9.99;
     const player = document.getElementById('player');
-    const msgs = ["LIQUIDITY RISING", "50% PROFIT SHARE ACTIVE", "50 SHARES AVAILABLE", "90 DAYS TO RELEASE"];
+    const msgs = ["LIQUIDITY RISING", "PARTNERS EARN 50% PROFIT", "50 SHARES AVAILABLE", "90 DAYS TO RELEASE"];
 
     player.onended = () => { nextTrack(); };
 
