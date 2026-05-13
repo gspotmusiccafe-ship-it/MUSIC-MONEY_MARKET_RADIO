@@ -19,9 +19,9 @@
         }
         
         * { box-sizing: border-box; }
-        html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; }
+        html, body { min-height: 100%; margin: 0; background: var(--bg); color: var(--neon); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; overflow-x: hidden; }
         
-        /* OVERLAY */
+        /* OVERLAY FIX */
         #init-overlay { position: fixed; inset: 0; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); z-index: 9999; display: flex; align-items: center; justify-content: center; }
         .radio-console { width: 90%; max-width: 400px; padding: 40px; border: 4px double var(--gold); background: #0a0a0a; text-align: center; }
         
@@ -31,17 +31,15 @@
         .side-col { background: #0a0a0a; border-right: 1px solid #333; padding: 20px; }
         .main-col { background: var(--bg); border-right: 1px solid #333; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
 
-        /* RESTORED: THE "BAD MOTHERFUCKER" MESSAGE FLASHER */
+        /* THE BAD MOTHERFUCKER FLASHER */
         #info-center { 
-            height: 100px; 
+            height: 110px; 
             background: var(--electric-blue); 
-            border: none; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             padding: 0 30px; 
             text-align: center; 
-            overflow: hidden; 
             box-shadow: 8px 8px 0px var(--gold);
             margin-bottom: 10px;
         }
@@ -50,29 +48,27 @@
             font-size: 0.85rem; 
             color: #000; 
             font-weight: 900; 
-            letter-spacing: 0px; 
             display: none; 
-            line-height: 1.2; 
+            line-height: 1.3; 
         }
         .flash-msg.active { display: block; }
         
-        /* MARKET ELEMENTS */
-        .chart-box { background: #000; border: 1px solid #333; height: 300px; position: relative; border-radius: 4px; overflow: hidden; }
-        #candle-layer { position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: space-around; padding: 20px 10px; z-index: 1; }
-        .candle { width: 10px; border-radius: 1px; position: relative; min-height: 5px; transition: 0.3s; }
-        .wick { position: absolute; width: 2px; height: 150%; left: 4px; top: -25%; z-index: -1; }
+        /* BUTTONS - HARDWIRED FOR ACTION */
+        .btn-action {
+            display: block; width: 100%; padding: 18px; margin-bottom: 12px;
+            font-weight: 900; font-size: 0.8rem; text-align: center; cursor: pointer;
+            border: none; transition: 0.1s;
+        }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-cash { background: var(--cash); color: #fff; font-size: 1.1rem; }
+        .btn-outline { border: 2px solid var(--gold); color: var(--gold); background: transparent; }
+        .btn-action:hover { filter: brightness(1.2); transform: translateY(-2px); }
 
-        .ledger-row { display: grid; grid-template-columns: 1fr 80px; gap: 10px; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; }
-        .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); }
+        .ledger-row { display: grid; grid-template-columns: 1fr 80px; gap: 10px; padding: 15px; border-bottom: 1px solid #222; cursor: pointer; font-size: 0.75rem; }
+        .ledger-row:hover { background: #111; border-left: 4px solid var(--gold); color: #fff; }
 
         .oscillator-main { font-size: 4rem; color: white; font-weight: 900; letter-spacing: -4px; line-height: 0.9; }
         .album-art { width: 100%; aspect-ratio: 1; border: 3px solid var(--gold); background-size: cover; background-position: center; margin-bottom: 20px; }
-        
-        .btn-gold { background: var(--gold); color: #000; font-weight: 900; padding: 15px; width: 100%; text-align: center; border: none; display: block; cursor: pointer; text-decoration: none; font-size: 0.8rem; }
-        .btn-cash { background: var(--cash); color: white; font-weight: 900; padding: 20px; width: 100%; text-align: center; border: none; display: block; font-size: 1.1rem; cursor: pointer; text-decoration: none; }
-        
-        #order-flow { background: #080808; border: 1px solid #222; height: 180px; overflow: hidden; font-size: 0.7rem; padding: 12px; }
-        .trade-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px solid #111; padding-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -80,7 +76,7 @@
 <div id="init-overlay">
     <div class="radio-console">
         <h1 class="text-yellow-500 font-black text-2xl tracking-widest mb-6">97.7 THE FLAME</h1>
-        <button onclick="startEngine()" class="btn-gold animate-pulse">QUEEN BUTTA PRE-RELEASE</button>
+        <button onclick="startEngine()" class="btn-action btn-gold animate-pulse">QUEEN BUTTA PRE-RELEASE</button>
     </div>
 </div>
 
@@ -91,29 +87,31 @@
 
 <div class="dashboard">
     <aside class="side-col">
-        <a href="https://aitify-music-stream.replit.app/" class="btn-gold mb-4">OPEN MARKET TERMINAL</a>
+        <button onclick="window.open('https://aitify-music-stream.replit.app/', '_blank')" class="btn-action btn-gold mb-4">OPEN MARKET TERMINAL</button>
+        
         <div id="art-frame" class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        
         <div class="bg-[#151515] p-6 border border-[#333] text-center">
             <div id="radio-track" class="text-yellow-500 text-[11px] mb-3 font-bold tracking-widest">--</div>
             <div id="main-osc" class="oscillator-main mb-2">$1.00</div>
             <div id="price-arrow" class="font-bold text-2xl mb-6">▲ +0.00</div>
+            
             <div class="flex flex-col gap-3">
-                <a href="https://cash.app/f/POOL?id=52fqk4xl" target="_blank" class="border-2 border-yellow-500 text-yellow-500 font-black py-4 text-[10px] no-underline">SONGSHARE PARTNER: $100</a>
-                <a href="https://payhip.com/QUEENBUTTAMUSIC" target="_blank" class="btn-cash">BUY ALBUM: $9.99</a>
-                <a id="buy-btn" href="https://cash.app/f/POOL?id=tgva6fj4" target="_blank" class="border border-white text-white py-3 text-[10px] font-bold no-underline opacity-80">BUY SONG: $1.00</a>
+                <button onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl', '_blank')" class="btn-action btn-outline py-4 text-[10px]">SONGSHARE PARTNER: $100</button>
+                <button onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC', '_blank')" class="btn-action btn-cash">BUY ALBUM: $9.99</button>
+                <button onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4', '_blank')" id="buy-btn" class="btn-action border border-white text-white py-3 text-[10px] opacity-80">BUY SONG: $1.00</button>
             </div>
         </div>
     </aside>
 
     <main class="main-col">
         <div id="info-center">
-            <div class="flash-msg active">"THIS IS A COMPLIANT COMMUNITY DRIVEN BY HUMAN ENERGY, EMOTION, AND ENGAGEMENT. NO BOTTING PERMITTED."</div>
+            <div class="flash-msg active">"THIS IS A COMPLIANT COMMUNITY DRIVEN BY THREE FACTORS: HUMAN ENERGY, HUMAN EMOTION, AND HUMAN ENGAGEMENT. NO TALK OR MENTION OF BOTTING PERMITTED."</div>
             <div class="flash-msg">SONGSHARE PARTNERS ($100): EARN 50% COMMISSION + 25% ON TOTAL MARKET ENGAGEMENT.</div>
             <div class="flash-msg">GLOBAL PRE-RELEASE: OWN A PIECE OF THE MUSIC BEFORE GLOBAL LAUNCH.</div>
             <div class="flash-msg">KINETIC VALUATION: MARKET ACTIVITY DRIVES REAL-TIME ROI (0.00165% BASE).</div>
         </div>
-        <div class="chart-box"><div id="candle-layer"></div></div>
-        <div id="order-flow"></div>
+        <div class="chart-box"><div id="candle-layer" class="flex items-end justify-around h-full p-4"></div></div>
     </main>
 
     <aside class="side-col" style="border-left:1px solid #333;">
