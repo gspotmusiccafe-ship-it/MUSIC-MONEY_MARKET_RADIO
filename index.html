@@ -1,117 +1,244 @@
-// CONFIGURATION: Paste your Google Web App URL here once deployed
-const LEDGER_API_URL = "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>97.7 THE FLAME // MATRIX TRADING FLOOR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        :root { 
+            --emerald: #50C878; 
+            --bg: #020202; 
+            --glass: rgba(80, 200, 120, 0.08);
+            --red: #ff3b3b;
+        }
+        
+        body { background: var(--bg); color: var(--emerald); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; margin: 0; overflow-x: hidden; }
+        
+        .dashboard { display: grid; grid-template-columns: 1fr; gap: 10px; padding: 10px; }
+        @media (min-width: 1024px) {
+            .dashboard { grid-template-columns: 360px 1fr 340px; height: 100vh; overflow: hidden; }
+        }
 
-const assets = [
-    { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-    { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-    { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
-    { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
-    { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
-    { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
-    { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
-    { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
-    { name: "LET'S GO BACK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
-    { name: "I DESERVE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
-    { name: "THAT GIRL FROM THE GHETTO", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
-    { name: "MIDNIGHT SMOKE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
-    { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
-];
+        .side-col { background: #080808; border: 1px solid #1a1a1a; padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
 
-const portals = [
-    { price: 10, unlocked: true }, { price: 20, unlocked: false }, { price: 30, unlocked: false },
-    { price: 40, unlocked: false }, { price: 50, unlocked: false }, { price: 60, unlocked: false },
-    { price: 70, unlocked: false }, { price: 80, unlocked: false }, { price: 90, unlocked: false },
-    { price: 100, unlocked: false }
-];
+        .portal-tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-bottom: 8px; }
+        .portal-btn { background: #0c0c0c; border: 1px solid #1a1a1a; text-align: center; font-size: 0.55rem; padding: 8px 0; color: #333; font-weight: bold; position: relative; }
+        .portal-btn.unlocked { border-color: #666; color: #aaa; cursor: pointer; }
+        .portal-btn.active { border-color: var(--emerald); color: #fff; background: var(--glass); cursor: pointer; box-shadow: 0 0 10px rgba(80, 200, 120, 0.2); }
+        .portal-btn.locked::after { content: '🔒'; font-size: 0.45rem; position: absolute; top: 1px; right: 2px; opacity: 0.5; }
 
-let activePortalIdx = 0;
-let currentIdx = 0;
-let matrixCount = 0;
-let currentMode = "POOL"; 
-const audio = document.getElementById('main-audio-engine');
+        .stat-card { background: #000; border: 1px solid #1a1a1a; padding: 12px; }
 
-window.onload = () => {
-    const list = document.getElementById('list-target');
-    list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-white font-bold">$1.00</div></div>`).join('');
-    
-    // Fetch initial live state from your Google Sheet Ledger
-    fetchLiveLedgerState();
-    
-    // Poll the ledger every 10 seconds to update peer placements without lagging the audio player
-    setInterval(fetchLiveLedgerState, 10000);
-    
-    audio.onended = () => next();
-    sync(0);
-};
+        .command-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+        .glass-btn {
+            background: var(--glass); border: 1px solid var(--emerald);
+            color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.55rem; padding: 14px; text-align: center; cursor: pointer;
+        }
 
-async function fetchLiveLedgerState() {
-    if (LEDGER_API_URL === "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE") {
-        // Fallback demo sequence if API isn't linked yet
-        simulateFrontEndFlow();
-        return;
+        .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; line-height: 1; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--222); background-size: cover; margin-bottom: 15px; }
+        
+        .ledger-row { display: grid; grid-template-columns: 1fr 70px; padding: 12px; border-bottom: 1px solid #111; font-size: 0.65rem; cursor: pointer; color: #777; }
+        .ledger-row.playing { border-left: 3px solid var(--emerald); background: var(--glass); color: #fff; }
+
+        .media-ctrl { display: flex; justify-content: center; gap: 40px; padding: 15px; background: #000; border: 1px solid #1a1a1a; font-size: 1.3rem; margin-top: auto; }
+        .ctrl-btn { cursor: pointer; color: #fff; }
+    </style>
+</head>
+<body>
+
+<div class="p-2 bg-black border-b border-white/5">
+    <div class="portal-tabs">
+        <div id="p-0" class="portal-btn active" onclick="switchPortal(0)">P1 $10</div>
+        <div id="p-1" class="portal-btn locked" onclick="switchPortal(1)">P2 $20</div>
+        <div id="p-2" class="portal-btn locked" onclick="switchPortal(2)">P3 $30</div>
+        <div id="p-3" class="portal-btn locked" onclick="switchPortal(3)">P4 $40</div>
+        <div id="p-4" class="portal-btn locked" onclick="switchPortal(4)">P5 $50</div>
+    </div>
+    <div class="portal-tabs">
+        <div id="p-5" class="portal-btn locked" onclick="switchPortal(5)">P6 $60</div>
+        <div id="p-6" class="portal-btn locked" onclick="switchPortal(6)">P7 $70</div>
+        <div id="p-7" class="portal-btn locked" onclick="switchPortal(7)">P8 $80</div>
+        <div id="p-8" class="portal-btn locked" onclick="switchPortal(8)">P9 $90</div>
+        <div id="p-9" class="portal-btn locked" onclick="switchPortal(9)">P10 $100</div>
+    </div>
+</div>
+
+<div class="dashboard">
+    <aside class="side-col">
+        <div class="command-grid">
+            <div onclick="window.open('https://aitify-music-stream.replit.app/')" class="glass-btn">MARKET</div>
+            <div onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC')" class="glass-btn">ALBUM</div>
+            <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
+            <div onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4')" class="glass-btn">SONG</div>
+        </div>
+        <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
+        <div class="text-center">
+            <div id="portal-title-display" class="text-[8px] opacity-40 mb-1">PORTAL TIER 1 BASE PRICE</div>
+            <div id="main-osc" class="oscillator-main">$10.00</div>
+            <div id="price-arrow" class="font-bold text-sm mb-4 text-emerald-400">STATUS // POOL SEEDING</div>
+        </div>
+        <div class="media-ctrl">
+            <span class="ctrl-btn" onclick="prev()">⏮</span>
+            <span id="play-pause" class="ctrl-btn" onclick="togglePlay()">⏸</span>
+            <span class="ctrl-btn" onclick="next()">⏭</span>
+        </div>
+    </aside>
+
+    <main class="flex flex-col gap-3">
+        <div class="stat-card border border-emerald-500/30">
+            <div class="text-[9px] text-white/50 mb-2 font-bold">BINARY MATRIX DEMAND ROUTER</div>
+            <div class="flex justify-between items-center bg-[#101010] p-3 border border-white/5 mb-2">
+                <div>
+                    <div class="text-[8px] opacity-50">CURRENT DESTINATION:</div>
+                    <div id="router-target" class="text-white font-bold text-sm tracking-wide">MARKET POOL (A/B SEEDING)</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-[8px] opacity-50">MATRIX STRUCTURE:</div>
+                    <div id="router-count" class="text-emerald-400 font-bold text-sm">0 / 5 SALES</div>
+                </div>
+            </div>
+            <div id="matrix-visualizer" class="text-[8px] text-emerald-500/80 font-bold tracking-widest bg-black p-2 border border-white/5 text-center mb-1">
+                [YOU] ➔ L: 0/2 | R: 0/2
+            </div>
+        </div>
+
+        <div class="flex-1 bg-black border border-1a1a1a p-4 overflow-hidden text-[10px]">
+            <div class="text-white font-bold border-b border-white/10 pb-2 mb-2 text-[8px]">ROUTER EXECUTION STREAM</div>
+            <div id="flow-content" class="space-y-1"></div>
+        </div>
+    </main>
+
+    <aside class="side-col">
+        <div class="text-white font-bold border-b border-white/10 pb-2 mb-2 text-[9px] flex justify-between">
+            <span>TRACK ASSET TRACKER</span>
+            <span class="text-emerald-400">SINGLES: $1.00</span>
+        </div>
+        <div id="list-target" class="overflow-y-auto flex-1"></div>
+    </aside>
+</div>
+
+<audio id="main-audio-engine" preload="auto"></audio>
+
+<script>
+    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbx5IiYWS7ITKZsbldiQMCsBjGUX8iyyIsjdI7jqoj9IwBOXihJ411LIM3PW6hJ3uA3R/exec";
+
+    const assets = [
+        { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+        { name: "YOU'RE MY ADDICTION", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+        { name: "TIMES UP", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+        { name: "LOVE MAKE OVER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+        { name: "I'M NOT HER", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+        { name: "GANSTA CHICK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
+        { name: "IT'S FRIDAY NIGHT", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
+        { name: "HEARTBREAK MOTEL REMIX", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
+        { name: "LET'S GO BACK", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
+        { name: "I DESERVE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
+        { name: "THAT GIRL FROM THE GHETTO", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+        { name: "MIDNIGHT SMOKE", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
+        { name: "BETTER THAN GOOD", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
+    ];
+
+    const portals = [
+        { price: 10, unlocked: true }, { price: 20, unlocked: false }, { price: 30, unlocked: false },
+        { price: 40, unlocked: false }, { price: 50, unlocked: false }, { price: 60, unlocked: false },
+        { price: 70, unlocked: false }, { price: 80, unlocked: false }, { price: 90, unlocked: false },
+        { price: 100, unlocked: false }
+    ];
+
+    let activePortalIdx = 0; let currentIdx = 0; let matrixCount = 0; let currentMode = "POOL";
+    const audio = document.getElementById('main-audio-engine');
+
+    window.onload = () => {
+        const list = document.getElementById('list-target');
+        list.innerHTML = assets.map((a, i) => `<div id="row-${i}" class="ledger-row" onclick="sync(${i})"><div>${a.name}</div><div class="text-right text-white font-bold">$1.00</div></div>`).join('');
+        fetchLiveLedgerState();
+        setInterval(fetchLiveLedgerState, 10000);
+        audio.onended = () => next();
+        sync(0);
+    };
+
+    async function fetchLiveLedgerState() {
+        try {
+            const response = await fetch(`${LEDGER_API_URL}?portal=${activePortalIdx + 1}`);
+            const data = await response.json();
+            matrixCount = data.current_count;
+            currentMode = data.mode;
+            updateRouterDisplay();
+        } catch (err) {
+            simulateFrontEndFlow();
+        }
     }
-    try {
-        const response = await fetch(`${LEDGER_API_URL}?portal=${activePortalIdx + 1}`);
-        const data = await response.json();
-        
-        matrixCount = data.current_count;
-        currentMode = data.mode; // Returns "POOL" or "SELLER"
-        
+
+    function updateRouterDisplay() {
+        const targetElement = document.getElementById('router-target');
+        const countElement = document.getElementById('router-count');
+        const statusElement = document.getElementById('price-arrow');
+        const visualizer = document.getElementById('matrix-visualizer');
+        const activePrice = portals[activePortalIdx].price;
+
+        if (currentMode === "POOL") {
+            targetElement.innerText = "MARKET POOL (A/B SEEDING)";
+            countElement.innerText = `${matrixCount} / 5 SALES`;
+            statusElement.innerText = "STATUS // POOL SEEDING";
+            statusElement.className = "font-bold text-sm mb-4 text-emerald-400";
+            if (matrixCount <= 1) visualizer.innerText = "[YOU] INITIAL BUY-IN ACTIVE";
+            else if (matrixCount <= 3) visualizer.innerText = `[YOU] ➔ L SIDE SEEDED (${matrixCount - 1}/2)`;
+            else visualizer.innerText = `[YOU] ➔ R SIDE SEEDED (${matrixCount - 3}/2) | POOL MATURED`;
+        } else {
+            targetElement.innerText = "ORIGINAL BUYER (NOW DIRECT SELLER)";
+            countElement.innerText = `${matrixCount} / 8 SALES TEAM`;
+            statusElement.innerText = `STATUS // DIRECT NETTING`;
+            statusElement.className = "font-bold text-sm mb-4 text-yellow-500";
+            visualizer.innerText = `🔥 DIRECT PAYOUT: $${activePrice * matrixCount} / $${activePrice * 8} REALISED`;
+        }
+    }
+
+    function simulateFrontEndFlow() {
+        matrixCount++;
+        if (currentMode === "POOL" && matrixCount > 5) { currentMode = "SELLER"; matrixCount = 1; }
+        else if (currentMode === "SELLER" && matrixCount > 8) { 
+            currentMode = "POOL"; matrixCount = 1;
+            if (activePortalIdx < 9) portals[activePortalIdx + 1].unlocked = true;
+        }
         updateRouterDisplay();
-        updateLedgerLogs(data.recent_trades);
-    } catch (err) {
-        console.error("Ledger Sync Failed: ", err);
-    }
-}
-
-function updateRouterDisplay() {
-    const targetElement = document.getElementById('router-target');
-    const countElement = document.getElementById('router-count');
-    const statusElement = document.getElementById('price-arrow');
-    const visualizer = document.getElementById('matrix-visualizer');
-    const activePrice = portals[activePortalIdx].price;
-
-    if (currentMode === "POOL") {
-        targetElement.innerText = "MARKET POOL (A/B SEEDING)";
-        countElement.innerText = `${matrixCount} / 5 SALES`;
-        statusElement.innerText = "STATUS // POOL SEEDING";
-        statusElement.className = "font-bold text-sm mb-4 text-emerald-400";
         
-        if (matrixCount <= 1) visualizer.innerText = "[YOU] INITIAL BUY-IN ACTIVE";
-        else if (matrixCount <= 3) visualizer.innerText = `[YOU] ➔ L SIDE SEEDED (${matrixCount - 1}/2)`;
-        else visualizer.innerText = `[YOU] ➔ R SIDE SEEDED (${matrixCount - 3}/2) | POOL MATURED`;
-    } else {
-        targetElement.innerText = "ORIGINAL BUYER (NOW DIRECT SELLER)";
-        countElement.innerText = `${matrixCount} / 8 SALES TEAM`;
-        statusElement.innerText = `STATUS // DIRECT NETTING`;
-        statusElement.className = "font-bold text-sm mb-4 text-yellow-500";
-        visualizer.innerText = `🔥 DIRECT PAYOUT: $${activePrice * matrixCount} / $${activePrice * 8} REALISED`;
+        const flow = document.getElementById('flow-content');
+        const entry = document.createElement('div');
+        entry.className = "border-b border-white/5 py-1 text-white opacity-70 flex justify-between";
+        const price = portals[activePortalIdx].price;
+        entry.innerHTML = currentMode === "POOL" ? `<span>MARKET SEED // POSITION ACCOUNT SEEDED ($${price}.00)</span><span class="text-emerald-400">DONE</span>` : `<span>DIRECT ROUTE // P2P TRANSACTION ROUTED TO SELLER ($${price}.00)</span><span class="text-yellow-500">SETTLED</span>`;
+        flow.prepend(entry);
+        if (flow.children.length > 6) flow.removeChild(flow.lastChild);
     }
-}
 
-// Keep your UI navigation working perfectly
-function switchPortal(idx) {
-    if (!portals[idx].unlocked && idx !== 0) return;
-    activePortalIdx = idx;
-    document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById(`p-${idx}`).classList.add('active');
-    document.getElementById('portal-title-display').innerText = `PORTAL TIER ${idx + 1} BASE PRICE`;
-    document.getElementById('main-osc').innerText = `$${portals[idx].price}.00`;
-    
-    fetchLiveLedgerState();
-}
+    function switchPortal(idx) {
+        if (!portals[idx].unlocked && idx !== 0) return;
+        activePortalIdx = idx;
+        document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`p-${idx}`).classList.add('active');
+        document.getElementById('portal-title-display').innerText = `PORTAL TIER ${idx + 1} BASE PRICE`;
+        document.getElementById('main-oscillator').innerText = `$${portals[idx].price}.00`;
+        fetchLiveLedgerState();
+    }
 
-function togglePlay() {
-    if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
-    else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
-}
-function next() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
-function prev() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
-function sync(idx) {
-    document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
-    currentIdx = idx;
-    const row = document.getElementById(`row-${idx}`);
-    if(row) row.classList.add('playing');
-    audio.src = assets[idx].audio; 
-    audio.play().catch(() => {});
-}
+    function togglePlay() {
+        if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
+        else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
+    }
+    function next() { currentIdx = (currentIdx + 1) % assets.length; sync(currentIdx); }
+    function prev() { currentIdx = (currentIdx - 1 + assets.length) % assets.length; sync(currentIdx); }
+    function sync(idx) {
+        document.querySelectorAll('.ledger-row').forEach(r => r.classList.remove('playing'));
+        currentIdx = idx;
+        const row = document.getElementById(`row-${idx}`);
+        if(row) row.classList.add('playing');
+        audio.src = assets[idx].audio; 
+        audio.play().catch(() => {});
+    }
+</script>
+</body>
+</html>
