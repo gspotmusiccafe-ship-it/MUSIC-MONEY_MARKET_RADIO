@@ -39,7 +39,7 @@
         }
 
         .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; line-height: 1; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 2px solid var(--222); background-size: cover; margin-bottom: 15px; }
+        .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #222; background-size: cover; margin-bottom: 15px; }
         
         .ledger-row { display: grid; grid-template-columns: 1fr 70px; padding: 12px; border-bottom: 1px solid #111; font-size: 0.65rem; cursor: pointer; color: #777; }
         .ledger-row.playing { border-left: 3px solid var(--emerald); background: var(--glass); color: #fff; }
@@ -106,7 +106,7 @@
             </div>
         </div>
 
-        <div class="flex-1 bg-black border border-1a1a1a p-4 overflow-hidden text-[10px]">
+        <div class="flex-1 bg-black border border-[#1a1a1a] p-4 overflow-hidden text-[10px]">
             <div class="text-white font-bold border-b border-white/10 pb-2 mb-2 text-[8px]">ROUTER EXECUTION STREAM</div>
             <div id="flow-content" class="space-y-1"></div>
         </div>
@@ -221,10 +221,11 @@
         document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`p-${idx}`).classList.add('active');
         document.getElementById('portal-title-display').innerText = `PORTAL TIER ${idx + 1} BASE PRICE`;
-        document.getElementById('main-oscillator').innerText = `$${portals[idx].price}.00`;
+        document.getElementById('main-osc').innerText = `$${portals[idx].price}.00`;
         fetchLiveLedgerState();
     }
 
+    // Media Control Logic
     function togglePlay() {
         if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
         else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
