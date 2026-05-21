@@ -71,7 +71,7 @@
     <aside class="side-col">
         <div class="command-grid">
             <div onclick="window.open('https://aitify-music-stream.replit.app/')" class="glass-btn">MARKET</div>
-            <div onclick="window.open('https://payhip.com/QUEENBUTTAMUSIC')" class="glass-btn">ALBUM</div>
+            <div id="album-fulfillment-action" onclick="routeToActiveProductDownload()" class="glass-btn" style="border-color: #fff;">ALBUM</div>
             <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
             <div onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4')" class="glass-btn">SONG</div>
         </div>
@@ -124,7 +124,7 @@
 <audio id="main-audio-engine" preload="auto"></audio>
 
 <script>
-    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbx5IiYWS7ITKZsbldiQMCsBjGUX8iyyIsjdI7jqoj9IwBOXihJ411LIM3PW6hJ3uA3R/exec";
+    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwzHDxYDa_j21OmP6G3R7ai5PQIRKolhWkEaCddaDN3uTYjNiecNqCEfXyAYOGweuA/exec";
 
     const assets = [
         { name: "SUPERFLY", audio: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
@@ -150,6 +150,7 @@
     ];
 
     let activePortalIdx = 0; let currentIdx = 0; let matrixCount = 0; let currentMode = "POOL";
+    let activeDownloadTargetUrl = "https://payhip.com/QUEENBUTTAMUSIC";
     const audio = document.getElementById('main-audio-engine');
 
     window.onload = () => {
@@ -167,10 +168,15 @@
             const data = await response.json();
             matrixCount = data.current_count;
             currentMode = data.mode;
+            activeDownloadTargetUrl = data.fulfillment_download_url || "https://payhip.com/QUEENBUTTAMUSIC";
             updateRouterDisplay();
         } catch (err) {
             simulateFrontEndFlow();
         }
+    }
+
+    function routeToActiveProductDownload() {
+        window.open(activeDownloadTargetUrl, '_blank');
     }
 
     function updateRouterDisplay() {
@@ -210,7 +216,7 @@
         const entry = document.createElement('div');
         entry.className = "border-b border-white/5 py-1 text-white opacity-70 flex justify-between";
         const price = portals[activePortalIdx].price;
-        entry.innerHTML = currentMode === "POOL" ? `<span>MARKET SEED // POSITION ACCOUNT SEEDED ($${price}.00)</span><span class="text-emerald-400">DONE</span>` : `<span>DIRECT ROUTE // P2P TRANSACTION ROUTED TO SELLER ($${price}.00)</span><span class="text-yellow-500">SETTLED</span>`;
+        entry.innerHTML = currentMode === "POOL" ? `<span>PRODUCT FULFILLMENT // ALBUM SERVED VIA LIQUIDITY POOL ($${price}.00)</span><span class="text-emerald-400">DONE</span>` : `<span>PRODUCT FULFILLMENT // ROUTING PAYOUT TO RE-SELLER LINK ($${price}.00)</span><span class="text-yellow-500">SETTLED</span>`;
         flow.prepend(entry);
         if (flow.children.length > 6) flow.removeChild(flow.lastChild);
     }
@@ -225,7 +231,6 @@
         fetchLiveLedgerState();
     }
 
-    // Media Control Logic
     function togglePlay() {
         if (audio.paused) { audio.play(); document.getElementById('play-pause').innerText = '⏸'; }
         else { audio.pause(); document.getElementById('play-pause').innerText = '▶'; }
