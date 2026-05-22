@@ -1,159 +1,167 @@
 /**
- * AITITRADE User Terminal Data Engine
- * Connects the front-end Bloomberg-style terminal to the Apps Script Ledger Gateway.
+ * AITITRADE Terminal Data Line Controller - V2.0
+ * Feeds live data from the Apps Script Gateway and renders track lists dynamically.
  */
 
-const TERMINAL_CONFIG = {
-  // Your live verified API endpoint
+const TRADING_FLOOR_CONFIG = {
   gatewayUrl: "https://script.google.com/macros/s/AKfycbzs5eeFvYmE-bn6vDb0Mp49Xw5zD3XfgPiq3g9ce_K0N5BXe3OXDO2g2eP3HBxwdvS3/exec",
   defaultTier: 1,
-  pollingIntervalMs: 30000 // Refresh market data every 30 seconds
+  refreshRateMs: 15000 
 };
 
-// Global state tracking object to prevent redundant UI paint cycles
-let currentTerminalState = {
-  tier: null,
-  activeSeller: null,
-  loopPosition: null
+let activeMarketState = {
+  tier: 1,
+  currentMode: "POOL",
+  matrixCount: 0
 };
 
 /**
- * Executes a network fetch request to retrieve live dual-tier market states.
- * @param {number} tier - The active Portal Tier (1 for $10, 2 for $20)
+ * Executes network handshake to pull active matrix counts and routing destinations
  */
-async function fetchTerminalMarketData(tier = TERMINAL_CONFIG.defaultTier) {
-  displayTerminalStatus("FETCHING LIVE FEED...");
-  
+async function fetchLiveLedgerState(tier = activeMarketState.tier) {
   try {
-    // Construct safe URL with tier routing parameters
-    const requestUrl = `${TERMINAL_CONFIG.gatewayUrl}?tier=${tier}`;
-    
+    const requestUrl = `${TRADING_FLOOR_CONFIG.gatewayUrl}?tier=${tier}`;
     const response = await fetch(requestUrl, {
       method: 'GET',
-      mode: 'cors', // Required for cross-origin Apps Script routing
-      headers: {
-        'Accept': 'application/json'
-      }
+      mode: 'cors',
+      headers: { 'Accept': 'application/json' }
     });
 
-    if (!response.ok) {
-      throw new Error(`NETWORK_HTTP_ERROR: Status ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP_GATEWAY_FAIL: ${response.status}`);
+    const data = await response.json();
 
-    const marketState = await response.json();
-    
-    if (marketState.status === "SUCCESS") {
-      renderTerminalInterface(marketState);
-    } else {
-      throw new Error(marketState.message || "UNKNOWN_GATEWAY_ERROR");
+    if (data.status === "SUCCESS") {
+      updateLiveTradingFloor(data);
     }
-
   } catch (error) {
-    console.error("Critical Terminal Network Error:", error);
-    displayTerminalStatus("DATA FEED OFFLINE");
-    flashErrorIndicator();
+    console.warn("Ledger gateway reading fallback mode active: ", error.message);
   }
 }
 
 /**
- * Updates the structural text elements of your Bloomberg-style interface.
- * @param {Object} data - The validated market state payload from the ledger gateway.
+ * Paints the live API response values onto your visual layout IDs
  */
-function renderTerminalInterface(data) {
-  // Update state tracking variables
-  currentTerminalState.tier = data.portal_tier;
-  currentTerminalState.activeSeller = data.active_seller_id;
-  currentTerminalState.loopPosition = data.current_loop_position;
-
-  // 1. Render Live Asset Registry Information
-  document.getElementById("display-album-title").innerText = data.album_assets.title.toUpperCase();
+function updateLiveTradingFloor(data) {
+  activeMarketState.tier = data.portal_tier;
+  activeMarketState.matrixCount = data.current_loop_position;
   
-  const coverElement = document.getElementById("display-cover-image");
-  if (coverElement && data.album_assets.cover_image !== "NOT_SET") {
-    coverElement.src = data.album_assets.cover_image;
+  const targetElement = document.getElementById('router-target');
+  const countElement = document.getElementById('router-count');
+  const statusElement = document.getElementById('price-arrow');
+  const visualizer = document.getElementById('matrix-visualizer');
+  const mainOscillator = document.getElementById('main-osc');
+  
+  if (mainOscillator) {
+    mainOscillator.innerText = `$${data.payment_rules.cost_in.toFixed(2)}`;
   }
-  
-  const audioTrackSource = document.getElementById("terminal-audio-source");
-  const audioPlayer = document.getElementById("terminal-audio-player");
-  if (audioTrackSource && audioPlayer && data.album_assets.audio_stream !== "NOT_SET") {
-    if (audioTrackSource.src !== data.album_assets.audio_stream) {
-      audioTrackSource.src = data.album_assets.audio_stream;
-      audioPlayer.load(); // Forces HTML5 audio engine to buffer the fresh stream
+
+  // Handle Binary Matrix Destination Output Formatting
+  if (data.current_loop_position <= 5) {
+    activeMarketState.currentMode = "POOL";
+    if (targetElement) targetElement.innerText = "MARKET POOL (A/B SEEDING)";
+    if (countElement) countElement.innerText = `${data.current_loop_position} / 5 SALES`;
+    if (statusElement) {
+      statusElement.innerText = "STATUS // POOL SEEDING";
+      statusElement.className = "font-bold text-sm mb-4 text-emerald-400";
+    }
+    
+    if (visualizer) {
+      if (data.current_loop_position <= 1) {
+        visualizer.innerText = "[YOU] INITIAL BUY-IN ACTIVE";
+      } else {
+        visualizer.innerText = `[YOU] ➔ L/R SYNC SEEDING (${data.current_loop_position}/5)`;
+      }
+    }
+  } else {
+    activeMarketState.currentMode = "SELLER";
+    if (targetElement) targetElement.innerText = `ACTIVE SELLER ID: ${data.active_seller_id}`;
+    if (countElement) countElement.innerText = `${data.current_loop_position - 5} / 8 SALES TEAM`;
+    if (statusElement) {
+      statusElement.innerText = "STATUS // DIRECT NETTING";
+      statusElement.className = "font-bold text-sm mb-4 text-yellow-500";
     }
   }
 
-  // 2. Render Financial Pricing Matrix Rules
-  document.getElementById("display-cost-in").innerText = `$${data.payment_rules.cost_in.toFixed(2)}`;
-  document.getElementById("display-payout-target").innerText = `$${data.payment_rules.payout_target.toFixed(2)}`;
+  // Render Track List dynamically into your Track Asset Tracker box
+  renderTrackAssetGrid(data.portal_tier, data.album_assets.title);
+  logExecutionStream(data);
+}
 
-  // 3. Render Dynamic Escrow Routing Accounts
-  document.getElementById("display-seller-id").innerText = data.active_seller_id;
-  document.getElementById("handle-cashapp").innerText = data.payment_credentials.cash_app;
-  document.getElementById("handle-applepay").innerText = data.payment_credentials.apple_pay;
+/**
+ * Dynamically builds the album asset ledger items on the right section
+ */
+function renderTrackAssetGrid(tier, albumTitle) {
+  const assetContainer = document.querySelector('.w-full.bg-black\\/40.p-4.border.border-white\\/10');
+  if (!assetContainer) return;
 
-  // 4. Render Kinetic Position Indicators (Market Position Scrolling Ticker)
-  const positionString = `POSITION ${data.current_loop_position} OF 13`;
-  document.getElementById("display-loop-position").innerText = positionString;
+  // Track list setup based on your 90-second song structural rules
+  const tier1Tracks = ["G. Soul - Intro Vibe", "Blue Flame - Kinetic Velocity", "Ms. Butta - Velvet Smooth", "Shanae' - Silent Cries"];
+  const tier2Tracks = ["G. Smooth - Street Royalty", "Blue Flame - Heavy Smoke", "Ms. Butta - Gold Dust", "Shanae' - Gansta Lyfe"];
+  const tracksToRender = tier === 2 ? tier2Tracks : tier1Tracks;
+
+  let htmlContent = `
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xs tracking-widest text-white/40 uppercase font-mono">TRACK ASSET TRACKER</h3>
+      <span class="text-xs text-emerald-400 font-mono">SINGLES: $1.00</span>
+    </div>
+    <div class="text-sm font-bold text-emerald-400 mb-2 font-mono uppercase">${albumTitle || "ALBUM STREAM"}</div>
+    <div class="space-y-2 font-mono text-xs">
+  `;
+
+  tracksToRender.forEach((track, idx) => {
+    htmlContent += `
+      <div class="flex justify-between items-center border-b border-white/5 py-2 hover:bg-white/5 px-1 transition-all">
+        <span class="text-white/80">${idx + 1}. ${track}</span>
+        <button class="text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[10px] hover:bg-emerald-400/20" onclick="alert('Asset purchase routine initialized')">BUY SINGLE</button>
+      </div>
+    `;
+  });
+
+  htmlContent += `</div>`;
+  assetContainer.innerHTML = htmlContent;
+}
+
+function logExecutionStream(data) {
+  const flow = document.getElementById('flow-content');
+  if (!flow) return;
+
+  const entry = document.createElement('div');
+  entry.className = "border-b border-white/5 py-1 text-white opacity-70 flex justify-between font-mono text-xs";
   
-  // Calculate specific metrics for network visual queues
-  const progressionPercentage = ((data.current_loop_position / 13) * 100).toFixed(0);
-  const progressBar = document.getElementById("terminal-progress-bar");
-  if (progressBar) {
-    progressBar.style.width = `${progressionPercentage}%`;
+  if (data.current_loop_position <= 5) {
+    entry.innerHTML = `<span>GATEWAY // SYNCED PORTAL TIER ${data.portal_tier} DATA FEED</span><span class="text-emerald-400">ACTIVE</span>`;
+  } else {
+    entry.innerHTML = `<span>ROUTING // LIVE NODE CONNECTED TO [${data.active_seller_id}]</span><span class="text-yellow-500">LIVE</span>`;
   }
 
-  // Update central ticker board feed notice
-  displayTerminalStatus(`SYSTEM ONLINE // PORTAL_TIER_${data.portal_tier}`);
-}
-
-/**
- * Updates the terminal's status display bar.
- */
-function displayTerminalStatus(message) {
-  const statusBar = document.getElementById("terminal-status-ticker");
-  if (statusBar) {
-    statusBar.innerText = message.toUpperCase();
+  flow.prepend(entry);
+  if (flow.children.length > 3) {
+    flow.removeChild(flow.lastChild);
   }
 }
 
-/**
- * Visually alerts user via terminal elements if a data mismatch or failure occurs.
- */
-function flashErrorIndicator() {
-  const feedIndicator = document.getElementById("terminal-feed-status-light");
-  if (feedIndicator) {
-    feedIndicator.style.backgroundColor = "#ff0033"; // Alert Crimson Red
-    feedIndicator.classList.add("flash-animation");
-  }
-}
+function hijackPortalControls() {
+  window.switchPortal = function(idx) {
+    const requestedTier = idx + 1;
+    
+    document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
+    const clickedButton = document.getElementById(`p-${idx}`);
+    if (clickedButton) clickedButton.classList.add('active');
+    
+    const portalTitle = document.getElementById('portal-title-display');
+    if (portalTitle) portalTitle.innerText = `PORTAL TIER ${requestedTier} BASE PRICE`;
 
-/**
- * Interactive Terminal Event Listeners: Handles Tier switching commands
- */
-function initializeTerminalControls() {
-  const tierOneButton = document.getElementById("btn-tier-1");
-  const tierTwoButton = document.getElementById("btn-tier-2");
+    fetchLiveLedgerState(requestedTier);
+  };
 
-  if (tierOneButton) {
-    tierOneButton.addEventListener("click", () => {
-      fetchTerminalMarketData(1);
-    });
-  }
-
-  if (tierTwoButton) {
-    tierTwoButton.addEventListener("click", () => {
-      fetchTerminalMarketData(2);
-    });
-  }
-
-  // Boot up the Initial Default Market Feed
-  fetchTerminalMarketData(TERMINAL_CONFIG.defaultTier);
-
-  // Establish continuous market streaming sequence loop
+  fetchLiveLedgerState(1);
   setInterval(() => {
-    fetchTerminalMarketData(currentTerminalState.tier || TERMINAL_CONFIG.defaultTier);
-  }, TERMINAL_CONFIG.pollingIntervalMs);
+    fetchLiveLedgerState(activeMarketState.tier);
+  }, TRADING_FLOOR_CONFIG.refreshRateMs);
 }
 
-// Attach controller directly to your web application initialization routine
-document.addEventListener("DOMContentLoaded", initializeTerminalControls);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", hijackPortalControls);
+} else {
+  hijackPortalControls();
+}
