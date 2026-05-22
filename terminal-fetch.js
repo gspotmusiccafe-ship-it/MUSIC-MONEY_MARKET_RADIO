@@ -1,10 +1,9 @@
 /**
- * AITITRADE Terminal Data Line Controller - V2.0
- * Feeds live data from the Apps Script Gateway and renders track lists dynamically.
+ * AITITRADE Terminal Data Line Controller - V2.1
+ * Class-independent selector engine for rendering live assets and matrix counts.
  */
 
 const TRADING_FLOOR_CONFIG = {
-  // Your fresh verified API endpoint with the CORS response fix
   gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
   defaultTier: 1,
   refreshRateMs: 15000 
@@ -83,17 +82,33 @@ function updateLiveTradingFloor(data) {
     }
   }
 
-  // Render Track List dynamically into your Track Asset Tracker box
+  // Render Track List dynamically using structural layout sniffing
   renderTrackAssetGrid(data.portal_tier, data.album_assets.title);
   logExecutionStream(data);
 }
 
 /**
  * Dynamically builds the album asset ledger items on the right section
+ * Uses structural element sniffing to find your track column container perfectly.
  */
 function renderTrackAssetGrid(tier, albumTitle) {
-  const assetContainer = document.querySelector('.w-full.bg-black\\/40.p-4.border.border-white\\/10');
-  if (!assetContainer) return;
+  // Sniffs out the column box based on the static header text inside your layout
+  let assetContainer = null;
+  const headings = document.getElementsByTagName('h3');
+  
+  for (let i = 0; i < headings.length; i++) {
+    if (headings[i].innerText.includes("TRACK ASSET TRACKER")) {
+      assetContainer = headings[i].parentElement;
+      break;
+    }
+  }
+
+  // Fallback selector check if the header wrapper changes
+  if (!assetContainer) {
+    assetContainer = document.querySelector('.w-full.bg-black\\/40.p-4.border.border-white\\/10');
+  }
+
+  if (!assetContainer) return; // Safeguard if page is layout shifting during initialization
 
   // Track list setup based on your 90-second song structural rules
   const tier1Tracks = ["G. Soul - Intro Vibe", "Blue Flame - Kinetic Velocity", "Ms. Butta - Velvet Smooth", "Shanae' - Silent Cries"];
