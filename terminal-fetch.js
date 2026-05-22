@@ -4,7 +4,8 @@
  */
 
 const TRADING_FLOOR_CONFIG = {
-  gatewayUrl: "https://script.google.com/macros/s/AKfycbzs5eeFvYmE-bn6vDb0Mp49Xw5zD3XfgPiq3g9ce_K0N5BXe3OXDO2g2eP3HBxwdvS3/exec",
+  // Your fresh verified API endpoint with the CORS response fix
+  gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
   defaultTier: 1,
   refreshRateMs: 15000 
 };
