@@ -1,27 +1,67 @@
-<div class="grid grid-cols-3 gap-2 mb-4">
-  <button id="btn-market-view" class="portal-btn active border border-emerald-500/30 bg-black/60 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group">
-    <div class="text-[10px] text-emerald-400/60 font-mono tracking-widest group-hover:text-emerald-400">VIEW MODE</div>
-    <div class="text-xs font-bold text-white font-mono uppercase">MARKET FLOOR</div>
-  </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AITITRADE // 97.7 THE FLAME</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    /* Custom Bloomberg Glassmorphism Aesthetic overrides */
+    .bloomberg-glass {
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.05);
+    }
+    .portal-btn.active {
+      border-color: #10b981 !important;
+      background-color: rgba(16, 185, 129, 0.15) !important;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+    }
+  </style>
+</head>
+<body class="bg-[#030712] min-h-screen text-white flex items-center justify-center p-4">
 
-  <button id="p-0" onclick="switchPortal(0)" class="portal-btn border border-emerald-500/20 bg-black/40 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group">
-    <div class="text-[10px] text-white/40 font-mono tracking-widest group-hover:text-emerald-400">PORTAL 01 // $10</div>
-    <div id="nav-album-t1" class="text-xs font-bold text-emerald-400 font-mono truncate">FIRST ALBUM</div>
-  </button>
+  <div class="w-full max-w-md bloomberg-glass rounded-xl p-6 text-center">
+    
+    <div class="mb-6 border-b border-white/5 pb-4">
+      <h1 class="text-xs font-mono tracking-[0.25em] text-emerald-400 font-bold uppercase">AITITRADE // SONGSHARE MARKET</h1>
+      <p class="text-[10px] font-mono text-white/40 mt-1">STREAMING ENGAGEMENT PORTAL ARCHITECTURE</p>
+    </div>
 
-  <button id="p-1" onclick="switchPortal(1)" class="portal-btn border border-white/5 bg-black/20 p-2 text-center rounded opacity-50 cursor-not-allowed font-mono text-xs text-white/30 group relative overflow-hidden" disabled>
-    <div class="absolute inset-0 bg-black/90 flex items-center justify-center font-bold tracking-widest text-[10px] text-red-500/80 backdrop-blur-[1px]">🔒 T1 RESELL REQUIRED</div>
-    <div class="text-[10px] tracking-widest">PORTAL 02 // $20</div>
-    <div class="text-xs font-bold truncate">GANSTA LYFE</div>
-  </button>
-</div>
+    <div class="grid grid-cols-3 gap-2 mb-4">
+      <button id="btn-market-view" class="portal-btn active border border-emerald-500/30 bg-black/60 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group cursor-pointer">
+        <div class="text-[9px] text-emerald-400/60 font-mono tracking-widest group-hover:text-emerald-400">VIEW MODE</div>
+        <div class="text-[11px] font-bold text-white font-mono uppercase">MARKET FLOOR</div>
+      </button>
 
-<div class="grid grid-cols-2 gap-2 mb-4">
-  <button id="btn-free-download" class="border border-white/10 bg-white/5 p-3 text-center rounded font-mono text-xs text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden" disabled>
-    <span class="absolute top-1 right-1 text-[8px] bg-red-500/20 text-red-400 px-1 rounded">LOCKED</span>
-    📥 ACCESS FREE DOWNLOAD
-  </button>
-  <button id="btn-song-buy" class="border border-emerald-500/30 bg-emerald-500/10 p-3 text-center rounded font-mono text-xs text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider">
-    🎵 BUY SINGLE TRACK ($1)
-  </button>
-</div>
+      <button id="p-0" onclick="switchPortal(0)" class="portal-btn border border-white/10 bg-black/40 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group cursor-pointer">
+        <div class="text-[9px] text-white/40 font-mono tracking-widest group-hover:text-emerald-400">PORTAL 01 // $10</div>
+        <div id="nav-album-t1" class="text-[11px] font-bold text-emerald-400 font-mono truncate">FIRST ALBUM</div>
+      </button>
+
+      <button id="p-1" onclick="switchPortal(1)" class="portal-btn border border-white/5 bg-black/20 p-2 text-center rounded opacity-40 cursor-not-allowed font-mono text-xs text-white/30 group relative overflow-hidden" disabled>
+        <div class="absolute inset-0 bg-black/90 flex items-center justify-center font-bold tracking-widest text-[9px] text-red-500/80 backdrop-blur-[1px]">🔒 T1 RESELL REQUIRED</div>
+        <div class="text-[9px] tracking-widest">PORTAL 02 // $20</div>
+        <div class="text-[11px] font-bold truncate">GANSTA LYFE</div>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2 mb-6">
+      <button id="btn-free-download" class="border border-white/10 bg-white/5 p-3 text-center rounded font-mono text-xs text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden" disabled>
+        <span class="absolute top-1 right-1 text-[8px] bg-red-500/20 text-red-400 px-1 rounded">LOCKED</span>
+        📥 ACCESS FREE DOWNLOAD
+      </button>
+      <button id="btn-song-buy" class="border border-emerald-500/30 bg-emerald-500/10 p-3 text-center rounded font-mono text-xs text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider cursor-pointer">
+        🎵 BUY SINGLE TRACK ($1)
+      </button>
+    </div>
+
+    <div class="text-[9px] font-mono text-white/30 tracking-wider">
+      97.7 THE FLAME BROADCAST NETWORKS © 2026
+    </div>
+
+  </div>
+
+  <script src="terminal-fetch.js"></script>
+</body>
+</html>
