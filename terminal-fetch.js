@@ -1,9 +1,21 @@
 /**
- * AITITRADE Terminal Data Line Controller - V5.1 (Recovery Build)
- * Fixes the global registry lookup for the QUEEN_BUTTA_VAULT and streamlines the grid renderer.
+ * AITITRADE Terminal Data Line Controller - V5.2 (Ultra-Stable Build)
+ * Fixed: Zero-space URL injection, restored oscillator, and stable audio binding.
  */
 
-// 1. Ensure the Vault is globally available before the renderer attempts access
+const TRADING_FLOOR_CONFIG = {
+  gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
+  defaultTier: 1,
+  refreshRateMs: 12000 
+};
+
+let activeMarketState = {
+  tier: 1,
+  currentlyPlayingIdx: null,
+  globalPlayer: null,
+  audioCtx: null
+};
+
 window.QUEEN_BUTTA_VAULT = [
     { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
     { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
@@ -20,22 +32,62 @@ window.QUEEN_BUTTA_VAULT = [
     { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
 ];
 
-// 2. Optimized Grid Renderer
-function renderTrackAssetGrid(tier) {
-  const assetContainer = document.getElementById('terminal-track-matrix-container');
-  if (!assetContainer) return;
-  
-  const tracks = (tier === 2) ? 
-    [{n:"STREET ROYALTY",src:"#"},{n:"HEAVY SMOKE",src:"#"},{n:"GOLD DUST",src:"#"},{n:"GANSTA LYFE",src:"#"}] : 
-    window.QUEEN_BUTTA_VAULT;
-
-  assetContainer.innerHTML = tracks.map((t, i) => `
-    <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
-      <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i+1}. ${t.n}</span>
-      <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25" 
-              data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
-    </div>
-  `).join('');
+function initAcousticMixingDeck(player) {
+    if (activeMarketState.audioCtx) return;
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        activeMarketState.audioCtx = new AudioContext();
+        const source = activeMarketState.audioCtx.createMediaElementSource(player);
+        const bass = activeMarketState.audioCtx.createBiquadFilter();
+        bass.type = "peaking"; bass.frequency.value = 80; bass.gain.value = 10.0;
+        const treble = activeMarketState.audioCtx.createBiquadFilter();
+        treble.type = "highshelf"; treble.frequency.value = 6500; treble.gain.value = 5.0;
+        source.connect(bass); bass.connect(treble); treble.connect(activeMarketState.audioCtx.destination);
+    } catch (e) { console.warn("Audio Context init pending user gesture."); }
 }
 
-// ... Ensure all other function definitions remain intact as previously established ...
+function getPlayer() {
+    if (!activeMarketState.globalPlayer) {
+        activeMarketState.globalPlayer = new Audio();
+        activeMarketState.globalPlayer.crossOrigin = "anonymous";
+    }
+    return activeMarketState.globalPlayer;
+}
+
+window.executeTerminalPlayback = function(btn) {
+    const player = getPlayer();
+    initAcousticMixingDeck(player);
+    if (activeMarketState.audioCtx) activeMarketState.audioCtx.resume();
+    
+    const idx = parseInt(btn.dataset.idx, 10);
+    if (activeMarketState.currentlyPlayingIdx === idx && !player.paused) {
+        player.pause();
+        btn.innerText = "PLAY";
+    } else {
+        activeMarketState.currentlyPlayingIdx = idx;
+        player.src = btn.dataset.src;
+        player.play().catch(console.error);
+        document.querySelectorAll('.terminal-play-btn').forEach(b => b.innerText = "PLAY");
+        btn.innerText = "PAUSE";
+    }
+};
+
+function renderTrackAssetGrid(tier) {
+    const container = document.getElementById('terminal-track-matrix-container');
+    if (!container) return;
+    const tracks = window.QUEEN_BUTTA_VAULT;
+    container.innerHTML = tracks.map((t, i) => `
+        <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
+            <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i + 1}. ${t.n}</span>
+            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold" 
+                    data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
+        </div>
+    `).join('');
+}
+
+// Ensure the application boot-up routines are maintained
+renderTrackAssetGrid(1);
+setInterval(() => {
+    const ticker = document.getElementById('main-osc');
+    if (ticker) ticker.innerText = "$" + (10 + Math.random() * 5).toFixed(2);
+}, 850);
