@@ -37,55 +37,33 @@
             background: var(--glass); border: 1px solid var(--emerald);
             color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.55rem; padding: 14px; text-align: center; cursor: pointer;
         }
+<div class="grid grid-cols-3 gap-2 mb-4">
+  <button id="btn-market-view" class="portal-btn active border border-emerald-500/30 bg-black/60 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group">
+    <div class="text-[10px] text-emerald-400/60 font-mono tracking-widest group-hover:text-emerald-400">VIEW MODE</div>
+    <div class="text-xs font-bold text-white font-mono uppercase">MARKET FLOOR</div>
+  </button>
 
-        .oscillator-main { font-size: 3.5rem; color: #fff; font-weight: 900; font-family: 'Syncopate', sans-serif; letter-spacing: -3px; line-height: 1; }
-        .album-art { width: 100%; aspect-ratio: 1; border: 1px solid #222; background-size: cover; margin-bottom: 15px; }
-        
-        .ledger-row { display: grid; grid-template-columns: 1fr 70px; padding: 12px; border-bottom: 1px solid #111; font-size: 0.65rem; cursor: pointer; color: #777; }
-        .ledger-row.playing { border-left: 3px solid var(--emerald); background: var(--glass); color: #fff; }
+  <button id="p-0" onclick="switchPortal(0)" class="portal-btn border border-emerald-500/20 bg-black/40 p-2 text-center rounded hover:bg-emerald-500/10 transition-all group">
+    <div class="text-[10px] text-white/40 font-mono tracking-widest group-hover:text-emerald-400">PORTAL 01 // $10</div>
+    <div id="nav-album-t1" class="text-xs font-bold text-emerald-400 font-mono truncate">FIRST ALBUM</div>
+  </button>
 
-        .media-ctrl { display: flex; justify-content: center; gap: 40px; padding: 15px; background: #000; border: 1px solid #1a1a1a; font-size: 1.3rem; margin-top: auto; }
-        .ctrl-btn { cursor: pointer; color: #fff; }
-    </style>
-</head>
-<body>
-
-<div class="p-2 bg-black border-b border-white/5">
-    <div class="portal-tabs">
-        <div id="p-0" class="portal-btn active" onclick="switchPortal(0)">P1 $10</div>
-        <div id="p-1" class="portal-btn locked" onclick="switchPortal(1)">P2 $20</div>
-        <div id="p-2" class="portal-btn locked" onclick="switchPortal(2)">P3 $30</div>
-        <div id="p-3" class="portal-btn locked" onclick="switchPortal(3)">P4 $40</div>
-        <div id="p-4" class="portal-btn locked" onclick="switchPortal(4)">P5 $50</div>
-    </div>
-    <div class="portal-tabs">
-        <div id="p-5" class="portal-btn locked" onclick="switchPortal(5)">P6 $60</div>
-        <div id="p-6" class="portal-btn locked" onclick="switchPortal(6)">P7 $70</div>
-        <div id="p-7" class="portal-btn locked" onclick="switchPortal(7)">P8 $80</div>
-        <div id="p-8" class="portal-btn locked" onclick="switchPortal(8)">P9 $90</div>
-        <div id="p-9" class="portal-btn locked" onclick="switchPortal(9)">P10 $100</div>
-    </div>
+  <button id="p-1" onclick="switchPortal(1)" class="portal-btn border border-white/5 bg-black/20 p-2 text-center rounded opacity-50 cursor-not-allowed font-mono text-xs text-white/30 group relative overflow-hidden" disabled>
+    <div class="absolute inset-0 bg-black/80 flex items-center justify-center font-bold tracking-widest text-[10px] text-red-500/70 backdrop-blur-[1px]">🔒 T1 RESELL REQUIRED</div>
+    <div class="text-[10px] tracking-widest">PORTAL 02 // $20</div>
+    <div class="text-xs font-bold truncate">GANSTA LYFE</div>
+  </button>
 </div>
 
-<div class="dashboard">
-    <aside class="side-col">
-        <div class="command-grid">
-            <div onclick="window.open('https://aitify-music-stream.replit.app/')" class="glass-btn">MARKET</div>
-            <div id="album-fulfillment-action" onclick="routeToActiveProductDownload()" class="glass-btn" style="border-color: #fff;">ALBUM</div>
-            <div onclick="window.open('https://cash.app/f/POOL?id=52fqk4xl')" class="glass-btn">PARTNER</div>
-            <div onclick="window.open('https://cash.app/f/POOL?id=tgva6fj4')" class="glass-btn">SONG</div>
-        </div>
-        <div class="album-art" style="background-image: url('https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982');"></div>
-        <div class="text-center">
-            <div id="portal-title-display" class="text-[8px] opacity-40 mb-1">PORTAL TIER 1 BASE PRICE</div>
-            <div id="main-osc" class="oscillator-main">$10.00</div>
-            <div id="price-arrow" class="font-bold text-sm mb-4 text-emerald-400">STATUS // POOL SEEDING</div>
-        </div>
-        <div class="media-ctrl">
-            <span class="ctrl-btn" onclick="prev()">⏮</span>
-            <span id="play-pause" class="ctrl-btn" onclick="togglePlay()">⏸</span>
-            <span class="ctrl-btn" onclick="next()">⏭</span>
-        </div>
+<div class="grid grid-cols-2 gap-2 mb-4">
+  <button id="btn-free-download" class="border border-white/10 bg-white/5 p-3 text-center rounded font-mono text-xs text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden" disabled>
+    <span class="absolute top-1 right-1 text-[8px] bg-red-500/20 text-red-400 px-1 rounded">LOCKED</span>
+    📥 ACCESS FREE DOWNLOAD
+  </button>
+  <button id="btn-song-buy" class="border border-emerald-500/30 bg-emerald-500/10 p-3 text-center rounded font-mono text-xs text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider">
+    🎵 BUY SINGLE TRACK ($1)
+  </button>
+</div>
     </aside>
 
     <main class="flex flex-col gap-3">
