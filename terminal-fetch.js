@@ -1,7 +1,7 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.2 (Strict Gated Release)
- * Forces absolute gated lockdown for downloads unless verification tokens clear,
- * strips out all artist name prefixes to show pure song titles, and runs fluid playback.
+ * AITITRADE Terminal Data Line Controller - V4.3 (Bose Acoustic Edition)
+ * Integrates Web Audio API Equalizer nodes to boost low-end bass punch and treble depth.
+ * Retains strict transaction download gates, pure song labels, and 850ms market velocity.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -18,13 +18,56 @@ let activeMarketState = {
   oscillatorInterval: null,
   globalPlayer: null, 
   currentlyPlayingIdx: null,
-  isPaymentCleared: false // ABSOLUTE LOCKOUT UNTIL MANUAL VERIFICATION SIGNALS PASS
+  isPaymentCleared: false,
+  
+  // Web Audio Context Mixing Slots
+  audioCtx: null,
+  sourceNode: null,
+  bassFilter: null,
+  trebleFilter: null
 };
+
+/**
+ * Initializes the hidden Bose-style Master Mixing Deck pipeline
+ */
+function initAcousticMixingDeck(playerElement) {
+  if (activeMarketState.audioCtx) return; // Prevent duplicate audio pipelines
+
+  try {
+    // Create browser audio workspace context
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    activeMarketState.audioCtx = new AudioContext();
+
+    // Route your raw player output into our mix engine
+    activeMarketState.sourceNode = activeMarketState.audioCtx.createMediaElementSource(playerElement);
+
+    // Node 1: Heavy Bass Equalizer (Peaking Filter at 80Hz for deep sub-thump)
+    activeMarketState.bassFilter = activeMarketState.audioCtx.createBiquadFilter();
+    activeMarketState.bassFilter.type = "peaking";
+    activeMarketState.bassFilter.frequency.value = 80; 
+    activeMarketState.bassFilter.Q.value = 1.2;
+    activeMarketState.bassFilter.gain.value = 9.0; // Boost bass output by +9dB
+
+    // Node 2: Premium Treble Contour (High-Shelf Filter at 6500Hz for high-end crispness)
+    activeMarketState.trebleFilter = activeMarketState.audioCtx.createBiquadFilter();
+    activeMarketState.trebleFilter.type = "highshelf";
+    activeMarketState.trebleFilter.frequency.value = 6500;
+    activeMarketState.trebleFilter.gain.value = 4.5; // Smooth out high-end vocals by +4.5dB
+
+    // String the audio deck nodes together: Player -> Bass -> Treble -> Master Speakers
+    activeMarketState.sourceNode.connect(activeMarketState.bassFilter);
+    activeMarketState.bassFilter.connect(activeMarketState.trebleFilter);
+    activeMarketState.trebleFilter.connect(activeMarketState.audioCtx.destination);
+  } catch (err) {
+    console.warn("Acoustic mix deck initialization deferred until human click interaction.");
+  }
+}
 
 function getAudioEngine() {
   if (!activeMarketState.globalPlayer) {
     activeMarketState.globalPlayer = new Audio();
-    activeMarketState.globalPlayer.volume = 0.85;
+    activeMarketState.globalPlayer.volume = 0.90;
+    activeMarketState.globalPlayer.crossOrigin = "anonymous"; // Needed for Firebase Web Audio processing
   }
   return activeMarketState.globalPlayer;
 }
@@ -35,6 +78,12 @@ window.executeTerminalPlayback = function(element) {
   const idx = parseInt(element.getAttribute('data-idx'), 10);
   const playButtons = document.querySelectorAll('.terminal-play-btn');
   
+  // Activate audio routing context on first play click gesture
+  initAcousticMixingDeck(player);
+  if (activeMarketState.audioCtx && activeMarketState.audioCtx.state === 'suspended') {
+    activeMarketState.audioCtx.resume();
+  }
+
   if (activeMarketState.currentlyPlayingIdx === idx) {
     if (!player.paused) {
       player.pause();
@@ -63,7 +112,7 @@ window.executeTerminalPlayback = function(element) {
       element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
     })
     .catch(err => {
-      console.warn("Autoplay bypass initialized.");
+      console.warn("Autoplay layer handled. Routing direct stream frame.");
       window.open(srcUrl, '_blank');
     });
 };
@@ -99,7 +148,7 @@ function updateLiveTradingFloor(data) {
   activeMarketState.matrixCount = data.current_loop_position;
   activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
   
-  // FIXED LOCK RULE: Hardcoded to false on loop checks to strictly prevent slipping open
+  // FIXED LOCK RULE: Controlled via spreadsheet transaction log clearances
   activeMarketState.isPaymentCleared = (data.clearance_override === "GRANTED" || data.is_production_paid === true); 
 
   const targetElement = document.getElementById('router-target');
@@ -216,7 +265,6 @@ function renderTrackAssetGrid(tier) {
 
   let htmlContent = "";
   tracksToRender.forEach((track, idx) => {
-    // Strips away any prefixes to display the clean song name asset strictly
     const trackLabel = track.n;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
 
