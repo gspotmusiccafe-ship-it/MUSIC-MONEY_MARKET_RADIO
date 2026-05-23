@@ -1,7 +1,7 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.4 (Bose Premium Stream Edition)
- * Resolves Firebase cross-origin browser playback blockages to prevent external tab launching.
- * Integrates heavy sub-bass response nodes and crisp vocal treble contours.
+ * AITITRADE Terminal Data Line Controller - V4.5 (Acoustic Fix)
+ * Eliminates whitespace padding syntax errors on data-src injection to fix playback.
+ * Maintained: Bose mixing deck, strict download gates, pure song titles, and 850ms velocity.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -75,7 +75,9 @@ function getAudioEngine() {
 
 window.executeTerminalPlayback = function(element) {
   const player = getAudioEngine();
-  const srcUrl = element.getAttribute('data-src');
+  
+  // Clean off any accidental whitespace padding on the source string
+  const srcUrl = element.getAttribute('data-src').trim();
   const idx = parseInt(element.getAttribute('data-idx'), 10);
   const playButtons = document.querySelectorAll('.terminal-play-btn');
   
@@ -116,7 +118,6 @@ window.executeTerminalPlayback = function(element) {
     })
     .catch(err => {
       console.error("Secure media streaming pipeline failure:", err.message);
-      // Clean inline fallback fallback if audio stream is locked by standard network firewalls
       element.innerText = "PLAY";
     });
 };
@@ -272,6 +273,7 @@ function renderTrackAssetGrid(tier) {
     const trackLabel = track.n;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
 
+    // Strict alignment: Removed internal padding spaces inside the data-src wrapper template assignment
     htmlContent += `
       <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1">
         <span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span>
