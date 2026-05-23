@@ -1,6 +1,6 @@
 /**
- * AITITRADE Terminal Controller - V6.1 (Event Delegate Build)
- * Logic: Uses Event Delegation to bypass click-blocking.
+ * AITITRADE Terminal Controller - V7.0 (Direct Mapping Build)
+ * Logic: Bypasses DOM-attribute URL corruption by using a direct data lookup.
  */
 
 window.QUEEN_BUTTA_VAULT = [
@@ -21,7 +21,7 @@ window.QUEEN_BUTTA_VAULT = [
 
 const state = { player: new Audio(), ctx: null, activeIdx: null };
 
-function playTrack(btn) {
+function playTrack(idx) {
     if (!state.ctx) {
         state.ctx = new (window.AudioContext || window.webkitAudioContext)();
         const source = state.ctx.createMediaElementSource(state.player);
@@ -33,13 +33,14 @@ function playTrack(btn) {
     }
     state.ctx.resume();
 
-    if (state.activeIdx === btn.dataset.idx && !state.player.paused) {
+    const btn = document.querySelector(`[data-idx="${idx}"]`);
+    if (state.activeIdx === idx && !state.player.paused) {
         state.player.pause();
         btn.innerText = "PLAY";
     } else {
-        state.activeIdx = btn.dataset.idx;
-        state.player.src = btn.dataset.src;
-        state.player.play();
+        state.activeIdx = idx;
+        state.player.src = window.QUEEN_BUTTA_VAULT[idx].src;
+        state.player.play().catch(console.error);
         document.querySelectorAll('.terminal-play-btn').forEach(b => b.innerText = "PLAY");
         btn.innerText = "PAUSE";
     }
@@ -50,17 +51,10 @@ if (container) {
     container.innerHTML = window.QUEEN_BUTTA_VAULT.map((t, i) => `
         <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
             <span class="text-xs font-mono text-emerald-400">${i+1}. ${t.n}</span>
-            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 rounded text-[9px] font-bold" 
-                    data-src="${t.src}" data-idx="${i}">PLAY</button>
+            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 rounded text-[9px] font-bold" data-idx="${i}">PLAY</button>
         </div>
     `).join('');
-
     container.addEventListener('click', (e) => {
-        if (e.target.classList.contains('terminal-play-btn')) playTrack(e.target);
+        if (e.target.classList.contains('terminal-play-btn')) playTrack(parseInt(e.target.dataset.idx));
     });
 }
-
-setInterval(() => {
-    const osc = document.getElementById('main-osc');
-    if (osc) osc.innerText = "$" + (10 + Math.random() * 5).toFixed(2);
-}, 850);
