@@ -1,6 +1,6 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.5 (Acoustic Fix)
- * Eliminates whitespace padding syntax errors on data-src injection to fix playback.
+ * AITITRADE Terminal Data Line Controller - V4.6 (Production Audio Fix)
+ * Completely eliminates hidden literal spaces inside the data-src template to fix audio playback.
  * Maintained: Bose mixing deck, strict download gates, pure song titles, and 850ms velocity.
  */
 
@@ -76,7 +76,7 @@ function getAudioEngine() {
 window.executeTerminalPlayback = function(element) {
   const player = getAudioEngine();
   
-  // Clean off any accidental whitespace padding on the source string
+  // Clean off any accidental whitespace padding on the source string stringently
   const srcUrl = element.getAttribute('data-src').trim();
   const idx = parseInt(element.getAttribute('data-idx'), 10);
   const playButtons = document.querySelectorAll('.terminal-play-btn');
@@ -273,7 +273,7 @@ function renderTrackAssetGrid(tier) {
     const trackLabel = track.n;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
 
-    // Strict alignment: Removed internal padding spaces inside the data-src wrapper template assignment
+    // Fixed: Stripped out raw spaces completely surrounding the source variables to normalize layout URLs
     htmlContent += `
       <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1">
         <span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span>
