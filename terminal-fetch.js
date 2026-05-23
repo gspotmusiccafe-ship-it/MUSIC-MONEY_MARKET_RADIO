@@ -1,6 +1,6 @@
 /**
- * AITITRADE Terminal Data Line Controller - V3.1
- * Fully integrated matrix tracking, conditional tier locks, market price oscillation up to $130, and dynamic asset rendering.
+ * AITITRADE Terminal Data Line Controller - V3.2
+ * Fail-safe layout injector with automated ticker oscillation.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -41,9 +41,40 @@ async function fetchLiveLedgerState(tier = activeMarketState.tier) {
 }
 
 /**
+ * Ensures the target text outputs exist on the screen layout, or injects them safely
+ */
+function verifyAndInjectTerminalNodes() {
+  let displayBox = document.getElementById('terminal-data-display-node');
+  
+  if (!displayBox) {
+    // Find your main layout panel to embed the data readouts cleanly
+    const mainPanel = document.querySelector('.grid.grid-cols-3') || document.body.firstChild;
+    if (!mainPanel) return;
+    
+    displayBox = document.createElement('div');
+    displayBox.id = 'terminal-data-display-node';
+    displayBox.className = "w-full my-4 p-3 bg-black/60 border border-emerald-500/20 rounded font-mono text-xs space-y-1 text-left";
+    displayBox.innerHTML = `
+      <div class="text-emerald-400/60 font-bold tracking-wider mb-1">⚡ SYSTEM CORE MONITOR:</div>
+      <div class="flex justify-between"><span class="text-white/40">GATEWAY INDEX:</span> <span id="router-target" class="text-emerald-400">CONNECTING...</span></div>
+      <div class="flex justify-between"><span class="text-white/40">LOOP QUEUE:</span> <span id="router-count" class="text-emerald-400">-- / --</span></div>
+      <div class="flex justify-between"><span class="text-white/40">PRICE STREAM:</span> <span id="main-osc" class="text-emerald-400 font-bold">$10.00</span></div>
+      <div id="price-arrow" class="text-[10px] text-emerald-400/50 pt-1 border-t border-white/5 mt-1">STATUS // SYNCING NETWORK</div>
+      <div id="matrix-visualizer" class="hidden"></div>
+    `;
+    
+    // Inject directly below your top button rows
+    mainPanel.parentNode.insertBefore(displayBox, mainPanel.nextSibling);
+  }
+}
+
+/**
  * Paints the live API response values onto your visual layout IDs
  */
 function updateLiveTradingFloor(data) {
+  // Run safety injection routine
+  verifyAndInjectTerminalNodes();
+
   activeMarketState.tier = data.portal_tier;
   activeMarketState.matrixCount = data.current_loop_position;
   activeMarketState.basePrice = data.payment_rules.cost_in;
@@ -73,22 +104,22 @@ function updateLiveTradingFloor(data) {
   // Handle Binary Matrix Destination Output Formatting
   if (data.current_loop_position <= 5) {
     activeMarketState.currentMode = "POOL";
-    if (targetElement) targetElement.innerText = "MARKET POOL (A/B SEEDING)";
+    if (targetElement) targetElement.innerText = "MARKET POOL (SEEDING)";
     if (countElement) countElement.innerText = `${data.current_loop_position} / 5 SALES`;
     if (statusElement) {
-      statusElement.innerText = "STATUS // POOL SEEDING";
-      statusElement.className = "font-bold text-sm mb-4 text-emerald-400 font-mono";
+      statusElement.innerText = "STATUS // POOL SEEDING ACTIVE";
+      statusElement.className = "text-[10px] text-emerald-400 font-mono";
     }
     if (visualizer) {
-      visualizer.innerText = `[YOU] ➔ ARCHITECTURE BUILDING METRICS (${data.current_loop_position}/5)`;
+      visualizer.innerText = `[YOU] ➔ METRICS (${data.current_loop_position}/5)`;
     }
   } else {
     activeMarketState.currentMode = "SELLER";
-    if (targetElement) targetElement.innerText = `ACTIVE SELLER ID: ${data.active_seller_id}`;
+    if (targetElement) targetElement.innerText = `${data.active_seller_id}`;
     if (countElement) countElement.innerText = `${data.current_loop_position - 5} / 8 SALES TEAM`;
     if (statusElement) {
       statusElement.innerText = "STATUS // DIRECT RESELL NETTING";
-      statusElement.className = "font-bold text-sm mb-4 text-yellow-500 font-mono";
+      statusElement.className = "text-[10px] text-yellow-500 font-mono";
     }
   }
 
@@ -145,41 +176,38 @@ function evaluateDownloadPrivileges(data) {
 }
 
 /**
- * Dynamically builds the album asset ledger items on the right section
+ * Dynamically builds the album asset ledger items on the screen layout
  */
 function renderTrackAssetGrid(tier, albumTitle) {
-  let assetContainer = null;
-  const headings = document.getElementsByTagName('h3');
-  for (let i = 0; i < headings.length; i++) {
-    if (headings[i].innerText.includes("TRACK ASSET TRACKER")) {
-      assetContainer = headings[i].parentElement;
-      break;
-    }
-  }
-
+  let assetContainer = document.getElementById('terminal-track-matrix-container');
+  
   if (!assetContainer) {
-    assetContainer = document.querySelector('.w-full.bg-black\\/40.p-4.border.border-white\\/10');
+    const mainLayoutNode = document.getElementById('terminal-data-display-node');
+    if (!mainLayoutNode) return;
+    
+    assetContainer = document.createElement('div');
+    assetContainer.id = 'terminal-track-matrix-container';
+    assetContainer.className = "w-full mt-2 p-3 bg-black/40 border border-white/5 rounded font-mono text-xs text-left";
+    mainLayoutNode.parentNode.insertBefore(assetContainer, mainLayoutNode.nextSibling);
   }
-  if (!assetContainer) return;
 
   const tier1Tracks = ["G. Soul - Intro Vibe", "Blue Flame - Kinetic Velocity", "Ms. Butta - Velvet Smooth", "Shanae' - Silent Cries"];
   const tier2Tracks = ["G. Smooth - Street Royalty", "Blue Flame - Heavy Smoke", "Ms. Butta - Gold Dust", "Shanae' - Gansta Lyfe"];
   const tracksToRender = tier === 2 ? tier2Tracks : tier1Tracks;
 
   let htmlContent = `
-    <div class="flex justify-between items-center mb-4 font-mono">
-      <h3 class="text-xs tracking-widest text-white/40 uppercase font-mono">TRACK ASSET TRACKER</h3>
-      <span class="text-xs text-emerald-400">SINGLES: $1.00</span>
+    <div class="flex justify-between items-center mb-2 text-[10px] text-white/40">
+      <span>ALBUM: ${albumTitle.toUpperCase() || "ALBUM STREAM"}</span>
+      <span class="text-emerald-400">SINGLES: $1.00</span>
     </div>
-    <div class="text-sm font-bold text-emerald-400 mb-2 font-mono uppercase">${albumTitle || "ALBUM STREAM"}</div>
-    <div class="space-y-2 font-mono text-xs">
+    <div class="space-y-1">
   `;
 
   tracksToRender.forEach((track, idx) => {
     htmlContent += `
-      <div class="flex justify-between items-center border-b border-white/5 py-2 hover:bg-white/5 px-1 transition-all">
-        <span class="text-white/80">${idx + 1}. ${track}</span>
-        <button class="text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[10px] hover:bg-emerald-400/20" onclick="alert('Transaction node prepared for single download.')">BUY SINGLE</button>
+      <div class="flex justify-between items-center border-b border-white/5 py-1 text-white/80">
+        <span>${idx + 1}. ${track}</span>
+        <span class="text-emerald-400/40 text-[10px]">[READY]</span>
       </div>
     `;
   });
@@ -196,9 +224,6 @@ function hijackPortalControls() {
 
     document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
     if (buttonTarget) buttonTarget.classList.add('active');
-    
-    const portalTitle = document.getElementById('portal-title-display');
-    if (portalTitle) portalTitle.innerText = `PORTAL TIER ${requestedTier} BASE PRICE`;
 
     fetchLiveLedgerState(requestedTier);
   };
