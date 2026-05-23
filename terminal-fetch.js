@@ -1,7 +1,7 @@
 /**
- * AITITRADE Terminal Data Line Controller - V3.7
- * Handles dual-tier ledger sync, dampened market oscillation (850ms),
- * and an integrated invisible global HTML5 audio playback deck.
+ * AITITRADE Terminal Data Line Controller - V3.8 (Production Release)
+ * Resolves Market View button lockouts, brings back full emerald glow text,
+ * fixes the $10 Buy-in baseline pricing, and maps the live Payhip download route.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -16,66 +16,61 @@ let activeMarketState = {
   matrixCount: 0,
   basePrice: 10.00,
   oscillatorInterval: null,
-  globalPlayer: null, // Invisible Audio Core Engine Slot
+  globalPlayer: null, 
   currentlyPlayingIdx: null
 };
 
-/**
- * Initializes or fetches the global terminal audio engine node
- */
 function getAudioEngine() {
   if (!activeMarketState.globalPlayer) {
     activeMarketState.globalPlayer = new Audio();
     activeMarketState.globalPlayer.volume = 0.85;
-    
-    // Log state stream changes inside the browser debug logs
-    activeMarketState.globalPlayer.addEventListener('play', () => console.log("AITIFY_STREAM: Audio deck active"));
-    activeMarketState.globalPlayer.addEventListener('error', (e) => console.warn("AUDIO_DECK_FAIL:", e));
   }
   return activeMarketState.globalPlayer;
 }
 
-/**
- * Handles playing/pausing files out of your Firebase storage arrays
- */
 window.executeTerminalPlayback = function(srcUrl, idx) {
   const player = getAudioEngine();
   const playButtons = document.querySelectorAll('.terminal-play-btn');
   
-  // If clicking the same song that's already running, toggle pause/play
   if (activeMarketState.currentlyPlayingIdx === idx) {
     if (!player.paused) {
       player.pause();
-      if (playButtons[idx]) playButtons[idx].innerText = "PLAY";
+      if (playButtons[idx]) {
+        playButtons[idx].innerText = "PLAY";
+        playButtons[idx].className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0";
+      }
     } else {
       player.play();
-      if (playButtons[idx]) playButtons[idx].innerText = "PAUSE";
+      if (playButtons[idx]) {
+        playButtons[idx].innerText = "PAUSE";
+        playButtons[idx].className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0";
+      }
     }
     return;
   }
 
-  // Reset text on all other buttons across the deck
-  playButtons.forEach(btn => btn.innerText = "PLAY");
+  playButtons.forEach(btn => {
+    btn.innerText = "PLAY";
+    btn.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0";
+  });
 
-  // Load fresh digital asset line parameters
   activeMarketState.currentlyPlayingIdx = idx;
   player.src = srcUrl;
   player.load();
   
   player.play()
     .then(() => {
-      if (playButtons[idx]) playButtons[idx].innerText = "PAUSE";
+      if (playButtons[idx]) {
+        playButtons[idx].innerText = "PAUSE";
+        playButtons[idx].className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0";
+      }
     })
     .catch(err => {
-      console.error("Playback restriction triggered:", err.message);
-      // Fallback redirect if browser blocks autoplay frames
+      console.warn("Autoplay block active. Falling back to stream redirect.", err.message);
       window.open(srcUrl, '_blank');
     });
 };
 
-/**
- * Executes network handshake to pull active matrix counts and routing destinations
- */
 async function fetchLiveLedgerState(tier = activeMarketState.tier) {
   try {
     const requestUrl = `${TRADING_FLOOR_CONFIG.gatewayUrl}?tier=${tier}`;
@@ -92,7 +87,6 @@ async function fetchLiveLedgerState(tier = activeMarketState.tier) {
       updateLiveTradingFloor(data);
     }
   } catch (error) {
-    console.warn("Retaining baseline local terminal states.");
     updateLiveTradingFloor({
       portal_tier: tier,
       current_loop_position: 1,
@@ -103,21 +97,26 @@ async function fetchLiveLedgerState(tier = activeMarketState.tier) {
   }
 }
 
-/**
- * Paints the live API response values onto your visual layout IDs smoothly
- */
 function updateLiveTradingFloor(data) {
   activeMarketState.tier = data.portal_tier;
   activeMarketState.matrixCount = data.current_loop_position;
-  activeMarketState.basePrice = data.payment_rules.cost_in;
+  
+  // Forces Portal 1 base floor to strictly display the $10 entry rules configuration
+  activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
   
   const targetElement = document.getElementById('router-target');
   const countElement = document.getElementById('router-count');
   const statusElement = document.getElementById('price-arrow');
   const albumLabel = document.getElementById('nav-album-t1');
+  const buyInButton = document.getElementById('btn-song-buy');
   
   if (albumLabel && data.portal_tier === 1) {
     albumLabel.innerText = "QUEEN BUTTA";
+  }
+
+  // Update Buy-In text node dynamically to show the pristine $10 price value
+  if (buyInButton) {
+    buyInButton.innerText = `💰 BUY-IN PORTAL ($${activeMarketState.basePrice})`;
   }
 
   const tierTwoButton = document.getElementById('p-1');
@@ -137,6 +136,7 @@ function updateLiveTradingFloor(data) {
     if (countElement) countElement.innerText = `${data.current_loop_position} / 5 SALES`;
     if (statusElement) {
       statusElement.innerText = "STATUS // POOL SEEDING ACTIVE";
+      statusElement.className = "text-[9px] font-mono text-emerald-400/80 uppercase tracking-widest mt-1";
     }
   } else {
     activeMarketState.currentMode = "SELLER";
@@ -144,17 +144,15 @@ function updateLiveTradingFloor(data) {
     if (countElement) countElement.innerText = `${data.current_loop_position - 5} / 8 SALES TEAM`;
     if (statusElement) {
       statusElement.innerText = "STATUS // DIRECT RESELL NETTING";
+      statusElement.className = "text-[9px] font-mono text-yellow-500 uppercase tracking-widest mt-1";
     }
   }
 
   initializeMarketOscillator(activeMarketState.basePrice);
-  evaluateDownloadPrivileges(data);
+  evaluateDownloadPrivileges();
   renderTrackAssetGrid(data.portal_tier);
 }
 
-/**
- * Mimics organic financial terminal fluctuations with a heavily dampened delay loop
- */
 function initializeMarketOscillator(floorPrice) {
   if (activeMarketState.oscillatorInterval) {
     clearInterval(activeMarketState.oscillatorInterval);
@@ -173,32 +171,25 @@ function initializeMarketOscillator(floorPrice) {
   }, 850); 
 }
 
-/**
- * Activates the Free Download button module when a cleared payment record is confirmed
- */
-function evaluateDownloadPrivileges(data) {
+function evaluateDownloadPrivileges() {
   const downloadBtn = document.getElementById('btn-free-download');
   if (!downloadBtn) return;
 
   downloadBtn.disabled = false;
-  downloadBtn.className = "border border-emerald-500 bg-emerald-500/25 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider relative overflow-hidden cursor-pointer";
+  downloadBtn.className = "border border-emerald-500 bg-emerald-500/25 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider relative overflow-hidden cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.1)]";
   
   const lockBadge = downloadBtn.querySelector('span');
   if (lockBadge) {
     lockBadge.innerText = "OPEN";
-    lockBadge.className = "absolute top-1 right-1 text-[7px] bg-emerald-500/40 text-emerald-400 px-1 rounded";
+    lockBadge.className = "absolute top-1 right-1 text-[7px] bg-emerald-500/40 text-emerald-400 px-1 rounded font-bold";
   }
   
+  // Directly fires off your specified Payhip Album Vault Link on interaction
   downloadBtn.onclick = function() {
-    // Defaults directly to the core compilation repository stream
-    const targetAudio = "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906";
-    window.open(targetAudio, "_blank");
+    window.open("https://payhip.com/b/cONHP", "_blank");
   };
 }
 
-/**
- * Dynamically builds the full 13-track collection using your live Firebase links
- */
 function renderTrackAssetGrid(tier) {
   const assetContainer = document.getElementById('terminal-track-matrix-container');
   if (!assetContainer) return;
@@ -216,17 +207,15 @@ function renderTrackAssetGrid(tier) {
   let htmlContent = "";
   tracksToRender.forEach((track, idx) => {
     const trackLabel = tier === 2 ? `G. Smooth - ${track.n}` : `Shanae' - ${track.n}`;
-    
-    // Check if this specific item is currently playing to match button state toggles
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
-    const btnLabel = isPlaying ? "PAUSE" : "PLAY";
-
+    
+    // Explicitly injects emerald text layout properties into the runtime grid to destroy monochrome bugs
     htmlContent += `
-      <div class="flex justify-between items-center border-b border-white/5 py-1.5 text-white/80 hover:bg-white/5 px-1 transition-all">
-        <span class="truncate pr-2">${idx + 1}. ${trackLabel}</span>
-        <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0" 
+      <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1">
+        <span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span>
+        <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25 tracking-wider transition-all cursor-pointer shrink-0 font-mono" 
                 onclick="window.executeTerminalPlayback('${track.src}', ${idx})">
-          ${btnLabel}
+          ${isPlaying ? "PAUSE" : "PLAY"}
         </button>
       </div>
     `;
@@ -236,20 +225,39 @@ function renderTrackAssetGrid(tier) {
 }
 
 function hijackPortalControls() {
+  // Completely overrides the navigation deck routing matrix
   window.switchPortal = function(idx) {
-    const requestedTier = idx + 1;
+    document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
+    
+    if (idx === 'market') {
+      const marketViewBtn = document.getElementById('btn-market-view');
+      if (marketViewBtn) marketViewBtn.classList.add('active');
+      fetchLiveLedgerState(1); // Pulls top level architecture logs
+      return;
+    }
+
     const buttonTarget = document.getElementById(`p-${idx}`);
     if (buttonTarget && buttonTarget.disabled) return;
-
-    document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
     if (buttonTarget) buttonTarget.classList.add('active');
 
+    const requestedTier = idx + 1;
     fetchLiveLedgerState(requestedTier);
   };
 
+  // Wire up the Market View button directly to our fresh un-stuck override route
+  const marketViewBtn = document.getElementById('btn-market-view');
+  if (marketViewBtn) {
+    marketViewBtn.setAttribute('onclick', "switchPortal('market')");
+  }
+
   fetchLiveLedgerState(1);
   setInterval(() => {
-    fetchLiveLedgerState(activeMarketState.tier);
+    // Retain synchronization tracking loop
+    if (document.getElementById('btn-market-view').classList.contains('active')) {
+      fetchLiveLedgerState(1);
+    } else {
+      fetchLiveLedgerState(activeMarketState.tier);
+    }
   }, TRADING_FLOOR_CONFIG.refreshRateMs);
 }
 
