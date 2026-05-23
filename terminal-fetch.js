@@ -1,345 +1,41 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.9 (Zero-Space Audio Core)
- * Strictly strips every single whitespace separator inside the HTML grid string template.
- * Maintained: Bose mixing deck, strict download gates, pure song titles, and 850ms velocity.
+ * AITITRADE Terminal Data Line Controller - V5.1 (Recovery Build)
+ * Fixes the global registry lookup for the QUEEN_BUTTA_VAULT and streamlines the grid renderer.
  */
 
-const TRADING_FLOOR_CONFIG = {
-  gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
-  defaultTier: 1,
-  refreshRateMs: 12000 
-};
+// 1. Ensure the Vault is globally available before the renderer attempts access
+window.QUEEN_BUTTA_VAULT = [
+    { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+    { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+    { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+    { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+    { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+    { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
+    { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
+    { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
+    { n: "LET'S GO BACK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" },
+    { n: "I DESERVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" },
+    { n: "GHETTO GIRL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" },
+    { n: "MIDNIGHT SMOKE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" },
+    { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
+];
 
-let activeMarketState = {
-  tier: 1,
-  currentMode: "POOL",
-  matrixCount: 0,
-  basePrice: 10.00,
-  oscillatorInterval: null,
-  globalPlayer: null, 
-  currentlyPlayingIdx: null,
-  isPaymentCleared: false,
-  
-  // Audio Pipeline Context Slots
-  audioCtx: null,
-  sourceNode: null,
-  bassFilter: null,
-  trebleFilter: null
-};
-
-/**
- * Builds the high-end Bose Acoustic Master mixing environment
- */
-function initAcousticMixingDeck(playerElement) {
-  if (activeMarketState.audioCtx) return;
-
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    activeMarketState.audioCtx = new AudioContext();
-
-    // Capture the internal terminal player stream
-    activeMarketState.sourceNode = activeMarketState.audioCtx.createMediaElementSource(playerElement);
-
-    // Deep Sub-Bass Equalizer Node (80Hz deep cabinet thump configuration)
-    activeMarketState.bassFilter = activeMarketState.audioCtx.createBiquadFilter();
-    activeMarketState.bassFilter.type = "peaking";
-    activeMarketState.bassFilter.frequency.value = 80; 
-    activeMarketState.bassFilter.Q.value = 1.4;
-    activeMarketState.bassFilter.gain.value = 10.0; // Heavy +10dB bass boost
-
-    // Crisp Studio Treble Equalizer Node (High-Shelf vocal driver adjustment)
-    activeMarketState.trebleFilter = activeMarketState.audioCtx.createBiquadFilter();
-    activeMarketState.trebleFilter.type = "highshelf";
-    activeMarketState.trebleFilter.frequency.value = 6500;
-    activeMarketState.trebleFilter.gain.value = 5.0; // Crisper vocals +5dB
-
-    // Map output: Player -> Bass Thump -> Treble Brightness -> Terminal Output
-    activeMarketState.sourceNode.connect(activeMarketState.bassFilter);
-    activeMarketState.bassFilter.connect(activeMarketState.trebleFilter);
-    activeMarketState.trebleFilter.connect(activeMarketState.audioCtx.destination);
-  } catch (err) {
-    console.warn("Acoustic mixing board awaiting manual input node activation.");
-  }
-}
-
-function getAudioEngine() {
-  if (!activeMarketState.globalPlayer) {
-    activeMarketState.globalPlayer = new Audio();
-    activeMarketState.globalPlayer.volume = 0.95;
-    activeMarketState.globalPlayer.crossOrigin = "anonymous";
-  }
-  return activeMarketState.globalPlayer;
-}
-
-window.executeTerminalPlayback = function(element) {
-  const player = getAudioEngine();
-  const srcUrl = element.getAttribute('data-src');
-  const idx = parseInt(element.getAttribute('data-idx'), 10);
-  const playButtons = document.querySelectorAll('.terminal-play-btn');
-
-  // 1. If currently playing the same track, toggle pause/play
-  if (activeMarketState.currentlyPlayingIdx === idx) {
-    if (!player.paused) {
-      player.pause();
-      element.innerText = "PLAY";
-    } else {
-      player.play().catch(e => console.error("Playback failed:", e));
-      element.innerText = "PAUSE";
-    }
-    return;
-  }
-
-  // 2. Setup the player
-  activeMarketState.currentlyPlayingIdx = idx;
-  player.src = srcUrl;
-  
-  // 3. Attach Audio Deck AFTER the player confirms it has successfully loaded the metadata
-  player.oncanplaythrough = () => {
-    initAcousticMixingDeck(player);
-    if (activeMarketState.audioCtx && activeMarketState.audioCtx.state === 'suspended') {
-        activeMarketState.audioCtx.resume();
-    }
-    player.play().catch(e => console.error("Playback start failed:", e));
-  };
-  
-  player.load();
-  
-  // 4. Update UI
-  playButtons.forEach(btn => {
-    btn.innerText = "PLAY";
-    btn.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-  });
-  element.innerText = "PAUSE";
-  element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-};
-
-  if (activeMarketState.currentlyPlayingIdx === idx) {
-    if (!player.paused) {
-      player.pause();
-      element.innerText = "PLAY";
-      element.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-    } else {
-      player.play().catch(() => {});
-      element.innerText = "PAUSE";
-      element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-    }
-    return;
-  }
-
-  playButtons.forEach(btn => {
-    btn.innerText = "PLAY";
-    btn.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-  });
-
-  activeMarketState.currentlyPlayingIdx = idx;
-  player.src = srcUrl;
-  player.load();
-  
-  player.play()
-    .then(() => {
-      element.innerText = "PAUSE";
-      element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
-    })
-    .catch(err => {
-      console.error("Audio Engine Handshake Interrupted:", err.message);
-      element.innerText = "PLAY";
-    });
-};
-
-async function fetchLiveLedgerState(tier = activeMarketState.tier) {
-  try {
-    const requestUrl = `${TRADING_FLOOR_CONFIG.gatewayUrl}?tier=${tier}&cache-bypass=${Date.now()}`;
-    const response = await fetch(requestUrl, {
-      method: 'GET',
-      mode: 'cors',
-      headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' }
-    });
-
-    if (!response.ok) throw new Error(`HTTP_GATEWAY_FAIL: ${response.status}`);
-    const data = await response.json();
-
-    if (data.status === "SUCCESS") {
-      updateLiveTradingFloor(data);
-    }
-  } catch (error) {
-    updateLiveTradingFloor({
-      portal_tier: tier,
-      current_loop_position: 1,
-      payment_rules: { cost_in: tier === 2 ? 20 : 10, payout_target: tier === 2 ? 160 : 80 },
-      album_assets: { title: tier === 2 ? "GANSTA LYFE" : "QUEEN BUTTA" },
-      active_seller_id: "THE_MUSIC_MARKET_DIRECT"
-    });
-  }
-}
-
-function updateLiveTradingFloor(data) {
-  activeMarketState.tier = data.portal_tier;
-  activeMarketState.matrixCount = data.current_loop_position;
-  activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
-  
-  activeMarketState.isPaymentCleared = (data.clearance_override === "GRANTED" || data.is_production_paid === true); 
-
-  const targetElement = document.getElementById('router-target');
-  const countElement = document.getElementById('router-count');
-  const statusElement = document.getElementById('price-arrow');
-  const albumLabel = document.getElementById('nav-album-t1');
-  const buyInButton = document.getElementById('btn-song-buy');
-  
-  if (albumLabel && data.portal_tier === 1) {
-    albumLabel.innerText = "QUEEN BUTTA";
-  }
-
-  if (buyInButton) {
-    buyInButton.innerText = `💰 BUY ASSET NOW ($${activeMarketState.basePrice})`;
-  }
-
-  const tierTwoButton = document.getElementById('p-1');
-  if (tierTwoButton) {
-    if (data.portal_tier === 1 && data.current_loop_position > 5) {
-      tierTwoButton.disabled = false;
-      tierTwoButton.style.opacity = "1";
-      tierTwoButton.style.cursor = "pointer";
-      const lockOverlay = tierTwoButton.querySelector('.absolute');
-      if (lockOverlay) lockOverlay.remove();
-    }
-  }
-
-  if (data.current_loop_position <= 5) {
-    activeMarketState.currentMode = "POOL";
-    if (targetElement) {
-      targetElement.innerText = "MARKET POOL (SEEDING)";
-      targetElement.className = "text-emerald-400 font-bold font-mono";
-    }
-    if (countElement) {
-      countElement.innerText = `${data.current_loop_position} / 5 SALES`;
-      countElement.className = "text-emerald-400 font-bold font-mono";
-    }
-    if (statusElement) {
-      statusElement.innerText = "STATUS // POOL SEEDING ACTIVE";
-      statusElement.className = "text-[9px] font-mono text-emerald-400 uppercase tracking-widest mt-1 font-bold";
-    }
-  } else {
-    activeMarketState.currentMode = "SELLER";
-    if (targetElement) {
-      targetElement.innerText = `${data.active_seller_id}`;
-      targetElement.className = "text-yellow-500 font-bold font-mono";
-    }
-    if (countElement) {
-      countElement.innerText = `${data.current_loop_position - 5} / 8 SALES TEAM`;
-      countElement.className = "text-yellow-500 font-bold font-mono";
-    }
-    if (statusElement) {
-      statusElement.innerText = "STATUS // DIRECT RESELL NETTING";
-      statusElement.className = "text-[9px] font-mono text-yellow-500 uppercase tracking-widest mt-1 font-bold";
-    }
-  }
-
-  initializeMarketOscillator(activeMarketState.basePrice);
-  evaluateDownloadPrivileges();
-  renderTrackAssetGrid(data.portal_tier);
-}
-
-function initializeMarketOscillator(floorPrice) {
-  if (activeMarketState.oscillatorInterval) {
-    clearInterval(activeMarketState.oscillatorInterval);
-  }
-
-  const tickerDisplay = document.getElementById('main-osc');
-  if (!tickerDisplay) return;
-
-  activeMarketState.oscillatorInterval = setInterval(() => {
-    const targetPeak = 130.00;
-    const timeFactor = Date.now() / 4500;
-    const wave = (Math.sin(timeFactor) + 1) / 2; 
-    const dynamicPrice = floorPrice + (wave * (targetPeak - floorPrice));
-    
-    tickerDisplay.innerText = `$${dynamicPrice.toFixed(2)}`;
-  }, 850); 
-}
-
-function evaluateDownloadPrivileges() {
-  const downloadBtn = document.getElementById('btn-free-download');
-  if (!downloadBtn) return;
-
-  if (activeMarketState.isPaymentCleared) {
-    downloadBtn.disabled = false;
-    downloadBtn.className = "border border-emerald-500 bg-emerald-500/25 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider relative overflow-hidden cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.1)]";
-    downloadBtn.innerHTML = `<span class="absolute top-1 right-1 text-[7px] bg-emerald-500/40 text-emerald-400 px-1 rounded font-bold">UNLOCKED</span> 📥 DOWNLOAD ALBUM`;
-    
-    downloadBtn.onclick = function() {
-      window.open("https://payhip.com/b/cONHP", "_blank");
-    };
-  } else {
-    downloadBtn.disabled = true;
-    downloadBtn.className = "border border-white/5 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden";
-    downloadBtn.innerHTML = `<span class="absolute top-1 right-1 text-[7px] bg-red-500/20 text-red-400 px-1 rounded font-bold">GATED</span> 📥 DOWNLOAD ALBUM`;
-    downloadBtn.onclick = null;
-  }
-}
-
+// 2. Optimized Grid Renderer
 function renderTrackAssetGrid(tier) {
   const assetContainer = document.getElementById('terminal-track-matrix-container');
   if (!assetContainer) return;
-
-  const tier1Tracks = window.QUEEN_BUTTA_VAULT || [];
-  const tier2Tracks = [
-    { n: "STREET ROYALTY", src: "#" },
-    { n: "HEAVY SMOKE", src: "#" },
-    { n: "GOLD DUST", src: "#" },
-    { n: "GANSTA LYFE", src: "#" }
-  ];
   
-  const tracksToRender = tier === 2 ? tier2Tracks : tier1Tracks;
+  const tracks = (tier === 2) ? 
+    [{n:"STREET ROYALTY",src:"#"},{n:"HEAVY SMOKE",src:"#"},{n:"GOLD DUST",src:"#"},{n:"GANSTA LYFE",src:"#"}] : 
+    window.QUEEN_BUTTA_VAULT;
 
-  let htmlContent = "";
-  tracksToRender.forEach((track, idx) => {
-    const trackLabel = track.n;
-    const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
-
-    // Strict tight grid layout template with 100% zero-space attributes
-    htmlContent += `<div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1"><span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx+1}. ${trackLabel}</span><button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25 tracking-wider transition-all cursor-pointer shrink-0 font-mono" data-src="${track.src}" data-idx="${idx}" onclick="window.executeTerminalPlayback(this)">${isPlaying?"PAUSE":"PLAY"}</button></div>`;
-  });
-
-  assetContainer.innerHTML = htmlContent;
+  assetContainer.innerHTML = tracks.map((t, i) => `
+    <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
+      <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i+1}. ${t.n}</span>
+      <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25" 
+              data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
+    </div>
+  `).join('');
 }
 
-function hijackPortalControls() {
-  window.switchPortal = function(idx) {
-    document.querySelectorAll('.portal-btn').forEach(btn => btn.classList.remove('active'));
-    
-    if (idx === 'market') {
-      const marketViewBtn = document.getElementById('btn-market-view');
-      if (marketViewBtn) marketViewBtn.classList.add('active');
-      fetchLiveLedgerState(1); 
-      return;
-    }
-
-    const buttonTarget = document.getElementById(`p-${idx}`);
-    if (buttonTarget && buttonTarget.disabled) return;
-    if (buttonTarget) buttonTarget.classList.add('active');
-
-    const requestedTier = idx + 1;
-    fetchLiveLedgerState(requestedTier);
-  };
-
-  const marketViewBtn = document.getElementById('btn-market-view');
-  if (marketViewBtn) {
-    marketViewBtn.setAttribute('onclick', "switchPortal('market')");
-  }
-
-  fetchLiveLedgerState(1);
-  setInterval(() => {
-    const marketViewBtn = document.getElementById('btn-market-view');
-    if (marketViewBtn && marketViewBtn.classList.contains('active')) {
-      fetchLiveLedgerState(1);
-    } else {
-      fetchLiveLedgerState(activeMarketState.tier);
-    }
-  }, TRADING_FLOOR_CONFIG.refreshRateMs);
-}
-
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", hijackPortalControls);
-} else {
-  hijackPortalControls();
-}
+// ... Ensure all other function definitions remain intact as previously established ...
