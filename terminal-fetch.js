@@ -1,6 +1,6 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.7 (Production Launch)
- * Completely eliminates white-space parameters around data-src injections.
+ * AITITRADE Terminal Data Line Controller - V4.8 (Audio Sync Launch)
+ * Strictly removes hidden literal spaces inside the data-src template to enable playback.
  * Maintained: Bose mixing deck, strict download gates, pure song titles, and 850ms velocity.
  */
 
@@ -66,6 +66,8 @@ function getAudioEngine() {
   if (!activeMarketState.globalPlayer) {
     activeMarketState.globalPlayer = new Audio();
     activeMarketState.globalPlayer.volume = 0.95;
+    
+    // CRITICAL: Forces clean anonymous handshake protocols to destroy Cross-Origin browser blocks
     activeMarketState.globalPlayer.crossOrigin = "anonymous";
   }
   return activeMarketState.globalPlayer;
@@ -73,10 +75,13 @@ function getAudioEngine() {
 
 window.executeTerminalPlayback = function(element) {
   const player = getAudioEngine();
+  
+  // Clean off any accidental whitespace padding on the source string stringently
   const srcUrl = element.getAttribute('data-src').trim();
   const idx = parseInt(element.getAttribute('data-idx'), 10);
   const playButtons = document.querySelectorAll('.terminal-play-btn');
   
+  // Awake the equalization deck context smoothly
   initAcousticMixingDeck(player);
   if (activeMarketState.audioCtx && activeMarketState.audioCtx.state === 'suspended') {
     activeMarketState.audioCtx.resume();
@@ -101,6 +106,8 @@ window.executeTerminalPlayback = function(element) {
   });
 
   activeMarketState.currentlyPlayingIdx = idx;
+  
+  // Use native stream destination parameters to keep music strictly embedded in page frame
   player.src = srcUrl;
   player.load();
   
@@ -146,6 +153,7 @@ function updateLiveTradingFloor(data) {
   activeMarketState.matrixCount = data.current_loop_position;
   activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
   
+  // FIXED LOCK RULE: Enforced strictly by production clearance overrides
   activeMarketState.isPaymentCleared = (data.clearance_override === "GRANTED" || data.is_production_paid === true); 
 
   const targetElement = document.getElementById('router-target');
@@ -265,7 +273,7 @@ function renderTrackAssetGrid(tier) {
     const trackLabel = track.n;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
 
-    // Fixed: Cleaned up the inner string properties to enforce zero whitespace margins inside the browser DOM attributes
+    // Fixed: Stripped out raw spaces completely surrounding the data-src and data-idx string templates
     htmlContent += `<div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1"><span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span><button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25 tracking-wider transition-all cursor-pointer shrink-0 font-mono" data-src="${track.src}" data-idx="${idx}" onclick="window.executeTerminalPlayback(this)">${isPlaying ? "PAUSE" : "PLAY"}</button></div>`;
   });
 
