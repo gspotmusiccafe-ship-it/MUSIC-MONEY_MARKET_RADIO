@@ -1,6 +1,7 @@
 /**
- * AITITRADE Terminal Data Line Controller - V3.2
- * Fail-safe layout injector with automated ticker oscillation.
+ * AITITRADE Terminal Data Line Controller - V3.3
+ * Integrated matrix tracking, conditional tier locks, custom glassmorphic layout injector,
+ * and high-frequency market price oscillation up to $130.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -36,35 +37,46 @@ async function fetchLiveLedgerState(tier = activeMarketState.tier) {
       updateLiveTradingFloor(data);
     }
   } catch (error) {
-    console.warn("Ledger connection offline. Retaining active state loop.", error.message);
+    console.warn("Ledger connection temporary bypass active.", error.message);
   }
 }
 
 /**
- * Ensures the target text outputs exist on the screen layout, or injects them safely
+ * Forces injection of a styled terminal data panel directly into the view hierarchy
  */
-function verifyAndInjectTerminalNodes() {
+function buildBloombergDataModule() {
   let displayBox = document.getElementById('terminal-data-display-node');
   
   if (!displayBox) {
-    // Find your main layout panel to embed the data readouts cleanly
-    const mainPanel = document.querySelector('.grid.grid-cols-3') || document.body.firstChild;
-    if (!mainPanel) return;
+    // Locate the primary buttons container to slide the telemetry grid immediately below it
+    const anchor = document.getElementById('p-0')?.parentElement || document.body.firstChild;
+    if (!anchor) return;
     
     displayBox = document.createElement('div');
     displayBox.id = 'terminal-data-display-node';
-    displayBox.className = "w-full my-4 p-3 bg-black/60 border border-emerald-500/20 rounded font-mono text-xs space-y-1 text-left";
+    
+    // Injects raw custom styles to guarantee visibility over global sheet resets
+    displayBox.style.width = "100%";
+    displayBox.style.margin = "15px 0";
+    displayBox.style.padding = "15px";
+    displayBox.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+    displayBox.style.border = "1px solid rgba(16, 185, 129, 0.3)";
+    displayBox.style.borderRadius = "6px";
+    displayBox.style.fontFamily = "monospace";
+    displayBox.style.color = "#10b981";
+    displayBox.style.fontSize = "12px";
+    displayBox.style.boxShadow = "0 0 15px rgba(16, 185, 129, 0.1)";
+    
     displayBox.innerHTML = `
-      <div class="text-emerald-400/60 font-bold tracking-wider mb-1">⚡ SYSTEM CORE MONITOR:</div>
-      <div class="flex justify-between"><span class="text-white/40">GATEWAY INDEX:</span> <span id="router-target" class="text-emerald-400">CONNECTING...</span></div>
-      <div class="flex justify-between"><span class="text-white/40">LOOP QUEUE:</span> <span id="router-count" class="text-emerald-400">-- / --</span></div>
-      <div class="flex justify-between"><span class="text-white/40">PRICE STREAM:</span> <span id="main-osc" class="text-emerald-400 font-bold">$10.00</span></div>
-      <div id="price-arrow" class="text-[10px] text-emerald-400/50 pt-1 border-t border-white/5 mt-1">STATUS // SYNCING NETWORK</div>
-      <div id="matrix-visualizer" class="hidden"></div>
+      <div style="font-weight: bold; letter-spacing: 1px; margin-bottom: 8px; border-b: 1px solid rgba(255,255,255,0.1); padding-bottom: 4px;">⚡ SYSTEM CORE MONITOR:</div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="opacity: 0.5;">GATEWAY NODE:</span> <span id="router-target" style="color: #ffffff;">CONNECTING...</span></div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 4px;"><span style="opacity: 0.5;">LOOP QUEUE:</span> <span id="router-count" style="color: #ffffff;">-- / --</span></div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;"><span style="opacity: 0.5;">PRICE STREAM:</span> <span id="main-osc" style="color: #10b981; font-weight: bold; font-size: 14px;">$10.00</span></div>
+      <div id="price-arrow" style="font-size: 10px; opacity: 0.6; padding-top: 4px; border-top: 1px solid rgba(255,255,255,0.05);">STATUS // INITIALIZING NETWORK LINK</div>
+      <div id="terminal-track-matrix-container" style="margin-top: 12px; padding-top: 8px; border-top: 1px solid rgba(16, 185, 129, 0.2);"></div>
     `;
     
-    // Inject directly below your top button rows
-    mainPanel.parentNode.insertBefore(displayBox, mainPanel.nextSibling);
+    anchor.parentNode.insertBefore(displayBox, anchor.nextSibling);
   }
 }
 
@@ -72,8 +84,7 @@ function verifyAndInjectTerminalNodes() {
  * Paints the live API response values onto your visual layout IDs
  */
 function updateLiveTradingFloor(data) {
-  // Run safety injection routine
-  verifyAndInjectTerminalNodes();
+  buildBloombergDataModule();
 
   activeMarketState.tier = data.portal_tier;
   activeMarketState.matrixCount = data.current_loop_position;
@@ -82,9 +93,7 @@ function updateLiveTradingFloor(data) {
   const targetElement = document.getElementById('router-target');
   const countElement = document.getElementById('router-count');
   const statusElement = document.getElementById('price-arrow');
-  const visualizer = document.getElementById('matrix-visualizer');
   
-  // Synchronize dynamic album button labels at the top deck
   if (data.portal_tier === 1) {
     const t1Label = document.getElementById('nav-album-t1');
     if (t1Label) t1Label.innerText = data.album_assets.title.toUpperCase();
@@ -108,10 +117,7 @@ function updateLiveTradingFloor(data) {
     if (countElement) countElement.innerText = `${data.current_loop_position} / 5 SALES`;
     if (statusElement) {
       statusElement.innerText = "STATUS // POOL SEEDING ACTIVE";
-      statusElement.className = "text-[10px] text-emerald-400 font-mono";
-    }
-    if (visualizer) {
-      visualizer.innerText = `[YOU] ➔ METRICS (${data.current_loop_position}/5)`;
+      statusElement.style.color = "#10b981";
     }
   } else {
     activeMarketState.currentMode = "SELLER";
@@ -119,20 +125,17 @@ function updateLiveTradingFloor(data) {
     if (countElement) countElement.innerText = `${data.current_loop_position - 5} / 8 SALES TEAM`;
     if (statusElement) {
       statusElement.innerText = "STATUS // DIRECT RESELL NETTING";
-      statusElement.className = "text-[10px] text-yellow-500 font-mono";
+      statusElement.style.color = "#eab308";
     }
   }
 
-  // Kick off market fluctuation simulator matching current portal buy-in floor
   initializeMarketOscillator(activeMarketState.basePrice);
-
-  // Verify settlement data array to see if active client has valid clearances
   evaluateDownloadPrivileges(data);
   renderTrackAssetGrid(data.portal_tier, data.album_assets.title);
 }
 
 /**
- * Mimics true financial market movement by fluctuating pricing tickers up to a $130 cap
+ * Mimics financial terminal velocity by fluctuating pricing tickers up to a $130 cap
  */
 function initializeMarketOscillator(floorPrice) {
   if (activeMarketState.oscillatorInterval) {
@@ -144,12 +147,12 @@ function initializeMarketOscillator(floorPrice) {
 
   activeMarketState.oscillatorInterval = setInterval(() => {
     const targetPeak = 130.00;
-    const timeFactor = Date.now() / 1800;
+    const timeFactor = Date.now() / 1500;
     const wave = (Math.sin(timeFactor) + 1) / 2; 
     const dynamicPrice = floorPrice + (wave * (targetPeak - floorPrice));
     
     tickerDisplay.innerText = `$${dynamicPrice.toFixed(2)}`;
-  }, 150); 
+  }, 100); 
 }
 
 /**
@@ -161,9 +164,9 @@ function evaluateDownloadPrivileges(data) {
 
   if (data.status === "SUCCESS") {
     downloadBtn.disabled = false;
-    downloadBtn.className = "border border-emerald-500 bg-emerald-500/20 p-3 text-center rounded font-mono text-xs text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.2)] cursor-pointer";
+    downloadBtn.className = "border border-emerald-500 bg-emerald-500/20 p-3 text-center rounded font-mono text-xs text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider cursor-pointer";
     
-    const lockBadge = downloadBtn.querySelector('.absolute');
+    const lockBadge = downloadBtn.querySelector('.absolute') || downloadBtn.querySelector('span');
     if (lockBadge) {
       lockBadge.innerText = "VERIFIED";
       lockBadge.className = "absolute top-1 right-1 text-[8px] bg-emerald-500/30 text-emerald-400 px-1 rounded";
@@ -179,35 +182,26 @@ function evaluateDownloadPrivileges(data) {
  * Dynamically builds the album asset ledger items on the screen layout
  */
 function renderTrackAssetGrid(tier, albumTitle) {
-  let assetContainer = document.getElementById('terminal-track-matrix-container');
-  
-  if (!assetContainer) {
-    const mainLayoutNode = document.getElementById('terminal-data-display-node');
-    if (!mainLayoutNode) return;
-    
-    assetContainer = document.createElement('div');
-    assetContainer.id = 'terminal-track-matrix-container';
-    assetContainer.className = "w-full mt-2 p-3 bg-black/40 border border-white/5 rounded font-mono text-xs text-left";
-    mainLayoutNode.parentNode.insertBefore(assetContainer, mainLayoutNode.nextSibling);
-  }
+  const assetContainer = document.getElementById('terminal-track-matrix-container');
+  if (!assetContainer) return;
 
   const tier1Tracks = ["G. Soul - Intro Vibe", "Blue Flame - Kinetic Velocity", "Ms. Butta - Velvet Smooth", "Shanae' - Silent Cries"];
   const tier2Tracks = ["G. Smooth - Street Royalty", "Blue Flame - Heavy Smoke", "Ms. Butta - Gold Dust", "Shanae' - Gansta Lyfe"];
   const tracksToRender = tier === 2 ? tier2Tracks : tier1Tracks;
 
   let htmlContent = `
-    <div class="flex justify-between items-center mb-2 text-[10px] text-white/40">
-      <span>ALBUM: ${albumTitle.toUpperCase() || "ALBUM STREAM"}</span>
-      <span class="text-emerald-400">SINGLES: $1.00</span>
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 10px; opacity: 0.5;">
+      <span>ALBUM: ${albumTitle.toUpperCase()}</span>
+      <span style="color: #10b981;">SINGLES: $1.00</span>
     </div>
-    <div class="space-y-1">
+    <div style="display: flex; flex-direction: column; gap: 4px;">
   `;
 
   tracksToRender.forEach((track, idx) => {
     htmlContent += `
-      <div class="flex justify-between items-center border-b border-white/5 py-1 text-white/80">
+      <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 3px 0; opacity: 0.8;">
         <span>${idx + 1}. ${track}</span>
-        <span class="text-emerald-400/40 text-[10px]">[READY]</span>
+        <span style="color: rgba(16, 185, 129, 0.6); font-size: 10px;">[READY]</span>
       </div>
     `;
   });
