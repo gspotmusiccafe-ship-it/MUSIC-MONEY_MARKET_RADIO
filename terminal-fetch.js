@@ -73,14 +73,45 @@ function getAudioEngine() {
 
 window.executeTerminalPlayback = function(element) {
   const player = getAudioEngine();
-  const srcUrl = element.getAttribute('data-src').trim();
+  const srcUrl = element.getAttribute('data-src');
   const idx = parseInt(element.getAttribute('data-idx'), 10);
   const playButtons = document.querySelectorAll('.terminal-play-btn');
-  
-  initAcousticMixingDeck(player);
-  if (activeMarketState.audioCtx && activeMarketState.audioCtx.state === 'suspended') {
-    activeMarketState.audioCtx.resume();
+
+  // 1. If currently playing the same track, toggle pause/play
+  if (activeMarketState.currentlyPlayingIdx === idx) {
+    if (!player.paused) {
+      player.pause();
+      element.innerText = "PLAY";
+    } else {
+      player.play().catch(e => console.error("Playback failed:", e));
+      element.innerText = "PAUSE";
+    }
+    return;
   }
+
+  // 2. Setup the player
+  activeMarketState.currentlyPlayingIdx = idx;
+  player.src = srcUrl;
+  
+  // 3. Attach Audio Deck AFTER the player confirms it has successfully loaded the metadata
+  player.oncanplaythrough = () => {
+    initAcousticMixingDeck(player);
+    if (activeMarketState.audioCtx && activeMarketState.audioCtx.state === 'suspended') {
+        activeMarketState.audioCtx.resume();
+    }
+    player.play().catch(e => console.error("Playback start failed:", e));
+  };
+  
+  player.load();
+  
+  // 4. Update UI
+  playButtons.forEach(btn => {
+    btn.innerText = "PLAY";
+    btn.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/20 tracking-wider transition-all cursor-pointer shrink-0 font-mono";
+  });
+  element.innerText = "PAUSE";
+  element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
+};
 
   if (activeMarketState.currentlyPlayingIdx === idx) {
     if (!player.paused) {
