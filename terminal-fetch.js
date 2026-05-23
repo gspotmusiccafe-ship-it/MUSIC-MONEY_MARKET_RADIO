@@ -1,21 +1,20 @@
 /**
- * AITITRADE Terminal Data Line Controller - V5.2 (Ultra-Stable Build)
- * Fixed: Zero-space URL injection, restored oscillator, and stable audio binding.
+ * AITITRADE Terminal Controller - V6.0 (Stable Production)
+ * Logic: Uses element.dataset to avoid URL whitespace injection errors.
  */
 
 const TRADING_FLOOR_CONFIG = {
-  gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
-  defaultTier: 1,
-  refreshRateMs: 12000 
+    gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
+    refreshRateMs: 850
 };
 
 let activeMarketState = {
-  tier: 1,
-  currentlyPlayingIdx: null,
-  globalPlayer: null,
-  audioCtx: null
+    currentlyPlayingIdx: null,
+    player: new Audio(),
+    audioCtx: null
 };
 
+// Initialize Global Vault
 window.QUEEN_BUTTA_VAULT = [
     { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
     { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
@@ -32,60 +31,58 @@ window.QUEEN_BUTTA_VAULT = [
     { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
 ];
 
-function renderTrackAssetGrid(tier) {
-    const container = document.getElementById('terminal-track-matrix-container');
-    if (!container) return;
-    const tracks = window.QUEEN_BUTTA_VAULT;
-    container.innerHTML = tracks.map((t, i) => `
-        <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
-            <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i + 1}. ${t.n}</span>
-            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold" 
-                    data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
-        </div>
-    `).join('');
+function setupAudioDeck(player) {
+    if (activeMarketState.audioCtx) return;
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        activeMarketState.audioCtx = new AudioContext();
+        const source = activeMarketState.audioCtx.createMediaElementSource(player);
+        const bass = activeMarketState.audioCtx.createBiquadFilter();
+        bass.type = "peaking"; bass.frequency.value = 80; bass.gain.value = 10.0;
+        const treble = activeMarketState.audioCtx.createBiquadFilter();
+        treble.type = "highshelf"; treble.frequency.value = 6500; treble.gain.value = 5.0;
+        source.connect(bass).connect(treble).connect(activeMarketState.audioCtx.destination);
+    } catch(e) { console.log("Audio Init Pending Interaction"); }
 }
 
-function getPlayer() {
-    if (!activeMarketState.globalPlayer) {
-        activeMarketState.globalPlayer = new Audio();
-        activeMarketState.globalPlayer.crossOrigin = "anonymous";
-    }
-    return activeMarketState.globalPlayer;
-}
-
-window.executeTerminalPlayback = function(btn) {
-    const player = getPlayer();
-    initAcousticMixingDeck(player);
-    if (activeMarketState.audioCtx) activeMarketState.audioCtx.resume();
+window.executePlayback = function(btn) {
+    const player = activeMarketState.player;
+    setupAudioDeck(player);
+    if(activeMarketState.audioCtx) activeMarketState.audioCtx.resume();
     
-    const idx = parseInt(btn.dataset.idx, 10);
-    if (activeMarketState.currentlyPlayingIdx === idx && !player.paused) {
+    if(activeMarketState.currentlyPlayingIdx === btn.dataset.idx && !player.paused) {
         player.pause();
         btn.innerText = "PLAY";
     } else {
-        activeMarketState.currentlyPlayingIdx = idx;
+        activeMarketState.currentlyPlayingIdx = btn.dataset.idx;
         player.src = btn.dataset.src;
-        player.play().catch(console.error);
+        player.play().catch(e => console.error(e));
         document.querySelectorAll('.terminal-play-btn').forEach(b => b.innerText = "PLAY");
         btn.innerText = "PAUSE";
     }
 };
 
-function renderTrackAssetGrid(tier) {
+function initGrid() {
     const container = document.getElementById('terminal-track-matrix-container');
     if (!container) return;
-    const tracks = window.QUEEN_BUTTA_VAULT;
-    container.innerHTML = tracks.map((t, i) => `
-        <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
-            <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i + 1}. ${t.n}</span>
-            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold" 
-                    data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
-        </div>
-    `).join('');
+    container.innerHTML = "";
+    window.QUEEN_BUTTA_VAULT.forEach((t, i) => {
+        const div = document.createElement('div');
+        div.className = "flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1";
+        div.innerHTML = `<span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i+1}. ${t.n}</span>`;
+        const btn = document.createElement('button');
+        btn.className = "terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25";
+        btn.innerText = "PLAY";
+        btn.dataset.src = t.src;
+        btn.dataset.idx = i;
+        btn.onclick = function() { window.executePlayback(this); };
+        div.appendChild(btn);
+        container.appendChild(div);
+    });
 }
 
-// Ensure the application boot-up routines are maintained
-renderTrackAssetGrid(1);
+// Initial Boot
+initGrid();
 setInterval(() => {
     const ticker = document.getElementById('main-osc');
     if (ticker) ticker.innerText = "$" + (10 + Math.random() * 5).toFixed(2);
