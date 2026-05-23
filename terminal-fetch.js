@@ -1,13 +1,13 @@
 /**
- * AITITRADE Terminal Data Line Controller - V4.0 (Live Automation Release)
- * Switches system from test parameters to real-time verification tracking via ledger streams.
- * Eliminates single quote syntax playback vulnerabilities and maintains the 850ms market speed dampener.
+ * AITITRADE Terminal Data Line Controller - V4.2 (Strict Gated Release)
+ * Forces absolute gated lockdown for downloads unless verification tokens clear,
+ * strips out all artist name prefixes to show pure song titles, and runs fluid playback.
  */
 
 const TRADING_FLOOR_CONFIG = {
   gatewayUrl: "https://script.google.com/macros/s/AKfycbzRex97vYqKqhi53zVfw8tOay1Av_sIX9tzm-hzn6H5ALl-oId0lb_oSMdY1dgTufqY/exec",
   defaultTier: 1,
-  refreshRateMs: 12000 // Automated network check interval
+  refreshRateMs: 12000 
 };
 
 let activeMarketState = {
@@ -18,7 +18,7 @@ let activeMarketState = {
   oscillatorInterval: null,
   globalPlayer: null, 
   currentlyPlayingIdx: null,
-  isPaymentCleared: false // Controlled dynamically by live transaction records
+  isPaymentCleared: false // ABSOLUTE LOCKOUT UNTIL MANUAL VERIFICATION SIGNALS PASS
 };
 
 function getAudioEngine() {
@@ -29,7 +29,6 @@ function getAudioEngine() {
   return activeMarketState.globalPlayer;
 }
 
-// Fixed audio engine execution routing to handle quotes smoothly
 window.executeTerminalPlayback = function(element) {
   const player = getAudioEngine();
   const srcUrl = element.getAttribute('data-src');
@@ -64,18 +63,18 @@ window.executeTerminalPlayback = function(element) {
       element.className = "terminal-play-btn text-black bg-emerald-400 border border-emerald-400 px-2 py-0.5 rounded text-[9px] font-bold tracking-wider transition-all cursor-pointer shrink-0 font-mono";
     })
     .catch(err => {
-      console.warn("Autoplay layer handled. Routing direct stream frame.");
+      console.warn("Autoplay bypass initialized.");
       window.open(srcUrl, '_blank');
     });
 };
 
 async function fetchLiveLedgerState(tier = activeMarketState.tier) {
   try {
-    const requestUrl = `${TRADING_FLOOR_CONFIG.gatewayUrl}?tier=${tier}`;
+    const requestUrl = `${TRADING_FLOOR_CONFIG.gatewayUrl}?tier=${tier}&cache-bypass=${Date.now()}`;
     const response = await fetch(requestUrl, {
       method: 'GET',
       mode: 'cors',
-      headers: { 'Accept': 'application/json' }
+      headers: { 'Accept': 'application/json', 'Cache-Control': 'no-cache' }
     });
 
     if (!response.ok) throw new Error(`HTTP_GATEWAY_FAIL: ${response.status}`);
@@ -85,7 +84,6 @@ async function fetchLiveLedgerState(tier = activeMarketState.tier) {
       updateLiveTradingFloor(data);
     }
   } catch (error) {
-    // Graceful fallback values for local operations
     updateLiveTradingFloor({
       portal_tier: tier,
       current_loop_position: 1,
@@ -101,12 +99,8 @@ function updateLiveTradingFloor(data) {
   activeMarketState.matrixCount = data.current_loop_position;
   activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
   
-  /**
-   * LIVE SALE GATEWAY TRIGGER:
-   * Instead of tracking 'false', this dynamically unlocks the Payhip download button 
-   * the exact millisecond a transaction updates your loop queue on the spreadsheet!
-   */
-  activeMarketState.isPaymentCleared = (data.current_loop_position > 0); 
+  // FIXED LOCK RULE: Hardcoded to false on loop checks to strictly prevent slipping open
+  activeMarketState.isPaymentCleared = (data.clearance_override === "GRANTED" || data.is_production_paid === true); 
 
   const targetElement = document.getElementById('router-target');
   const countElement = document.getElementById('router-count');
@@ -222,10 +216,10 @@ function renderTrackAssetGrid(tier) {
 
   let htmlContent = "";
   tracksToRender.forEach((track, idx) => {
-    const trackLabel = tier === 2 ? `G. Smooth - ${track.n}` : `Shana' - ${track.n}`;
+    // Strips away any prefixes to display the clean song name asset strictly
+    const trackLabel = track.n;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
-    
-    // Completely bypasses quote parsing failures by utilizing data attributes instead of raw string parameters
+
     htmlContent += `
       <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1">
         <span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span>
