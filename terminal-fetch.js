@@ -32,18 +32,17 @@ window.QUEEN_BUTTA_VAULT = [
     { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
 ];
 
-function initAcousticMixingDeck(player) {
-    if (activeMarketState.audioCtx) return;
-    try {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        activeMarketState.audioCtx = new AudioContext();
-        const source = activeMarketState.audioCtx.createMediaElementSource(player);
-        const bass = activeMarketState.audioCtx.createBiquadFilter();
-        bass.type = "peaking"; bass.frequency.value = 80; bass.gain.value = 10.0;
-        const treble = activeMarketState.audioCtx.createBiquadFilter();
-        treble.type = "highshelf"; treble.frequency.value = 6500; treble.gain.value = 5.0;
-        source.connect(bass); bass.connect(treble); treble.connect(activeMarketState.audioCtx.destination);
-    } catch (e) { console.warn("Audio Context init pending user gesture."); }
+function renderTrackAssetGrid(tier) {
+    const container = document.getElementById('terminal-track-matrix-container');
+    if (!container) return;
+    const tracks = window.QUEEN_BUTTA_VAULT;
+    container.innerHTML = tracks.map((t, i) => `
+        <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
+            <span class="truncate pr-2 text-emerald-400/90 font-mono text-xs">${i + 1}. ${t.n}</span>
+            <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold" 
+                    data-src="${t.src}" data-idx="${i}" onclick="executeTerminalPlayback(this)">PLAY</button>
+        </div>
+    `).join('');
 }
 
 function getPlayer() {
