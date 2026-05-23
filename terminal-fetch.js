@@ -1,7 +1,7 @@
 /**
- * AITITRADE Terminal Data Line Controller - V3.9 (Gated Release)
- * Handles dual-tier ledger sync, dampened market oscillation (850ms),
- * active track streaming, and strict payment verification gating for downloads.
+ * AITITRADE Terminal Data Line Controller - V3.92 (Strict Lock Mode)
+ * Enforces absolute hard-gated security walls for exclusive album assets,
+ * dampens ticker oscillation to an elegant 850ms, and runs seamless track playback.
  */
 
 const TRADING_FLOOR_CONFIG = {
@@ -18,7 +18,7 @@ let activeMarketState = {
   oscillatorInterval: null,
   globalPlayer: null, 
   currentlyPlayingIdx: null,
-  isPaymentCleared: false // Strict transactional state gateway
+  isPaymentCleared: false // HARD LOCK: Toggle to TRUE only when backend validates ledger purchase records
 };
 
 function getAudioEngine() {
@@ -67,7 +67,7 @@ window.executeTerminalPlayback = function(srcUrl, idx) {
       }
     })
     .catch(err => {
-      console.warn("Autoplay restriction bypassed safely.");
+      console.warn("Autoplay block handled safely via standard sandbox stream.");
       window.open(srcUrl, '_blank');
     });
 };
@@ -103,8 +103,8 @@ function updateLiveTradingFloor(data) {
   activeMarketState.matrixCount = data.current_loop_position;
   activeMarketState.basePrice = data.portal_tier === 1 ? 10.00 : data.payment_rules.cost_in;
   
-  // Update verification status flag based on active backend network ledger settlement
-  activeMarketState.isPaymentCleared = (data.current_loop_position > 0); 
+  // SECURE CHECK: Always forces download lock parameters on initial entry loops
+  activeMarketState.isPaymentCleared = false; 
 
   const targetElement = document.getElementById('router-target');
   const countElement = document.getElementById('router-count');
@@ -117,7 +117,7 @@ function updateLiveTradingFloor(data) {
   }
 
   if (buyInButton) {
-    buyInButton.innerText = `💰 BUY-IN PORTAL ($${activeMarketState.basePrice})`;
+    buyInButton.innerText = `💰 BUY ASSET NOW ($${activeMarketState.basePrice})`;
   }
 
   const tierTwoButton = document.getElementById('p-1');
@@ -188,31 +188,19 @@ function evaluateDownloadPrivileges() {
   const downloadBtn = document.getElementById('btn-free-download');
   if (!downloadBtn) return;
 
-  // STRICT RULE COMPLIANCE GATEWAY
   if (activeMarketState.isPaymentCleared) {
-    // If the system registers verification parameters, activate the download deck cleanly
     downloadBtn.disabled = false;
     downloadBtn.className = "border border-emerald-500 bg-emerald-500/25 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white hover:bg-emerald-500/40 transition-all uppercase tracking-wider relative overflow-hidden cursor-pointer shadow-[0_0_15px_rgba(16,185,129,0.1)]";
-    
-    const lockBadge = downloadBtn.querySelector('span');
-    if (lockBadge) {
-      lockBadge.innerText = "UNLOCKED";
-      lockBadge.className = "absolute top-1 right-1 text-[7px] bg-emerald-500/40 text-emerald-400 px-1 rounded font-bold";
-    }
+    downloadBtn.innerHTML = `<span class="absolute top-1 right-1 text-[7px] bg-emerald-500/40 text-emerald-400 px-1 rounded font-bold">UNLOCKED</span> 📥 DOWNLOAD ALBUM`;
     
     downloadBtn.onclick = function() {
       window.open("https://payhip.com/b/cONHP", "_blank");
     };
   } else {
-    // Retain absolute lockout parameters if transaction pipeline is blank
+    // FORCES THE GATED APPEARANCE AND STRIPS ALL CLICK HANDLERS NATIVELY
     downloadBtn.disabled = true;
-    downloadBtn.className = "border border-white/10 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden";
-    
-    const lockBadge = downloadBtn.querySelector('span');
-    if (lockBadge) {
-      lockBadge.innerText = "GATED";
-      lockBadge.className = "absolute top-1 right-1 text-[7px] bg-red-500/20 text-red-400 px-1 rounded";
-    }
+    downloadBtn.className = "border border-white/5 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden";
+    downloadBtn.innerHTML = `<span class="absolute top-1 right-1 text-[7px] bg-red-500/20 text-red-400 px-1 rounded font-bold">GATED</span> 📥 DOWNLOAD ALBUM`;
     downloadBtn.onclick = null;
   }
 }
@@ -235,12 +223,13 @@ function renderTrackAssetGrid(tier) {
   tracksToRender.forEach((track, idx) => {
     const trackLabel = tier === 2 ? `G. Smooth - ${track.n}` : `Shanae' - ${track.n}`;
     const isPlaying = activeMarketState.currentlyPlayingIdx === idx && activeMarketState.globalPlayer && !activeMarketState.globalPlayer.paused;
-    
+    const safeUrl = track.src.replace(/'/g, "\\'");
+
     htmlContent += `
       <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 transition-all hover:bg-emerald-500/5 px-1">
         <span class="truncate pr-2 text-emerald-400/90 font-mono font-medium">${idx + 1}. ${trackLabel}</span>
         <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 py-0.5 rounded text-[9px] font-bold hover:bg-emerald-400/25 tracking-wider transition-all cursor-pointer shrink-0 font-mono" 
-                onclick="window.executeTerminalPlayback('${track.src}', ${idx})">
+                onclick="window.executeTerminalPlayback('${safeUrl}', ${idx})">
           ${isPlaying ? "PAUSE" : "PLAY"}
         </button>
       </div>
