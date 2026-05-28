@@ -187,8 +187,7 @@ window.startEngine = function() {
 
     // Send the credentials straight to your Google Sheet Ledger Engine
     // (Swap this placeholder URL with your actual deployed Google Web App Script URL)
-   const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycby6Nzwn29WkCIpILHUOT-TiV44TyY9yazspD8B6Rowb1Emyof2n7OVpIds8PMx88d8b/exec";
-    
+   const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbxrtdbUK28sXJq7H0Dq9KBApeuJCqTtbCXv06yIkBrezxOBt2Wh-EztpAzykOggzlxr/exec
     if (LEDGER_API_URL !== "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE") {
         fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
         .catch(err => console.log("Ledger entry bypass routing: ", err));
