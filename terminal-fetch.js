@@ -174,7 +174,44 @@ function executeMarketOscillator() {
         priceArrow.className = `text-[9px] font-mono uppercase tracking-widest mt-1 font-bold ${driftDir === 1 ? 'text-emerald-400' : 'text-red-500'}`;
     }
 }
+// 7. SECURE REGISTRATION SHIPMENT CIRCUIT
+window.startEngine = function() {
+    if (state.engineStarted) return;
+    
+    // Capture the physical input credentials from the gateway shield
+    const name = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
+    const email = document.getElementById('reseller-email')?.value || "NO EMAIL PROVIDED";
+    const cashapp = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
+    
+    console.log(`PROSPECTUS ATTEMPT: ${name} // ${email} // ${cashapp}`);
 
+    // Send the credentials straight to your Google Sheet Ledger Engine
+    // (Swap this placeholder URL with your actual deployed Google Web App Script URL)
+    const LEDGER_API_URL = "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE";
+    
+    if (LEDGER_API_URL !== "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE") {
+        fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
+        .catch(err => console.log("Ledger entry bypass routing: ", err));
+    }
+
+    // Prime audio player to bypass mobile hardware restrictions
+    const currentVault = config[state.currentPortal].vault;
+    state.player.src = currentVault[0].src;
+    state.player.load();
+
+    // Drop the greeting shield overlay and reveal the live Bloomberg chassis
+    const overlay = document.getElementById('prospectus-overlay');
+    if (overlay) {
+        overlay.style.setProperty('display', 'none', 'important');
+    }
+    
+    state.engineStarted = true;
+
+    // Start market oscillator tickers and auto-play track 1
+    populateTrackMatrixUI();
+    setInterval(executeMarketOscillator, 1100);
+    window.playT(0); 
+};
 // 5. TRANSACTION ROUTER METRIC STRINGS
 function logRealtimeBuyerTransaction() {
     state.totalRegisteredBuyers++;
