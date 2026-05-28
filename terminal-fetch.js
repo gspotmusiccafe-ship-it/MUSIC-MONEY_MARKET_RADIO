@@ -147,7 +147,7 @@ window.startEngine = function() {
     const cashapp = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
 
     // 3. Connect API URL ledger payload
-    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbzQZEy8xp3fW4yOkHkZ6ylOXyMsDt9aYTDdO8U2om9LQoV9c37GTdHIDtLn6KzsRjE5/exec";
+   const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwZVIuiqPKqEtziEVO-wkQXUiS7_tSlFMGwCzW7Fg11L3o_zZiWI3z26HI3IgFaNQJU/exec"; 
     
     fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
         .catch(err => console.log("Logging exception handled: ", err));
