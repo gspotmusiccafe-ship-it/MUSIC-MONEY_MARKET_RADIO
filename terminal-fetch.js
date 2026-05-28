@@ -104,8 +104,8 @@ function registerRealtimeBuyerTransaction() {
     const timestamp = new Date().toLocaleTimeString();
     const mockUnits = (Math.random() * 4.0000 + 1.0000).toFixed(4);
     
-    // Format entry strings to slide into layout rows
-    let allocationMode = state.totalRegisteredBuyers <= 5 ? "POOL SEED DISTRIBUTION" : "DIRECT SELLER NETTING TEAM";
+    // Updated Market Naming Rules
+    let allocationMode = state.totalRegisteredBuyers <= 5 ? "BUY MARKET DIRECT" : "BUY RESELLER DIRECT";
     
     const ledgerEntryHTML = `
         <div class="text-[10px] font-mono border-b border-emerald-500/5 py-1 flex justify-between uppercase" style="color: #00ff00;">
