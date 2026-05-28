@@ -1,5 +1,5 @@
 /**
- * AITITRADE Bloomberg Multi-Portal Engine - V21.0 (Password Matrix Integrated)
+ * AITITRADE Bloomberg Multi-Portal Engine - V22.0 (Transactional Matrix Build)
  */
 
 const QUEEN_BUTTA_VAULT = [
@@ -74,8 +74,6 @@ window.switchPortal = function(portalId) {
     document.getElementById('display-active-album-name').innerText = currentConf.name;
     document.getElementById('asset-label-header').innerText = `${currentConf.name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${currentConf.name}: $${currentConf.buyIn}`;
-    const buyButton = document.getElementById('btn-song-buy');
-    if (buyButton) buyButton.innerText = `💰 BUY ASSET NOW ($${currentConf.buyIn})`;
     state.currentMarketPrice = currentConf.buyIn;
     state.activeTrackIndex = null;
     populateTrackMatrixUI();
@@ -97,7 +95,6 @@ window.playT = function(i) {
         .then(() => {
             if (targetBtn) targetBtn.innerText = "PAUSE";
             document.getElementById('display-active-album-name').innerText = `${config[state.currentPortal].name} // ${currentVault[i].n}`;
-            logRealtimeBuyerTransaction();
         })
         .catch(err => console.log("Audio lockout holding context."));
 };
@@ -130,34 +127,26 @@ function executeMarketOscillator() {
 // SECURE REGISTRATION ENGINE GATEWAY WITH PASSWORD CHECK
 window.startEngine = function() {
     if (state.engineStarted) return;
-    
-    // 1. Verify access password entry
     const password = document.getElementById('reseller-password')?.value || "";
     const errorDisplay = document.getElementById('password-error');
-    
     if (password !== "AITITRADE2026") {
         if (errorDisplay) errorDisplay.classList.remove('hidden');
         return;
     }
     if (errorDisplay) errorDisplay.classList.add('hidden');
 
-    // 2. Extract input text values
     const name = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
     const email = document.getElementById('reseller-email')?.value || "NO EMAIL PROVIDED";
     const cashapp = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
 
-  // 3. Connect API URL ledger payload
     const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwZVIuiqPKqEtziEVO-wkQXUiS7_tSlFMGwCzW7Fg11L3o_zZiWI3z26HI3IgFaNQJU/exec";
-    
     fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
-        .catch(err => console.log("Logging exception handled: ", err)); 
+        .catch(err => console.log("Logging exception handled: ", err));
 
-    // 4. Prime the audio track pipelines
     const currentVault = config[state.currentPortal].vault;
     state.player.src = currentVault[0].src;
     state.player.load();
 
-    // 5. Tear down greeting veil to render Bloomberg grid chassis
     const overlay = document.getElementById('prospectus-overlay');
     if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
     state.engineStarted = true;
@@ -167,17 +156,19 @@ window.startEngine = function() {
     window.playT(0);
 };
 
-function logRealtimeBuyerTransaction() {
+// EXCLUSIVE TRIGGER FOR FUNDED INVESTMENTS ONLY
+window.executeAssetPurchase = function() {
     state.totalRegisteredBuyers++;
     const nodeTarget = document.getElementById('router-target');
     const nodeCount = document.getElementById('router-count');
     const matrixVis = document.getElementById('matrix-visualizer');
     const currentCount = state.totalRegisteredBuyers % 5;
     let strategyLabel = state.totalRegisteredBuyers <= 5 ? "BUY MARKET DIRECT" : "BUY RESELLER DIRECT";
+    
     if (nodeTarget) nodeTarget.innerText = `BUYER #${String(state.totalRegisteredBuyers).padStart(2, '0')} EXECUTED`;
     if (nodeCount) nodeCount.innerText = `${currentCount} / 5 MATRIX POSITION`;
     if (matrixVis) matrixVis.innerText = `CURRENT SYSTEM ROUTING PROTOCOL: [${strategyLabel}]`;
-}
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     populateTrackMatrixUI();
