@@ -1,4 +1,4 @@
-/** * AITITRADE Terminal Controller - V16.0 (Mobile Audio Fix)
+/** * AITITRADE Terminal Controller - V17.0 (Real-Time Tracking & Audio Sync)
  */
 window.QUEEN_BUTTA_VAULT = [
     {n:"SUPERFLY",src:"https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906"},
@@ -16,75 +16,117 @@ window.QUEEN_BUTTA_VAULT = [
     {n:"BETTER THAN GOOD",src:"https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a"}
 ];
 
-// Single global native audio layer
-const nativePlayer = new Audio();
-nativePlayer.preload = "auto";
-let currentTrackIndex = null;
+// Core Hardware State Variables
+const state = {
+    player: new Audio(),
+    activeTrackIndex: null,
+    currentMarketPrice: 10.00,
+    totalRegisteredBuyers: 0
+};
+state.player.preload = "auto";
 
-// Track list container template builder
-const cont = document.getElementById('terminal-track-matrix-container');
-if (cont) {
-    let html = '';
-    window.QUEEN_BUTTA_VAULT.forEach((track, i) => {
-        html += `
-            <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
-                <span class="text-xs font-mono text-emerald-400">${i + 1}. ${track.n}</span>
-                <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 rounded text-[9px] font-bold cursor-pointer" data-i="${i}">PLAY</button>
-            </div>`;
-    });
-    cont.innerHTML = html;
-
-    // Direct Physical User Tap Route
-    cont.addEventListener('click', e => {
-        if (e.target.classList.contains('terminal-play-btn')) {
-            const selectedIndex = parseInt(e.target.dataset.i);
-            executePlayback(selectedIndex);
-        }
-    });
-}
-
-function executePlayback(i) {
-    const totalButtons = document.querySelectorAll('.terminal-play-btn');
-    const targetButton = document.querySelector(`[data-i="${i}"]`);
-
-    // If tapping the exact same song that's already loaded
-    if (currentTrackIndex === i) {
-        if (!nativePlayer.paused) {
-            nativePlayer.pause();
-            if (targetButton) targetButton.innerText = "PLAY";
+// 1. RE-ESTABLISH HTML CLICK HANDSHAKE FOR PHONE PLAY/PAUSE BUTTONS
+function playT(i) {
+    const targetBtn = document.querySelector(`[data-i="${i}"]`);
+    
+    // If user is toggling the song that's already running
+    if (state.activeTrackIndex === i) {
+        if (!state.player.paused) {
+            state.player.pause();
+            if (targetBtn) targetBtn.innerText = "PLAY";
         } else {
-            nativePlayer.play().catch(err => console.log("Playback engine stalled: ", err));
-            if (targetButton) targetButton.innerText = "PAUSE";
+            state.player.play().catch(e => console.log("Stream pending physical tap context."));
+            if (targetBtn) targetBtn.innerText = "PAUSE";
         }
         return;
     }
 
-    // Reset all other button strings back to default state
-    totalButtons.forEach(b => b.innerText = "PLAY");
+    // Reset layout elements
+    document.querySelectorAll('.terminal-play-btn').forEach(b => b.innerText = "PLAY");
 
-    // Load new song source track directly down the hardware pipeline
-    currentTrackIndex = i;
-    nativePlayer.src = window.QUEEN_BUTTA_VAULT[i].src;
+    // Route assets cleanly down the pipeline
+    state.activeTrackIndex = i;
+    state.player.src = window.QUEEN_BUTTA_VAULT[i].src;
     
-    // Explicit play invocation tied immediately to the tap click block
-    nativePlayer.play()
+    state.player.play()
         .then(() => {
-            if (targetButton) targetButton.innerText = "PAUSE";
+            if (targetBtn) targetBtn.innerText = "PAUSE";
+            // Increment the ledger tracking sequence as soon as a user clicks to listen/engage
+            registerRealtimeBuyerTransaction();
         })
         .catch(err => {
-            alert("Tap the track directly to enable audio pipeline.");
-            console.log("Hardware flag blocking auto-stream: ", err);
+            console.log("Audio stream blocked by mobile hardware flag: ", err);
         });
 }
 
-// Global automated track continuous looping logic 
-nativePlayer.onended = () => {
-    let nextIndex = (currentTrackIndex + 1) % window.QUEEN_BUTTA_VAULT.length;
-    executePlayback(nextIndex);
+// Global Automated Continuation Circuit
+state.player.onended = () => {
+    let nextIndex = (state.activeTrackIndex + 1) % window.QUEEN_BUTTA_VAULT.length;
+    playT(nextIndex);
 };
 
-// Continuous Market Value Feed Calculations Loop
+// 2. HARDCODED KINETIC OSCILLATOR LOGIC ($10 - $80 NET - $130 GROSS MAX)
 setInterval(() => {
-    const o = document.getElementById('main-osc');
-    if (o) o.innerText = "$" + (10 + Math.random() * 5).toFixed(2);
-}, 850);
+    const displayOsc = document.getElementById('main-osc');
+    if (!displayOsc) return;
+
+    const driftDirection = Math.random() > 0.48 ? 1 : -1;
+    // Volatility calculation mechanics
+    const swingVariance = (Math.random() * 8.50) + 1.20;
+
+    if (driftDirection === 1) {
+        // Upper bound handles gross trading valuation ceiling up to $130
+        state.currentMarketPrice = Math.min(130.00, state.currentMarketPrice + swingVariance);
+    } else {
+        // Lower bound safely locks value to the initial base buy-in floor of $10
+        state.currentMarketPrice = Math.max(10.00, state.currentMarketPrice - swingVariance);
+    }
+
+    // Dynamic Net Range Highlight Indicator ($80 evaluation zone flag)
+    if (state.currentMarketPrice >= 80.00 && state.currentMarketPrice < 110.00) {
+        displayOsc.style.color = "#ffcc00"; // Gold highlights warning net processing
+    } else if (state.currentMarketPrice >= 110.00) {
+        displayOsc.style.color = "#00ff00"; // Bright neon green denotes gross saturation
+    } else {
+        displayOsc.style.color = ""; // Standard system matrix color rule
+    }
+
+    displayOsc.innerText = `$${state.currentMarketPrice.toFixed(2)}`;
+}, 950);
+
+// 3. REAL-TIME BUYER SEEDING DATA FEED TRACKER
+function registerRealtimeBuyerTransaction() {
+    state.totalRegisteredBuyers++;
+    
+    const bufferStream = document.getElementById('terminal-log-buffer');
+    if (!bufferStream) return;
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const mockUnits = (Math.random() * 4.0000 + 1.0000).toFixed(4);
+    
+    // Format entry strings to slide into layout rows
+    let allocationMode = state.totalRegisteredBuyers <= 5 ? "POOL SEED DISTRIBUTION" : "DIRECT SELLER NETTING TEAM";
+    
+    const ledgerEntryHTML = `
+        <div class="text-[10px] font-mono border-b border-emerald-500/5 py-1 flex justify-between uppercase" style="color: #00ff00;">
+            <span>[${timestamp}] BUYER #${String(state.totalRegisteredBuyers).padStart(2, '0')} EXECUTED</span>
+            <span>${mockUnits} SHARES @ $${state.currentMarketPrice.toFixed(2)} [${allocationMode}]</span>
+        </div>
+    `;
+    
+    bufferStream.innerHTML = ledgerEntryHTML + bufferStream.innerHTML;
+}
+
+// Setup template placeholders right away at deployment boot execution
+const structuralContainer = document.getElementById('terminal-track-matrix-container');
+if (structuralContainer) {
+    let outputHTML = '';
+    window.QUEEN_BUTTA_VAULT.forEach((track, idx) => {
+        outputHTML += `
+            <div class="flex justify-between items-center border-b border-emerald-500/10 py-1.5 px-1">
+                <span class="text-xs font-mono text-emerald-400">${idx + 1}. ${track.n}</span>
+                <button class="terminal-play-btn text-emerald-400 border border-emerald-400/30 px-2 rounded text-[9px] font-bold cursor-pointer" data-i="${idx}" onclick="playT(${idx})">PLAY</button>
+            </div>`;
+    });
+    structuralContainer.innerHTML = outputHTML;
+}
