@@ -53,7 +53,7 @@
         <p class="text-white/80">OWN A PIECE OF THE MUSIC BEFORE IT GOES PUBLIC ON SPOTIFY, APPLE MUSIC, DEEZER, AMAZON, AND ALL STREAMING PLATFORMS.</p>
         <p class="text-white/80"><span class="text-emerald-400 font-bold">THE BASICS:</span> BUY ONE ALBUM, RESELL 8 AS AN ACTIVE TRADER ON THE EXCHANGE FLOOR.</p>
         <div class="pt-1 text-[10px] text-emerald-400/70 font-bold flex justify-between uppercase">
-          <span>📉 MULTI-PORTAL ACCESS ACTIVE</span>
+          <span>📉 SECURE CREDENTIAL CHECK ACTIVE</span>
         </div>
       </div>
 
@@ -71,6 +71,11 @@
           <div>
             <label class="text-[9px] font-bold tracking-wider text-white/40 uppercase">CASH APP CASHTAG ($)</label>
             <input type="text" id="reseller-cashapp" placeholder="$CASHTAG" class="input-field rounded-lg">
+          </div>
+          <div class="pt-2 border-t border-emerald-500/10">
+            <label class="text-[9px] font-bold tracking-wider text-yellow-500 uppercase">MARKET ACCESS PASSWORD</label>
+            <input type="password" id="reseller-password" placeholder="ENTER ACCESS PASSWORD" class="input-field rounded-lg border-yellow-500/40 focus:border-yellow-500 text-yellow-400">
+            <div id="password-error" class="text-[9px] text-red-500 font-bold uppercase mt-1 hidden">⚠️ INVALID SECURITY PASSWORD ACCESS DENIED</div>
           </div>
         </div>
       </div>
@@ -115,12 +120,12 @@
         <div class="text-[10px] font-bold font-mono uppercase tracking-tight mt-0.5">MARKET</div>
       </button>
 
-      <button id="p-0" onclick="switchPortal(0)" class="portal-btn border border-emerald-500/30 bg-emerald-500/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer text-emerald-400">
+      <button id="p-0" onclick="window.switchPortal(0)" class="portal-btn border border-emerald-500/30 bg-emerald-500/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer text-emerald-400">
         <div class="text-[8px] text-white/40 font-mono tracking-wider group-hover:text-emerald-400">PORTAL 01 // $10</div>
         <div id="nav-album-t1" class="text-[10px] font-bold font-mono truncate mt-0.5 text-white/80">QUEEN BUTTA</div>
       </button>
 
-      <button id="p-1" onclick="switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer">
+      <button id="p-1" onclick="window.switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer">
         <div class="text-[8px] text-white/40 font-mono tracking-wider group-hover:text-emerald-400">PORTAL 02 // $20</div>
         <div id="nav-album-t2" class="text-[10px] font-bold font-mono truncate mt-0.5 text-white/80">GANSTA LYFE</div>
       </button>
@@ -169,17 +174,6 @@
 
   </div>
 
-  <script>
-    function startEngine() {
-      const overlay = document.getElementById('prospectus-overlay');
-      if (overlay) {
-        overlay.style.setProperty('display', 'none', 'important');
-      }
-      if (typeof initTerminalAudioBridge === "function") {
-        initTerminalAudioBridge();
-      }
-    }
-  </script>
   <script src="terminal-fetch.js"></script>
 </body>
 </html>
