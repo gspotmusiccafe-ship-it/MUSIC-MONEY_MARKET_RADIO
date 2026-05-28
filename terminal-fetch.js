@@ -1,5 +1,5 @@
 /**
- * AITITRADE Bloomberg Multi-Portal Engine - V22.0 (Transactional Matrix Build)
+ * AITITRADE Bloomberg Multi-Portal Engine - V25.0 (Tab 1 Consolidated Registry Build)
  */
 
 const QUEEN_BUTTA_VAULT = [
@@ -48,6 +48,9 @@ let state = {
 };
 state.player.preload = "auto";
 
+// ⚠️ PASTE YOUR NEWLY COPIED STEP 1 WEB APP LINK INSIDE THESE QUOTES:
+const LEDGER_API_URL = "PASTE_YOUR_NEW_MACRO_URL_HERE";
+
 function populateTrackMatrixUI() {
     const container = document.getElementById('terminal-track-matrix-container');
     if (!container) return;
@@ -70,10 +73,15 @@ window.switchPortal = function(portalId) {
     document.getElementById(`p-${portalId}`).className = "portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono";
     state.currentPortal = portalId;
     const currentConf = config[portalId];
+    
     document.getElementById('album-cover-img').src = currentConf.art;
     document.getElementById('display-active-album-name').innerText = currentConf.name;
     document.getElementById('asset-label-header').innerText = `${currentConf.name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${currentConf.name}: $${currentConf.buyIn}`;
+    
+    const buyBtn = document.getElementById('btn-song-buy');
+    if (buyBtn) buyBtn.innerHTML = `💰 BUY ASSET NOW ($${currentConf.buyIn})`;
+
     state.currentMarketPrice = currentConf.buyIn;
     state.activeTrackIndex = null;
     populateTrackMatrixUI();
@@ -96,7 +104,7 @@ window.playT = function(i) {
             if (targetBtn) targetBtn.innerText = "PAUSE";
             document.getElementById('display-active-album-name').innerText = `${config[state.currentPortal].name} // ${currentVault[i].n}`;
         })
-        .catch(err => console.log("Audio lockout holding context."));
+        .catch(err => console.log("Audio contexts pending interaction."));
 };
 
 state.player.onended = () => {
@@ -124,39 +132,76 @@ function executeMarketOscillator() {
     }
 }
 
-// SECURE REGISTRATION ENGINE GATEWAY WITH PASSWORD CHECK
+// CONSOLIDATED TAB 1 GATEWAY LOOKUP VALIDATION LOGIC
 window.startEngine = function() {
     if (state.engineStarted) return;
-    const password = document.getElementById('reseller-password')?.value || "";
+    
+    const emailInput = document.getElementById('reseller-email')?.value || "";
+    const passwordInput = document.getElementById('reseller-password')?.value || "";
+    const nameInput = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
+    const cashappInput = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
+    
+    const cleanEmail = emailInput.trim().toLowerCase();
+    const cleanPassword = passwordInput.trim();
     const errorDisplay = document.getElementById('password-error');
-    if (password !== "AITITRADE2026") {
-        if (errorDisplay) errorDisplay.classList.remove('hidden');
+    
+    if (!cleanEmail || !cleanPassword) {
+        if (errorDisplay) {
+            errorDisplay.innerText = "⚠️ EMAIL AND PASSWORD FIELDS CANNOT BE EMPTY";
+            errorDisplay.classList.remove('hidden');
+        }
         return;
     }
-    if (errorDisplay) errorDisplay.classList.add('hidden');
 
-    const name = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
-    const email = document.getElementById('reseller-email')?.value || "NO EMAIL PROVIDED";
-    const cashapp = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
+    // Live scan Column D (Email) and Column F (Password) on Tab 1
+    fetch(`${LEDGER_API_URL}?action=verify_password&email=${encodeURIComponent(cleanEmail)}&password=${encodeURIComponent(cleanPassword)}`)
+        .then(response => response.json())
+        .then(res => {
+            if (res.status === "SUCCESS") {
+                if (errorDisplay) errorDisplay.classList.add('hidden');
+                
+                // Drop gateway veil layout and run player context loop
+                const currentVault = config[state.currentPortal].vault;
+                state.player.src = currentVault[0].src;
+                state.player.load();
 
-    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwZVIuiqPKqEtziEVO-wkQXUiS7_tSlFMGwCzW7Fg11L3o_zZiWI3z26HI3IgFaNQJU/exec";
-    fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
-        .catch(err => console.log("Logging exception handled: ", err));
+                const overlay = document.getElementById('prospectus-overlay');
+                if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
+                state.engineStarted = true;
 
-    const currentVault = config[state.currentPortal].vault;
-    state.player.src = currentVault[0].src;
-    state.player.load();
+                populateTrackMatrixUI();
+                setInterval(executeMarketOscillator, 1100);
+                window.playT(0);
+            } else {
+                // If credentials don't match an existing row, register them as a new user profile on Tab 1
+                fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(nameInput)}&email=${encodeURIComponent(cleanEmail)}&cashapp=${encodeURIComponent(cashappInput)}&password=${encodeURIComponent(cleanPassword)}`, { mode: 'no-cors' })
+                    .then(() => {
+                        if (errorDisplay) errorDisplay.classList.add('hidden');
+                        
+                        const currentVault = config[state.currentPortal].vault;
+                        state.player.src = currentVault[0].src;
+                        state.player.load();
 
-    const overlay = document.getElementById('prospectus-overlay');
-    if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
-    state.engineStarted = true;
+                        const overlay = document.getElementById('prospectus-overlay');
+                        if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
+                        state.engineStarted = true;
 
-    populateTrackMatrixUI();
-    setInterval(executeMarketOscillator, 1100);
-    window.playT(0);
+                        populateTrackMatrixUI();
+                        setInterval(executeMarketOscillator, 1100);
+                        window.playT(0);
+                    })
+                    .catch(err => console.log("New registration catch handled"));
+            }
+        })
+        .catch(err => {
+            console.log("Database connection error: ", err);
+            if (errorDisplay) {
+                errorDisplay.innerText = "⚠️ NETWORK LEDGER OFFLINE RE-DEPLOY SERVICE ROUTE";
+                errorDisplay.classList.remove('hidden');
+            }
+        });
 };
 
-// EXCLUSIVE TRIGGER FOR FUNDED INVESTMENTS ONLY
 window.executeAssetPurchase = function() {
     state.totalRegisteredBuyers++;
     const nodeTarget = document.getElementById('router-target');
