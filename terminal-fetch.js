@@ -49,7 +49,7 @@ let state = {
 state.player.preload = "auto";
 
 // ⚠️ PASTE YOUR NEWLY COPIED STEP 1 WEB APP LINK INSIDE THESE QUOTES:
-const LEDGER_API_URL = "PASTE_YOUR_NEW_MACRO_URL_HERE";
+const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwwCN6H4dGmTdStJIiHqSf6bFRlW-EKFHVZ8R_CqyCSY-fTo3OPrZd54RKAUY4DJ-W4/exec";
 
 function populateTrackMatrixUI() {
     const container = document.getElementById('terminal-track-matrix-container');
