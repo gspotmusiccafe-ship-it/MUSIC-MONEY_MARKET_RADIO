@@ -1,8 +1,7 @@
 /**
- * AITITRADE Bloomberg Multi-Portal Engine - V20.0
+ * AITITRADE Bloomberg Multi-Portal Engine - V21.0 (Password Matrix Integrated)
  */
 
-// Portal 01 Catalog
 const QUEEN_BUTTA_VAULT = [
     { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
     { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
@@ -19,7 +18,6 @@ const QUEEN_BUTTA_VAULT = [
     { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }
 ];
 
-// Portal 02 Catalog
 const GANSTA_SMOOTH_VAULT = [
     { n: "A GANGSTA'S LIFE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FA%20Gangsta's%20Life.mp3?alt=media&token=e7f31106-ec8e-4dee-bb5e-b29a75677d29" },
     { n: "CRUISIN IN MY 4 DOOR", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FCruisin%20In%20My%204%20Door.mp3?alt=media&token=81988b80-9dbd-4f4e-a216-e6034e4ee2b7" },
@@ -35,7 +33,6 @@ const GANSTA_SMOOTH_VAULT = [
     { n: "MS. MARY JANE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FMs.%20Mary%20Jane.mp3?alt=media&token=9bb1cd28-5cfb-4587-8207-aedb89010d9d" }
 ];
 
-// Structural Configuration Models
 const config = {
     0: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", buyIn: 10.00, sellOut: 80.00, maxGross: 130.00, vault: QUEEN_BUTTA_VAULT },
     1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, sellOut: 160.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT }
@@ -51,192 +48,137 @@ let state = {
 };
 state.player.preload = "auto";
 
-// 1. CHASSIS ASSET POPULATION LOGIC
 function populateTrackMatrixUI() {
     const container = document.getElementById('terminal-track-matrix-container');
     if (!container) return;
-    
     let html = "";
     const currentVault = config[state.currentPortal].vault;
-    
     currentVault.forEach((track, idx) => {
         html += `
             <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 transition-all duration-150">
                 <span class="font-mono text-emerald-400/80">${idx + 1}. ${track.n}</span>
-                <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black transition-all cursor-pointer" id="play-btn-${idx}" onclick="playT(${idx})">
-                    PLAY
-                </button>
+                <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black transition-all cursor-pointer" id="play-btn-${idx}" onclick="playT(${idx})"> PLAY </button>
             </div>`;
     });
     container.innerHTML = html;
 }
 
-// 2. LIVE ROUTER PORTAL SWITCH MATRIX
 window.switchPortal = function(portalId) {
     if (!config[portalId]) return;
-    
-    // Toggle active border states across buttons
     document.getElementById('p-0').className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer";
     document.getElementById('p-1').className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer";
     document.getElementById(`p-${portalId}`).className = "portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono";
-
     state.currentPortal = portalId;
     const currentConf = config[portalId];
-    
-    // Swap Frontend Image and Labels
     document.getElementById('album-cover-img').src = currentConf.art;
     document.getElementById('display-active-album-name').innerText = currentConf.name;
     document.getElementById('asset-label-header').innerText = `${currentConf.name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${currentConf.name}: $${currentConf.buyIn}`;
-    
     const buyButton = document.getElementById('btn-song-buy');
     if (buyButton) buyButton.innerText = `💰 BUY ASSET NOW ($${currentConf.buyIn})`;
-
-    // Reset pricing configuration boundaries
     state.currentMarketPrice = currentConf.buyIn;
     state.activeTrackIndex = null;
-    
     populateTrackMatrixUI();
-    if (state.engineStarted) {
-        playT(0); // Instantly play track 1 of chosen portal
-    }
+    if (state.engineStarted) { playT(0); }
 };
 
-// 3. SECURE MEDIA HANDSHAKE & LEDGER FEED
 window.playT = function(i) {
     const currentVault = config[state.currentPortal].vault;
     const targetBtn = document.getElementById(`play-btn-${i}`);
-    
     if (state.activeTrackIndex === i) {
-        if (!state.player.paused) {
-            state.player.pause();
-            if (targetBtn) targetBtn.innerText = "PLAY";
-        } else {
-            state.player.play().catch(() => {});
-            if (targetBtn) targetBtn.innerText = "PAUSE";
-        }
+        if (!state.player.paused) { state.player.pause(); if (targetBtn) targetBtn.innerText = "PLAY"; }
+        else { state.player.play().catch(() => {}); if (targetBtn) targetBtn.innerText = "PAUSE"; }
         return;
     }
-
-    currentVault.forEach((_, idx) => {
-        const btn = document.getElementById(`play-btn-${idx}`);
-        if (btn) btn.innerText = "PLAY";
-    });
-
+    currentVault.forEach((_, idx) => { const btn = document.getElementById(`play-btn-${idx}`); if (btn) btn.innerText = "PLAY"; });
     state.activeTrackIndex = i;
     state.player.src = currentVault[i].src;
-    
     state.player.play()
         .then(() => {
             if (targetBtn) targetBtn.innerText = "PAUSE";
             document.getElementById('display-active-album-name').innerText = `${config[state.currentPortal].name} // ${currentVault[i].n}`;
             logRealtimeBuyerTransaction();
         })
-        .catch(err => console.log("Audio block flag processing touch parameters."));
+        .catch(err => console.log("Audio lockout holding context."));
 };
 
-// Loop playlist automation
 state.player.onended = () => {
     const currentVault = config[state.currentPortal].vault;
     let nextIndex = (state.activeTrackIndex + 1) % currentVault.length;
     window.playT(nextIndex);
 };
 
-// 4. MULTI-RANGE KINETIC MATH ENGINE
 function executeMarketOscillator() {
     const mainOsc = document.getElementById('main-osc');
     const priceArrow = document.getElementById('price-arrow');
     if (!mainOsc) return;
-
     const currentConf = config[state.currentPortal];
     const driftDir = Math.random() > 0.47 ? 1 : -1;
     const priceShift = (Math.random() * (currentConf.buyIn * 0.8)) + 1.10;
-
-    if (driftDir === 1) {
-        state.currentMarketPrice = Math.min(currentConf.maxGross, state.currentMarketPrice + priceShift);
-    } else {
-        state.currentMarketPrice = Math.max(currentConf.buyIn, state.currentMarketPrice - priceShift);
-    }
-
-    // Dynamic Highlighting Ranges mapped to active parameters
-    if (state.currentMarketPrice >= currentConf.sellOut && state.currentMarketPrice < (currentConf.maxGross * 0.85)) {
-        mainOsc.style.color = "#fbbf24"; // Gold Target Zone
-    } else if (state.currentMarketPrice >= (currentConf.maxGross * 0.85)) {
-        mainOsc.style.color = "#34d399"; // Gross Saturation
-    } else {
-        mainOsc.style.color = "#10b981"; // Base Terminal Green
-    }
-
+    if (driftDir === 1) { state.currentMarketPrice = Math.min(currentConf.maxGross, state.currentMarketPrice + priceShift); }
+    else { state.currentMarketPrice = Math.max(currentConf.buyIn, state.currentMarketPrice - priceShift); }
+    if (state.currentMarketPrice >= currentConf.sellOut && state.currentMarketPrice < (currentConf.maxGross * 0.85)) { mainOsc.style.color = "#fbbf24"; }
+    else if (state.currentMarketPrice >= (currentConf.maxGross * 0.85)) { mainOsc.style.color = "#34d399"; }
+    else { mainOsc.style.color = "#10b981"; }
     mainOsc.innerText = `$${state.currentMarketPrice.toFixed(2)}`;
-    
     if (priceArrow) {
         priceArrow.innerText = `KINETIC SHIFT // ${driftDir === 1 ? "▲ +" : "▼ -"}${priceShift.toFixed(2)}`;
         priceArrow.className = `text-[9px] font-mono uppercase tracking-widest mt-1 font-bold ${driftDir === 1 ? 'text-emerald-400' : 'text-red-500'}`;
     }
 }
-// 7. SECURE REGISTRATION SHIPMENT CIRCUIT
+
+// SECURE REGISTRATION ENGINE GATEWAY WITH PASSWORD CHECK
 window.startEngine = function() {
     if (state.engineStarted) return;
     
-    // Capture the physical input credentials from the gateway shield
+    // 1. Verify access password entry
+    const password = document.getElementById('reseller-password')?.value || "";
+    const errorDisplay = document.getElementById('password-error');
+    
+    if (password !== "AITITRADE2026") {
+        if (errorDisplay) errorDisplay.classList.remove('hidden');
+        return;
+    }
+    if (errorDisplay) errorDisplay.classList.add('hidden');
+
+    // 2. Extract input text values
     const name = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
     const email = document.getElementById('reseller-email')?.value || "NO EMAIL PROVIDED";
     const cashapp = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
+
+    // 3. Connect API URL ledger payload
+    const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbzk44-FMJa7dgHTrvBtk4YdvS2ee_vfGsSFkgRWBrrPz3FvNeGTfVYoH9jDTFEjXFmU/exec";
     
-    console.log(`PROSPECTUS ATTEMPT: ${name} // ${email} // ${cashapp}`);
+    fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
+        .catch(err => console.log("Logging exception handled: ", err));
 
-    // Send the credentials straight to your Google Sheet Ledger Engine
-    // (Swap this placeholder URL with your actual deployed Google Web App Script URL)
-  const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbzk44-FMJa7dgHTrvBtk4YdvS2ee_vfGsSFkgRWBrrPz3FvNeGTfVYoH9jDTFEjXFmU/exec";
-    if (LEDGER_API_URL !== "YOUR_GOOGLE_WEB_APP_SCRIPT_URL_HERE") {
-        fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&cashapp=${encodeURIComponent(cashapp)}`, { mode: 'no-cors' })
-        .catch(err => console.log("Ledger entry bypass routing: ", err));
-    }
-
-    // Prime audio player to bypass mobile hardware restrictions
+    // 4. Prime the audio track pipelines
     const currentVault = config[state.currentPortal].vault;
     state.player.src = currentVault[0].src;
     state.player.load();
 
-    // Drop the greeting shield overlay and reveal the live Bloomberg chassis
+    // 5. Tear down greeting veil to render Bloomberg grid chassis
     const overlay = document.getElementById('prospectus-overlay');
-    if (overlay) {
-        overlay.style.setProperty('display', 'none', 'important');
-    }
-    
+    if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
     state.engineStarted = true;
 
-    // Start market oscillator tickers and auto-play track 1
-    populateTrackMatrixUI();
-    setInterval(executeMarketOscillator, 1100);
-    window.playT(0); 
-};
-// 5. TRANSACTION ROUTER METRIC STRINGS
-function logRealtimeBuyerTransaction() {
-    state.totalRegisteredBuyers++;
-    
-    const nodeTarget = document.getElementById('router-target');
-    const nodeCount = document.getElementById('router-count');
-    const matrixVis = document.getElementById('matrix-visualizer');
-    const currentCount = state.totalRegisteredBuyers % 5;
-    
-    let strategyLabel = state.totalRegisteredBuyers <= 5 ? "BUY MARKET DIRECT" : "BUY RESELLER DIRECT";
-
-    if (nodeTarget) nodeTarget.innerText = `BUYER #${String(state.totalRegisteredBuyers).padStart(2, '0')} EXECUTED`;
-    if (nodeCount) nodeCount.innerText = `${currentCount} / 5 MATRIX POSITION`;
-    if (matrixVis) matrixVis.innerText = `CURRENT SYSTEM ROUTING PROTOCOL: [${strategyLabel}]`;
-}
-
-// 6. INITIALIZATION PIPELINE HANDSHAKE
-window.initTerminalAudioBridge = function() {
-    state.engineStarted = true;
     populateTrackMatrixUI();
     setInterval(executeMarketOscillator, 1100);
     window.playT(0);
 };
 
-// Initial visual render
+function logRealtimeBuyerTransaction() {
+    state.totalRegisteredBuyers++;
+    const nodeTarget = document.getElementById('router-target');
+    const nodeCount = document.getElementById('router-count');
+    const matrixVis = document.getElementById('matrix-visualizer');
+    const currentCount = state.totalRegisteredBuyers % 5;
+    let strategyLabel = state.totalRegisteredBuyers <= 5 ? "BUY MARKET DIRECT" : "BUY RESELLER DIRECT";
+    if (nodeTarget) nodeTarget.innerText = `BUYER #${String(state.totalRegisteredBuyers).padStart(2, '0')} EXECUTED`;
+    if (nodeCount) nodeCount.innerText = `${currentCount} / 5 MATRIX POSITION`;
+    if (matrixVis) matrixVis.innerText = `CURRENT SYSTEM ROUTING PROTOCOL: [${strategyLabel}]`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-    window.QUEEN_BUTTA_VAULT = QUEEN_BUTTA_VAULT;
     populateTrackMatrixUI();
 });
