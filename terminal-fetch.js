@@ -143,3 +143,78 @@ window.switchPortal = function(idx) {
     });
     
     const activeBtn = document.getElementById(`p-${idx}`);
+    if(activeBtn) {
+        activeBtn.classList.add('active', 'text-emerald-400', 'font-bold');
+        activeBtn.classList.remove('text-white/70', 'bg-white/5');
+    }
+
+    populateTrackMatrixUI();
+
+    // FIX 2: Explicitly forces track 0 initialization with full audio playback on portal change
+    if(config[idx].vault && config[idx].vault.length > 0) {
+        setTimeout(() => {
+            window.playT(0);
+        }, 200);
+    }
+};
+
+function populateTrackMatrixUI() {
+    const container = document.getElementById('terminal-track-matrix-container');
+    if (!container) return;
+    let html = "";
+    config[state.currentPortal].vault.forEach((track, idx) => {
+        let activeStyle = (idx === state.activeTrackIndex) ? "bg-emerald-500/10 text-white font-bold" : "";
+        let isPlaying = (idx === state.activeTrackIndex && !state.player.paused);
+        let btnText = isPlaying ? "PAUSE" : "PLAY";
+
+        html += `
+        <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 ${activeStyle}" id="track-row-${idx}">
+            <span class="font-mono text-emerald-400/80 text-[11px]">${idx + 1}. ${track.n}</span>
+            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="window.toggleTrack(${idx})"> ${btnText} </button>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
+
+window.toggleTrack = function(idx) {
+    if (state.activeTrackIndex === idx) {
+        if (!state.player.paused) {
+            state.player.pause();
+        } else {
+            state.player.play();
+        }
+        populateTrackMatrixUI();
+    } else {
+        window.playT(idx);
+    }
+};
+
+window.playT = function(idx) {
+    const track = config[state.currentPortal].vault[idx];
+    if(!track || !track.src) return;
+    
+    state.activeTrackIndex = idx;
+    state.player.src = track.src;
+    state.player.load();
+    
+    let playPromise = state.player.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            populateTrackMatrixUI();
+        }).catch(error => {
+            console.log("Autoplay bound intercepted successfully.");
+        });
+    }
+};
+
+// FIX 3: Unbroken sequence engine loop to continuously transition across tracks till manual pause command
+state.player.onended = function() {
+    let nextIdx = state.activeTrackIndex + 1;
+    if (nextIdx < config[state.currentPortal].vault.length) {
+        window.playT(nextIdx);
+    } else {
+        window.playT(0); 
+    }
+};
+
+window.onload = () => { populateTrackMatrixUI(); };
