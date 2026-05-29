@@ -1,5 +1,5 @@
 /**
- * AITITRADE Bloomberg Multi-Portal Engine - V25.0 (Tab 1 Consolidated Registry Build)
+ * AITITRADE Bloomberg Multi-Portal Engine - V26.0 (Triple Portal & WhatsApp Build)
  */
 
 const QUEEN_BUTTA_VAULT = [
@@ -33,9 +33,25 @@ const GANSTA_SMOOTH_VAULT = [
     { n: "MS. MARY JANE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FMs.%20Mary%20Jane.mp3?alt=media&token=9bb1cd28-5cfb-4587-8207-aedb89010d9d" }
 ];
 
+const G_SMOOTH_NEED_VAULT = [
+    { n: "I GOT WHAT YOU NEED", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI-GOT-WHAT-YOU-NEED.mp3?alt=media&token=4964672a-dd1d-4bff-921f-f6ae49a7165d" },
+    { n: "BODY CALL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FBODY%20CALL%20G.%20SMOOTH.mp3?alt=media&token=d992ce3e-aea7-4e3e-aac1-4deafae04a00" },
+    { n: "SPECIAL TO A G", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FSPECIAL%20TO%20A%20_G_.mp3?alt=media&token=bff92c51-b516-4f76-ac5a-86e69beec014" },
+    { n: "A GOOD WOMAN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FA%20GOOD%20WOMAN.mp3?alt=media&token=bcdcd768-4dea-4d5d-a679-63655e6f2d01" },
+    { n: "HOW WAS YOUR DAY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%F0%9F%8E%B5%20G.%20SMOOTH%20%E2%80%93%20%E2%80%9CHOW%20WAS%20YOUR%20DAY%E2%80%9D.mp3?alt=media&token=4fc208c9-7d7a-4479-a7db-df5b52678ab9" },
+    { n: "JUICY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FJUICY%20LOVE%20G.%20SMOOTH.mp3?alt=media&token=cfc384bf-82ef-4dee-9a39-c46b473a3c54" },
+    { n: "CANDY LAND", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CCANDY%20LAND%E2%80%9D.mp3?alt=media&token=fe8be134-a952-4ed9-9723-3c001e5e7aa5" },
+    { n: "HONEY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CHONEY%20LOVE%E2%80%9D.mp3?alt=media&token=8d335ccd-ef09-4d54-babf-5e1376994ec2" },
+    { n: "YOUR BODY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FYOUR%20BODY.mp3?alt=media&token=77855e86-4f66-49ca-9b80-7b079a93647b" },
+    { n: "YOUR BODY IS MY PLAYGROUND", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FYOUR%20BODY%20IS%20MY%20PLAYGROUND.mp3?alt=media&token=115bc408-6ea4-4cfd-ae76-ac02b794ca89" },
+    { n: "DRIP DROP SLOW", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FDRIP%20DROP%20SLOW.mp3?alt=media&token=3e5d77ce-e8fc-4d7c-82a1-5cb13850f676" },
+    { n: "BABY DON'T CRY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FBABY%20DON'T%20CRY.mp3?alt=media&token=089ef8b4-1351-4e4a-8ded-44eb7898a7ec" }
+];
+
 const config = {
     0: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", buyIn: 10.00, sellOut: 80.00, maxGross: 130.00, vault: QUEEN_BUTTA_VAULT },
-    1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, sellOut: 160.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT }
+    1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, sellOut: 160.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT },
+    2: { name: "G. SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=ca2f5e98-f2e1-4863-8aa1-12ea5ea8af5c", buyIn: 30.00, sellOut: 240.00, maxGross: 390.00, vault: G_SMOOTH_NEED_VAULT }
 };
 
 let state = {
@@ -48,8 +64,7 @@ let state = {
 };
 state.player.preload = "auto";
 
-// ⚠️ PASTE YOUR NEWLY COPIED STEP 1 WEB APP LINK INSIDE THESE QUOTES:
-const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwwCN6H4dGmTdStJIiHqSf6bFRlW-EKFHVZ8R_CqyCSY-fTo3OPrZd54RKAUY4DJ-W4/exec";
+const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwv3L4wzki_imUUOxqR0fKxfRpg5GSU6n2vtX0s7o0Kj3-hbj3XAhSC2lJYi8zR7Nz3/exec";
 
 function populateTrackMatrixUI() {
     const container = document.getElementById('terminal-track-matrix-container');
@@ -68,9 +83,12 @@ function populateTrackMatrixUI() {
 
 window.switchPortal = function(portalId) {
     if (!config[portalId]) return;
-    document.getElementById('p-0').className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer";
-    document.getElementById('p-1').className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer";
-    document.getElementById(`p-${portalId}`).className = "portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono";
+    document.querySelectorAll('.portal-btn').forEach(btn => {
+        btn.className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer text-[10px] text-white/70 font-mono";
+    });
+    const activeBtn = document.getElementById(`p-${portalId}`);
+    if (activeBtn) activeBtn.className = "portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono text-[10px]";
+    
     state.currentPortal = portalId;
     const currentConf = config[portalId];
     
@@ -104,7 +122,7 @@ window.playT = function(i) {
             if (targetBtn) targetBtn.innerText = "PAUSE";
             document.getElementById('display-active-album-name').innerText = `${config[state.currentPortal].name} // ${currentVault[i].n}`;
         })
-        .catch(err => console.log("Audio contexts pending interaction."));
+        .catch(err => console.log("Interactivity tracking catch loaded."));
 };
 
 state.player.onended = () => {
@@ -132,35 +150,34 @@ function executeMarketOscillator() {
     }
 }
 
-// CONSOLIDATED TAB 1 GATEWAY LOOKUP VALIDATION LOGIC
+// SECURE WHATSAPP CREDENTIAL VALIDATION PASSTHROUGH
 window.startEngine = function() {
     if (state.engineStarted) return;
     
     const emailInput = document.getElementById('reseller-email')?.value || "";
-    const passwordInput = document.getElementById('reseller-password')?.value || "";
+    const whatsappInput = document.getElementById('reseller-password')?.value || ""; 
     const nameInput = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
     const cashappInput = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
     
     const cleanEmail = emailInput.trim().toLowerCase();
-    const cleanPassword = passwordInput.trim();
+    const cleanWhatsapp = whatsappInput.trim().replace(/[^0-9+]/g, "");
     const errorDisplay = document.getElementById('password-error');
     
-    if (!cleanEmail || !cleanPassword) {
+    if (!cleanEmail || !cleanWhatsapp) {
         if (errorDisplay) {
-            errorDisplay.innerText = "⚠️ EMAIL AND PASSWORD FIELDS CANNOT BE EMPTY";
+            errorDisplay.innerText = "⚠️ EMAIL AND WHATSAPP NUMBER CANNOT BE EMPTY";
             errorDisplay.classList.remove('hidden');
         }
         return;
     }
 
-    // Live scan Column D (Email) and Column F (Password) on Tab 1
-    fetch(`${LEDGER_API_URL}?action=verify_password&email=${encodeURIComponent(cleanEmail)}&password=${encodeURIComponent(cleanPassword)}`)
+    // Live network lookup matching Tab 1 database rows
+    fetch(`${LEDGER_API_URL}?action=verify_password&email=${encodeURIComponent(cleanEmail)}&password=${encodeURIComponent(cleanWhatsapp)}`)
         .then(response => response.json())
         .then(res => {
             if (res.status === "SUCCESS") {
                 if (errorDisplay) errorDisplay.classList.add('hidden');
                 
-                // Drop gateway veil layout and run player context loop
                 const currentVault = config[state.currentPortal].vault;
                 state.player.src = currentVault[0].src;
                 state.player.load();
@@ -171,10 +188,10 @@ window.startEngine = function() {
 
                 populateTrackMatrixUI();
                 setInterval(executeMarketOscillator, 1100);
-                window.playT(0);
+                window.switchPortal(state.currentPortal);
             } else {
-                // If credentials don't match an existing row, register them as a new user profile on Tab 1
-                fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(nameInput)}&email=${encodeURIComponent(cleanEmail)}&cashapp=${encodeURIComponent(cashappInput)}&password=${encodeURIComponent(cleanPassword)}`, { mode: 'no-cors' })
+                // If profile data is unrecognized, create an active row profile automatically on Tab 1
+                fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(nameInput)}&email=${encodeURIComponent(cleanEmail)}&cashapp=${encodeURIComponent(cashappInput)}&password=${encodeURIComponent(cleanWhatsapp)}`, { mode: 'no-cors' })
                     .then(() => {
                         if (errorDisplay) errorDisplay.classList.add('hidden');
                         
@@ -188,13 +205,12 @@ window.startEngine = function() {
 
                         populateTrackMatrixUI();
                         setInterval(executeMarketOscillator, 1100);
-                        window.playT(0);
+                        window.switchPortal(state.currentPortal);
                     })
-                    .catch(err => console.log("New registration catch handled"));
+                    .catch(err => console.log("Registration routing failed"));
             }
         })
         .catch(err => {
-            console.log("Database connection error: ", err);
             if (errorDisplay) {
                 errorDisplay.innerText = "⚠️ NETWORK LEDGER OFFLINE RE-DEPLOY SERVICE ROUTE";
                 errorDisplay.classList.remove('hidden');
