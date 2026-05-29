@@ -1,179 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AITITRADE // 97.7 THE FLAME</title>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>
-    /* Premium Bloomberg Glassmorphism Aesthetic */
-    .bloomberg-terminal {
-      background: rgba(4, 5, 10, 0.95);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(16, 185, 129, 0.05);
-    }
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .glow-text-green {
-      color: #10b981;
-      text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
-    }
-    .portal-btn.active {
-      border-color: #10b981 !important;
-      background: rgba(16, 185, 129, 0.1) !important;
-      color: #10b981 !important;
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
-    }
-    /* Smooth Marquee Ticker Loop */
-    @keyframes marquee {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    .animate-marquee {
-      display: inline-block;
-      animation: marquee 25s linear infinite;
-    }
-
-    .input-field { background: #000; border: 1px solid rgba(16, 185, 129, 0.2); color: #fff; padding: 10px; width: 100%; font-size: 0.8rem; margin-top: 4px; outline: none; font-family: 'JetBrains Mono', monospace; }
-    .input-field:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AITITRADE // 97.7 THE FLAME</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #030712; color: #f3f4f6; }
+        .emerald-glass { background: rgba(4, 120, 87, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(16, 185, 129, 0.15); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .input-field { background: #000; border: 1px solid rgba(16, 185, 129, 0.2); color: #fff; padding: 10px; width: 100%; font-size: 0.8rem; margin-top: 4px; outline: none; font-family: 'JetBrains Mono', monospace; }
+        .input-field:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+    </style>
 </head>
-<body class="bg-[#02040a] min-h-screen text-white flex items-center justify-center p-3 sm:p-6 antialiased selection:bg-emerald-500/30">
+<body class="antialiased min-h-screen flex items-center justify-center p-4">
 
-  <div id="prospectus-overlay" class="fixed inset-0 bg-[#02040a]/95 z-[9999] overflow-y-auto padding-4 flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bloomberg-terminal rounded-2xl p-6 border border-emerald-500/20 bg-black/90">
-      <h1 class="text-base font-mono font-bold tracking-[0.3em] text-emerald-400 text-center border-b border-emerald-500/10 pb-3 mb-5">AITITRADE // SONGSHARE</h1>
-      
-      <div class="bg-black/40 border border-white/5 rounded p-4 mb-5 space-y-3 font-mono text-[11px] leading-relaxed">
-        <p class="text-emerald-400/90 font-bold border-b border-emerald-500/10 pb-1">📊 EXCHANGE RULES:</p>
-        <p class="text-white/80">OWN A PIECE OF THE MUSIC BEFORE IT GOES PUBLIC ON SPOTIFY, APPLE MUSIC, DEEZER, AMAZON, AND ALL STREAMING PLATFORMS.</p>
-        <p class="text-white/80"><span class="text-emerald-400 font-bold">THE BASICS:</span> BUY ONE ALBUM, RESELL 8 AS AN ACTIVE TRADER ON THE EXCHANGE FLOOR.</p>
-        <div class="pt-1 text-[10px] text-emerald-400/70 font-bold flex justify-between uppercase">
-          <span>📉 SECURE CREDENTIAL CHECK ACTIVE</span>
+    <div id="prospectus-overlay" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="emerald-glass max-w-sm w-full p-6 rounded-2xl text-center">
+            <h2 class="text-emerald-400 font-bold tracking-wider font-mono text-base mb-1">AITITRADE ACCESS PROTOCOL</h2>
+            <p class="text-[10px] text-gray-500 font-mono uppercase mb-6 tracking-widest">Verify Mobile Network Credentials</p>
+            
+            <div class="space-y-4 text-left">
+                <div>
+                    <label class="block text-[10px] font-mono text-emerald-400/60 uppercase tracking-wider">FULL NAME</label>
+                    <input type="text" id="reseller-name" placeholder="G. SMOOTH" class="input-field">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-mono text-emerald-400/60 uppercase tracking-wider">EMAIL ADDRESS</label>
+                    <input type="email" id="reseller-email" placeholder="name@domain.com" class="input-field" required>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-mono text-emerald-400/60 uppercase tracking-wider">CASH APP CASHTAG ($)</label>
+                    <input type="text" id="reseller-cashapp" placeholder="$CASHTAG" class="input-field">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-mono text-emerald-400/60 uppercase tracking-wider">REGISTERED WHATSAPP NUMBER</label>
+                    <input type="text" id="reseller-password" placeholder="+1 (555) 000-0000" class="input-field" required>
+                </div>
+            </div>
+
+            <p id="password-error" class="text-red-500 text-[10px] font-mono font-bold mt-4 uppercase hidden">⚠️ INVALID SECURITY WHATSAPP PROFILE</p>
+
+            <button onclick="window.startEngine()" class="mt-6 w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold font-mono py-2.5 rounded-xl transition-all cursor-pointer shadow-[0_0_20px_rgba(16,185,129,0.3)] text-xs uppercase tracking-wider">
+                ENTER MARKET FLOOR
+            </button>
         </div>
-      </div>
+    </div>
 
-      <div class="border border-emerald-500/10 rounded-xl p-4 bg-white/[0.01] mb-5 font-mono">
-        <h3 class="text-center font-bold text-emerald-400 text-[10px] tracking-widest mb-3 uppercase">REGISTER AS A MARKET RESELLER</h3>
-        <div class="space-y-3">
-          <div>
-            <label class="text-[9px] font-bold tracking-wider text-white/40 uppercase">FULL NAME</label>
-            <input type="text" id="reseller-name" placeholder="ENTER NAME" class="input-field rounded-lg">
-          </div>
-          <div>
-            <label class="text-[9px] font-bold tracking-wider text-white/40 uppercase">EMAIL ADDRESS</label>
-            <input type="email" id="reseller-email" placeholder="ENTER EMAIL" class="input-field rounded-lg">
-          </div>
-          <div>
-            <label class="text-[9px] font-bold tracking-wider text-white/40 uppercase">CASH APP CASHTAG ($)</label>
-            <input type="text" id="reseller-cashapp" placeholder="$CASHTAG" class="input-field rounded-lg">
-          </div>
-          <div class="pt-2 border-t border-emerald-500/10">
-            <label class="text-[9px] font-bold tracking-wider text-yellow-500 uppercase">MARKET ACCESS PASSWORD</label>
-            <input type="password" id="reseller-password" placeholder="ENTER ACCESS PASSWORD" class="input-field rounded-lg border-yellow-500/40 focus:border-yellow-500 text-yellow-400">
-            <div id="password-error" class="text-[9px] text-red-500 font-bold uppercase mt-1 hidden">⚠️ INVALID SECURITY PASSWORD ACCESS DENIED</div>
-          </div>
+    <div class="emerald-glass max-w-md w-full rounded-3xl p-5 shadow-2xl relative overflow-hidden">
+        <div class="flex justify-between items-center border-b border-emerald-500/10 pb-3 mb-4">
+            <div>
+                <h4 class="text-emerald-400 font-bold tracking-wide font-mono text-sm">AITITRADE</h4>
+                <p class="text-[9px] font-mono text-emerald-500/50 uppercase tracking-widest">SONGSHARE MARKET LOGIC</p>
+            </div>
+            <div class="text-right">
+                <span class="inline-block bg-emerald-500/10 text-emerald-400 text-[9px] font-mono px-2 py-0.5 rounded border border-emerald-500/20 font-bold uppercase tracking-wider animate-pulse">● LIVE TERMINAL</span>
+            </div>
         </div>
-      </div>
 
-      <button onclick="startEngine()" class="w-full border border-emerald-500/30 bg-emerald-500/10 py-3.5 px-2 text-center rounded-xl font-mono text-xs text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-widest font-bold cursor-pointer">
-        ENTER MARKET FLOOR
-      </button>
-    </div>
-  </div>
+        <div class="grid grid-cols-3 gap-2 mb-4">
+            <button id="p-0" onclick="window.switchPortal(0)" class="portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono text-[10px]">PORTAL 01 // QUEEN BUTTA</button>
+            <button id="p-1" onclick="window.switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono">PORTAL 02 // GANSTA LYFE</button>
+            <button id="p-2" onclick="window.switchPortal(2)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono">PORTAL 03 // G. SMOOTH</button>
+        </div>
 
-  <div class="w-full max-w-md bloomberg-terminal rounded-2xl p-5 relative overflow-hidden border border-emerald-500/10">
-    
-    <div class="flex justify-between items-start mb-4 border-b border-white/5 pb-3">
-      <div class="text-left">
-        <h1 class="text-xs font-mono font-bold tracking-[0.3em] text-emerald-400">AITITRADE</h1>
-        <p class="text-[9px] font-mono text-emerald-400/70 tracking-wider mt-0.5 uppercase">SONGSHARE MARKET LOGIC</p>
-      </div>
-      <div class="text-right font-mono">
-        <div class="text-[10px] text-emerald-500 bg-emerald-950/30 border border-emerald-500/20 px-2 py-0.5 rounded animate-pulse font-bold">● LIVE TERMINAL</div>
-      </div>
-    </div>
+        <div class="border border-emerald-500/10 bg-black/40 rounded-2xl p-3 mb-4 font-mono text-center">
+            <span class="text-[9px] text-emerald-400/50 uppercase tracking-widest block mb-1">MARKET TICKER VALUE</span>
+            <div id="main-osc" class="text-2xl font-bold text-emerald-400 tracking-tight transition-all duration-300">$10.00</div>
+            <div id="price-arrow" class="text-[9px] text-emerald-400 font-bold mt-1 uppercase tracking-widest">⚡ CONNECTING LIVE LEDGER NODE...</div>
+        </div>
 
-    <div class="w-full bg-black/40 border border-white/5 rounded p-1 mb-4 overflow-hidden whitespace-nowrap">
-      <div class="animate-marquee text-[10px] font-mono text-emerald-400/80 tracking-widest uppercase">
-        ⚡ CONNECTING LIVE LEDGER NODE... MATCHING KINETIC STREAMING ASSETS... PORTAL TIER OVERRIDES ACTIVE... 97.7 THE FLAME BROADCASTING SYSTEM...
-      </div>
-    </div>
+        <div class="grid grid-cols-2 gap-3 mb-4">
+            <div class="emerald-glass p-3 rounded-xl border border-emerald-500/5 font-mono text-center">
+                <span class="text-[8px] text-emerald-400/40 uppercase tracking-widest block">GATEWAY STREAM</span>
+                <div id="router-target" class="text-[10px] text-emerald-400 font-bold uppercase tracking-wide mt-1 truncate">CONNECTING...</div>
+            </div>
+            <div class="emerald-glass p-3 rounded-xl border border-emerald-500/5 font-mono text-center">
+                <span class="text-[8px] text-emerald-400/40 uppercase tracking-widest block">MATRIX QUEUE</span>
+                <div id="router-count" class="text-[10px] text-emerald-400 font-bold uppercase tracking-wide mt-1">-- / --</div>
+            </div>
+        </div>
 
-    <div class="glass-panel rounded-xl p-5 mb-4 text-center relative overflow-hidden group border border-white/5">
-      <div class="absolute top-2 left-3 text-[8px] font-mono text-emerald-400/40 tracking-widest uppercase">MARKET TICKER VALUE</div>
-      <div id="main-osc" class="text-3xl sm:text-4xl font-mono font-black glow-text-green tracking-tighter my-2 transition-all duration-100">
-        $10.00
-      </div>
-      <div id="price-arrow" class="text-[9px] font-mono text-emerald-400/70 uppercase tracking-widest mt-1 font-bold">
-        STATUS // CORE RUNNING
-      </div>
-    </div>
+        <div id="matrix-visualizer" class="border border-emerald-500/5 bg-emerald-950/10 p-2 text-center rounded-xl font-mono text-[9px] text-emerald-500/50 uppercase mb-4 tracking-wider">
+            SYNCING POSITIONS...
+        </div>
 
-    <div class="grid grid-cols-3 gap-1.5 mb-4">
-      <button id="btn-market-view" class="portal-btn active border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer">
-        <div class="text-[8px] text-white/40 font-mono tracking-wider group-hover:text-emerald-400">VIEW MODE</div>
-        <div class="text-[10px] font-bold font-mono uppercase tracking-tight mt-0.5">MARKET</div>
-      </button>
+        <div class="grid grid-cols-3 gap-3 items-center mb-4 border border-emerald-500/10 bg-black/20 p-3 rounded-2xl">
+            <div class="col-span-1 aspect-square rounded-xl overflow-hidden border border-emerald-500/10 bg-black">
+                <img id="album-cover-img" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" alt="Cover Artwork" class="w-full h-full object-cover">
+            </div>
+            <div class="col-span-2 text-left">
+                <span id="asset-label-header" class="text-[8px] font-mono text-emerald-400/40 uppercase tracking-widest block">QUEEN BUTTA ASSET TRACKER</span>
+                <h2 id="display-active-album-name" class="font-bold text-gray-200 text-sm tracking-wide uppercase truncate mt-0.5">QUEEN BUTTA // SUPERFLY</h2>
+                <p id="buy-label-header" class="text-[10px] font-mono text-emerald-400 mt-1 font-bold">INVEST IN QUEEN BUTTA: $10.00</p>
+            </div>
+        </div>
 
-      <button id="p-0" onclick="window.switchPortal(0)" class="portal-btn border border-emerald-500/30 bg-emerald-500/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer text-emerald-400">
-        <div class="text-[8px] text-white/40 font-mono tracking-wider group-hover:text-emerald-400">PORTAL 01 // $10</div>
-        <div id="nav-album-t1" class="text-[10px] font-bold font-mono truncate mt-0.5 text-white/80">QUEEN BUTTA</div>
-      </button>
+        <div class="emerald-glass rounded-2xl p-2 max-h-40 overflow-y-auto space-y-1 mb-4 text-left" id="terminal-track-matrix-container"></div>
 
-      <button id="p-1" onclick="window.switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer">
-        <div class="text-[8px] text-white/40 font-mono tracking-wider group-hover:text-emerald-400">PORTAL 02 // $20</div>
-        <div id="nav-album-t2" class="text-[10px] font-bold font-mono truncate mt-0.5 text-white/80">GANSTA LYFE</div>
-      </button>
+        <div class="grid grid-cols-2 gap-2 mt-2">
+            <button class="border border-white/5 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-gray-400 hover:bg-white/10 transition-all uppercase tracking-wider font-bold cursor-not-allowed opacity-50">
+                📥 GATED DOWNLOAD
+            </button>
+            <a id="btn-song-buy" href="https://cash.app/$AITITRADEBROKERAGE" onclick="window.executeAssetPurchase()" target="_blank" class="border border-emerald-500/30 bg-emerald-500/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider font-bold block shadow-[0_0_15px_rgba(16,185,129,0.02)]">
+                💰 BUY ASSET NOW ($10)
+            </a>
+        </div>
     </div>
 
-    <div class="bg-black/60 border border-emerald-500/20 rounded-xl p-3.5 mb-4 text-left font-mono text-[11px] space-y-1.5">
-      <div class="text-[9px] text-emerald-400/60 tracking-widest font-bold border-b border-emerald-500/10 pb-1 uppercase">📊 TERMINAL LOG BUFFER:</div>
-      <div class="flex justify-between"><span class="text-emerald-400/50">GATEWAY STREAM:</span> <span id="router-target" class="text-emerald-400 font-bold">CONNECTING...</span></div>
-      <div class="flex justify-between"><span class="text-emerald-400/50">MATRIX QUEUE:</span> <span id="router-count" class="text-emerald-400 font-bold">-- / --</span></div>
-      <div id="matrix-visualizer" class="text-[10px] text-emerald-400/50 mt-1 pt-1 border-t border-emerald-500/10 italic">SYNCING POSITIONS...</div>
-    </div>
-
-    <div class="border border-emerald-500/20 bg-black/40 rounded-xl p-4 mb-4 text-left">
-      <div class="flex justify-between items-center mb-3 font-mono">
-        <h3 id="asset-label-header" class="text-[10px] tracking-widest text-emerald-400/60 uppercase font-bold">TRACK ASSET TRACKER</h3>
-        <span id="buy-label-header" class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">INVEST IN QUEEN BUTTA: $10</span>
-      </div>
-      
-     <div id="album-cover-frame" class="w-full mb-3 rounded border border-emerald-500/15 overflow-hidden bg-black/60 aspect-square flex items-center justify-center">
-        <img id="album-cover-img" src="https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982" class="w-full h-full object-cover" alt="Cover Artwork">
-      </div>
-
-      <div id="display-active-album-name" class="text-xs font-bold text-emerald-400 mb-2 font-mono uppercase tracking-wider">QUEEN BUTTA</div>
-      <div id="terminal-track-matrix-container" class="space-y-1.5 font-mono text-xs max-h-48 overflow-y-auto pr-1"></div>
-    </div>
-
-    <div class="grid grid-cols-2 gap-2 mb-2">
-      <button id="btn-free-download" class="border border-white/5 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-white/20 cursor-not-allowed transition-all uppercase tracking-wider relative overflow-hidden" disabled>
-        <span class="absolute top-1 right-1 text-[7px] bg-red-500/20 text-red-400 px-1 rounded font-bold">GATED</span>
-        📥 DOWNLOAD ALBUM
-      </button>
-      <a id="btn-song-buy" href="https://cash.app/$AITITRADEBROKERAGE" onclick="window.executeAssetPurchase()" target="_blank" class="border border-emerald-500/30 bg-emerald-500/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider font-bold block text-center shadow-[0_0_15px_rgba(16,185,129,0.02)]">
-  💰 BUY ASSET NOW ($10)
-</a>
-    </div>
-
-    <div class="mt-2">
-      <a href="https://aitify-music-stream.replit.app/" target="_blank" class="border border-white/10 bg-white/5 py-2 px-4 text-center rounded-xl font-mono text-[10px] text-emerald-400/60 hover:text-emerald-400 hover:bg-white/10 transition-all uppercase tracking-widest block font-bold text-center">
-        🌐 AITITRADE EXCHANGE
-      </a>
-    </div>
-
-    <div class="text-[9px] font-mono text-emerald-400/30 tracking-wider text-center mt-4 pt-2 border-t border-emerald-500/10">
-      97.7 THE FLAME BROADCAST NETWORKS © 2026
-    </div>
-
-  </div>
-
-  <script src="terminal-fetch.js"></script>
+    <script src="terminal-fetch.js"></script>
 </body>
 </html>
