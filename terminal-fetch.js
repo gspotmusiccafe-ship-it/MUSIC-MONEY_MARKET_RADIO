@@ -1,9 +1,9 @@
 const QUEEN_BUTTA_VAULT = [
-    { n: "SUPERFLY", src: "" },
-    { n: "ADDICTION", src: "" },
-    { n: "TIMES UP", src: "" },
-    { n: "LOVE MAKE OVER", src: "" },
-    { n: "I'M NOT HER", src: "" },
+    { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media" },
+    { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FADDICTION.mp3?alt=media" },
+    { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media" },
+    { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKEOVER.mp3?alt=media" },
+    { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media" },
     { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
     { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
     { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
@@ -34,7 +34,7 @@ const G_SMOOTH_NEED_VAULT = [
     { n: "BODY CALL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FBODY%20CALL%20G.%20SMOOTH.mp3?alt=media&token=d992ce3e-aea7-4e3e-aac1-4deafae04a00" },
     { n: "SPECIAL TO A G", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FSPECIAL%20TO%20A%20_G_.mp3?alt=media&token=bff92c51-b516-4f76-ac5a-86e69beec014" },
     { n: "A GOOD WOMAN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FA%20GOOD%20WOMAN.mp3?alt=media&token=bcdcd768-4dea-4d5d-a679-63655e6f2d01" },
-    { n: "HOW WAS YOUR DAY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%F0%9F%8E%B5%20G.%20SMOOTH%20%E2%80%93%20%E2%80%9CHOW%20WAS%20YOUR%20DAY%E2%80%9D.mp3?alt=media&token=4fc208c9-7d7a-4479-a7db-df5b52678ab9" },
+    { n: "HOW WAS YOUR DAY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%F0%9F%8E%B5%20G.%20SMOOTH%20%E2%80%9–%20%E2%80%9CHOW%20WAS%20YOUR%20DAY%E2%80%9D.mp3?alt=media&token=4fc208c9-7d7a-4479-a7db-df5b52678ab9" },
     { n: "JUICY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FJUICY%20LOVE%20G.%20SMOOTH.mp3?alt=media&token=cfc384bf-82ef-4dee-9a39-c46b473a3c54" },
     { n: "CANDY LAND", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CCANDY%20LAND%E2%80%9D.mp3?alt=media&token=fe8be134-a952-4ed9-9723-3c001e5e7aa5" },
     { n: "HONEY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CHONEY%20LOVE%E2%80%9D.mp3?alt=media&token=8d335ccd-ef09-4d54-babf-5e1376994ec2" },
@@ -53,7 +53,7 @@ const J_MARIE_VAULT = [
     { n: "QUEEN BEE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FQUEEN%20BEE%20(1).mp3?alt=media&token=b9330051-df22-4122-a69f-b0b703052b6d" },
     { n: "ZODIAC SIGN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FZODIAC%20SIGN.mp3?alt=media&token=cb1a41b0-6b02-4a07-83e7-2a7a2dc8f775" },
     { n: "CAN'T FOLLOW THROUGH", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FCAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=20698162-f940-4501-91a4-650d05672807" },
-    { n: "ECSTASY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FJ.%20MARIE%20%E2%80%94%20%E2%80%9CECSTASY%E2%80%9D.mp3?alt=media&token=6d2166b2-3c8d-4930-be72-11c23c2104da" },
+    { n: "ECSTASY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FJ.%20MARIE%20%E2%80%9–%20%E2%80%9CECSTASY%E2%80%9D.mp3?alt=media&token=6d2166b2-3c8d-4930-be72-11c23c2104da" },
     { n: "KICK ROCKS BOO", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FJ.%20MARIE%20KICK%20ROCKS%20BOO%20(2).mp3?alt=media&token=81069a4f-55e8-4189-8d68-8f5512071852" },
     { n: "SCENE BY SCENE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FSCENE%20BY%20SCENE.mp3?alt=media&token=68f6c6c4-ac59-4d91-9aa9-1b535ad6efa9" },
     { n: "HE'S GOT STYLE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHE'S%20GOT%20STYLE.mp3?alt=media&token=b53cece4-6dc5-469e-8e34-3fb137a9b840" }
@@ -81,8 +81,25 @@ let state = {
     currentPortal: 0,
     player: new Audio(),
     activeTrackIndex: null,
-    engineStarted: false
+    engineStarted: false,
+    baseOscillation: 0
 };
+
+// Global pricing wave generator ($10 to $50 range bounds)
+setInterval(() => {
+    state.baseOscillation += 0.05;
+    if (state.engineStarted && config[state.currentPortal]) {
+        let basePrice = config[state.currentPortal].buyIn;
+        // Natural market ticker wave swing +/- $2.50
+        let dynamicSwing = Math.sin(state.baseOscillation) * 2.50;
+        let finalTickerPrice = Math.max(10.00, Math.min(55.00, basePrice + dynamicSwing));
+        
+        const tickerElement = document.getElementById('main-osc');
+        if (tickerElement) {
+            tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
+        }
+    }
+}, 300);
 
 window.startEngine = function() {
     const overlay = document.getElementById('prospectus-overlay');
@@ -95,19 +112,18 @@ window.switchPortal = function(idx) {
     if(!config[idx]) return;
     state.currentPortal = idx;
     
-    // Stop any playing audio cleanly
+    // Stop old audio channels completely
     state.player.pause();
     state.activeTrackIndex = null;
 
-    // UI Updates
+    // UI Field Refresh
     document.getElementById('album-cover-img').src = config[idx].art;
-    document.getElementById('main-osc').innerText = `$${config[idx].buyIn.toFixed(2)}`;
     document.getElementById('display-active-album-name').innerText = `${config[idx].name} // PORTAL ACTIVE`;
     document.getElementById('asset-label-header').innerText = `${config[idx].name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
     document.getElementById('btn-song-buy').innerText = `BUY ASSET NOW ($${config[idx].buyIn})`;
 
-    // Reset button design states
+    // Re-highlight active button states on slider
     document.querySelectorAll('.portal-btn').forEach(btn => {
         btn.classList.remove('active', 'text-emerald-400', 'font-bold');
         btn.classList.add('text-white/70', 'bg-white/5');
@@ -120,6 +136,13 @@ window.switchPortal = function(idx) {
     }
 
     populateTrackMatrixUI();
+
+    // Fix 1: Auto-trigger track 0 play layout instantly on switch
+    if(config[idx].vault && config[idx].vault.length > 0) {
+        setTimeout(() => {
+            window.playT(0);
+        }, 150);
+    }
 };
 
 function populateTrackMatrixUI() {
@@ -127,10 +150,11 @@ function populateTrackMatrixUI() {
     if (!container) return;
     let html = "";
     config[state.currentPortal].vault.forEach((track, idx) => {
+        let activeStyle = (idx === state.activeTrackIndex) ? "bg-emerald-500/10 text-white font-bold" : "";
         html += `
-        <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5">
+        <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 ${activeStyle}" id="track-row-${idx}">
             <span class="font-mono text-emerald-400/80 text-[11px]">${idx + 1}. ${track.n}</span>
-            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="playT(${idx})"> PLAY </button>
+            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="window.playT(${idx})"> PLAY </button>
         </div>`;
     });
     container.innerHTML = html;
@@ -138,10 +162,33 @@ function populateTrackMatrixUI() {
 
 window.playT = function(idx) {
     const track = config[state.currentPortal].vault[idx];
-    if(!track || !track.src) return alert("STREAM DESTINATION NOT LINKED YET");
+    if(!track || !track.src) return; 
+    
+    state.activeTrackIndex = idx;
     state.player.src = track.src;
-    state.player.play();
+    state.player.load();
+    
+    let playPromise = state.player.play();
+    if (playPromise !== undefined) {
+        playPromise.then(() => {
+            // Update track row display state
+            document.querySelectorAll('[id^="track-row-"]').forEach(row => row.classList.remove('bg-emerald-500/10'));
+            const currentRow = document.getElementById(`track-row-${idx}`);
+            if(currentRow) currentRow.classList.add('bg-emerald-500/10');
+        }).catch(error => {
+            console.log("Autoplay restricted by browser interaction boundaries.");
+        });
+    }
 };
 
-// Start default template on ready
+// Go to next song automatically when current track completes execution
+state.player.onended = function() {
+    let nextIdx = state.activeTrackIndex + 1;
+    if (nextIdx < config[state.currentPortal].vault.length) {
+        window.playT(nextIdx);
+    } else {
+        window.playT(0); // Loop back around to the first track
+    }
+};
+
 window.onload = () => { populateTrackMatrixUI(); };
