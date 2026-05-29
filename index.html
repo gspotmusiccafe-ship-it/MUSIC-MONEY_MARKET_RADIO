@@ -57,11 +57,13 @@
             </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 mb-4">
-            <button id="p-0" onclick="window.switchPortal(0)" class="portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono text-[10px]">PORTAL 01 // QUEEN BUTTA</button>
-            <button id="p-1" onclick="window.switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono">PORTAL 02 // GANSTA LYFE</button>
-            <button id="p-2" onclick="window.switchPortal(2)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono">PORTAL 03 // G. SMOOTH</button>
-        </div>
+      <div class="portal-scroll-container flex overflow-x-auto whitespace-nowrap gap-2 mb-4 pb-2" style="scrollbar-width: thin; -webkit-overflow-scrolling: touch;">
+    <button id="p-0" onclick="window.switchPortal(0)" class="portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono text-[10px] min-w-[160px]">PORTAL 01 // QUEEN BUTTA</button>
+    <button id="p-1" onclick="window.switchPortal(1)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono min-w-[160px]">PORTAL 02 // GANSTA LYFE</button>
+    <button id="p-2" onclick="window.switchPortal(2)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono min-w-[160px]">PORTAL 03 // G. SMOOTH</button>
+    <button id="p-3" onclick="window.switchPortal(3)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono min-w-[160px]">PORTAL 04 // J. MARIE</button>
+    <button id="p-4" onclick="window.switchPortal(4)" class="portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all text-[10px] text-white/70 font-mono min-w-[160px]">PORTAL 05 // ROSELYN REYNOLDS</button>
+</div> 
 
         <div class="border border-emerald-500/10 bg-black/40 rounded-2xl p-3 mb-4 font-mono text-center">
             <span class="text-[9px] text-emerald-400/50 uppercase tracking-widest block mb-1">MARKET TICKER VALUE</span>
