@@ -1,9 +1,9 @@
 const QUEEN_BUTTA_VAULT = [
-    { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media" },
-    { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FADDICTION.mp3?alt=media" },
-    { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media" },
-    { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKEOVER.mp3?alt=media" },
-    { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media" },
+    { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
+    { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
+    { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
+    { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
+    { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
     { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
     { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
     { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
@@ -86,31 +86,29 @@ let state = {
     lastPrice: 10.00
 };
 
-// Foundational Price Oscillator (Resets on base price, bounces between bounds, triggers visual indicator signals)
+// FIX 1: Ticker slowed down dramatically (Step value dropped from 0.08 to 0.008 for a smooth, relaxed crawl)
 setInterval(() => {
-    state.baseOscillation += 0.08;
+    state.baseOscillation += 0.008; 
     if (config[state.currentPortal]) {
         let basePrice = config[state.currentPortal].buyIn;
         let maxLimit = config[state.currentPortal].maxGross;
         
-        // Generate a smooth continuous wave swing between buy-in floor and max valuation ceiling
         let amplitude = (maxLimit - basePrice) / 2;
         let midpoint = basePrice + amplitude;
         let dynamicPrice = midpoint + Math.sin(state.baseOscillation) * amplitude;
         let finalTickerPrice = Math.max(basePrice, Math.min(maxLimit, dynamicPrice));
         
         const tickerElement = document.getElementById('main-osc');
-        const syncNodeElement = document.querySelector('.text-emerald-400.animate-pulse'); // Find signaling bar block
+        const syncNodeElement = document.querySelector('.text-emerald-400.animate-pulse');
 
         if (tickerElement) {
             tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
             
-            // Render visual tracking indicators (+ Green / - Red signals)
             if (syncNodeElement) {
                 if (finalTickerPrice >= state.lastPrice) {
                     syncNodeElement.innerHTML = `<span class="text-emerald-400 font-bold">▲ +${(finalTickerPrice - basePrice).toFixed(2)} MARKET MOMENTUM GAIN</span>`;
                 } else {
-                    syncNodeElement.innerHTML = `<span class="text-rose-500 font-bold">▼ -${(midpoint - finalTickerPrice).toFixed(2)} MARKET FLUIDITY ADJUST</span>`;
+                    syncNodeElement.innerHTML = `<span class="text-rose-500 font-bold">▼ -${(maxLimit - finalTickerPrice).toFixed(2)} MARKET FLUIDITY ADJUST</span>`;
                 }
             }
             state.lastPrice = finalTickerPrice;
@@ -129,97 +127,19 @@ window.switchPortal = function(idx) {
     if(!config[idx]) return;
     state.currentPortal = idx;
     
-    // Stop old music layout cleanly
     state.player.pause();
     state.activeTrackIndex = null;
-    state.baseOscillation = 0; // Reset oscillator foundation wave string on station jump
+    state.baseOscillation = 0; 
 
-    // UI Field Configuration Refresh
     document.getElementById('album-cover-img').src = config[idx].art;
     document.getElementById('display-active-album-name').innerText = `${config[idx].name} // PORTAL ACTIVE`;
     document.getElementById('asset-label-header').innerText = `${config[idx].name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
     document.getElementById('btn-song-buy').innerText = `BUY ASSET NOW ($${config[idx].buyIn})`;
 
-    // Re-highlight target slider tabs
     document.querySelectorAll('.portal-btn').forEach(btn => {
         btn.classList.remove('active', 'text-emerald-400', 'font-bold');
         btn.classList.add('text-white/70', 'bg-white/5');
     });
     
     const activeBtn = document.getElementById(`p-${idx}`);
-    if(activeBtn) {
-        activeBtn.classList.add('active', 'text-emerald-400', 'font-bold');
-        activeBtn.classList.remove('text-white/70', 'bg-white/5');
-    }
-
-    populateTrackMatrixUI();
-
-    // Trigger explicit media autoplay across portal switches
-    if(config[idx].vault && config[idx].vault.length > 0) {
-        setTimeout(() => {
-            window.playT(0);
-        }, 150);
-    }
-};
-
-function populateTrackMatrixUI() {
-    const container = document.getElementById('terminal-track-matrix-container');
-    if (!container) return;
-    let html = "";
-    config[state.currentPortal].vault.forEach((track, idx) => {
-        let activeStyle = (idx === state.activeTrackIndex) ? "bg-emerald-500/10 text-white font-bold" : "";
-        let isPlaying = (idx === state.activeTrackIndex && !state.player.paused);
-        let btnText = isPlaying ? "PAUSE" : "PLAY";
-
-        html += `
-        <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 ${activeStyle}" id="track-row-${idx}">
-            <span class="font-mono text-emerald-400/80 text-[11px]">${idx + 1}. ${track.n}</span>
-            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="window.toggleTrack(${idx})"> ${btnText} </button>
-        </div>`;
-    });
-    container.innerHTML = html;
-}
-
-// Solid Play/Pause toggle matrix action execution
-window.toggleTrack = function(idx) {
-    if (state.activeTrackIndex === idx) {
-        if (!state.player.paused) {
-            state.player.pause();
-        } else {
-            state.player.play();
-        }
-        populateTrackMatrixUI(); // Re-render pause/play label button layout state instantly
-    } else {
-        window.playT(idx);
-    }
-};
-
-window.playT = function(idx) {
-    const track = config[state.currentPortal].vault[idx];
-    if(!track || !track.src) return;
-    
-    state.activeTrackIndex = idx;
-    state.player.src = track.src;
-    state.player.load();
-    
-    let playPromise = state.player.play();
-    if (playPromise !== undefined) {
-        playPromise.then(() => {
-            populateTrackMatrixUI();
-        }).catch(error => {
-            console.log("Autoplay context initialization boundary caught.");
-        });
-    }
-};
-
-state.player.onended = function() {
-    let nextIdx = state.activeTrackIndex + 1;
-    if (nextIdx < config[state.currentPortal].vault.length) {
-        window.playT(nextIdx);
-    } else {
-        window.playT(0);
-    }
-};
-
-window.onload = () => { populateTrackMatrixUI(); };
