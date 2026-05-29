@@ -88,16 +88,16 @@ let state = {
 // Global pricing wave generator ($10 to $50 range bounds)
 setInterval(() => {
     state.baseOscillation += 0.05;
-    if (state.engineStarted && config[state.currentPortal]) {
-        let basePrice = config[state.currentPortal].buyIn;
-        // Natural market ticker wave swing +/- $2.50
-        let dynamicSwing = Math.sin(state.baseOscillation) * 2.50;
-        let finalTickerPrice = Math.max(10.00, Math.min(55.00, basePrice + dynamicSwing));
-        
-        const tickerElement = document.getElementById('main-osc');
-        if (tickerElement) {
-            tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
-        }
+    // Read the current price directly from the active configuration row
+    let basePrice = config[state.currentPortal] ? config[state.currentPortal].buyIn : 10.00;
+    
+    // Natural market ticker wave swing +/- $2.50
+    let dynamicSwing = Math.sin(state.baseOscillation) * 2.50;
+    let finalTickerPrice = Math.max(10.00, Math.min(55.00, basePrice + dynamicSwing));
+    
+    const tickerElement = document.getElementById('main-osc');
+    if (tickerElement) {
+        tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
     }
 }, 300);
 
