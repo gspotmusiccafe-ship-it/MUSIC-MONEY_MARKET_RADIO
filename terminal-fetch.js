@@ -1,13 +1,9 @@
-/**
- * AITITRADE Bloomberg Multi-Portal Engine - V26.0 (Triple Portal & WhatsApp Build)
- */
-
 const QUEEN_BUTTA_VAULT = [
-    { n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" },
-    { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" },
-    { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" },
-    { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" },
-    { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" },
+    { n: "SUPERFLY", src: "" },
+    { n: "ADDICTION", src: "" },
+    { n: "TIMES UP", src: "" },
+    { n: "LOVE MAKE OVER", src: "" },
+    { n: "I'M NOT HER", src: "" },
     { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" },
     { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" },
     { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" },
@@ -38,7 +34,7 @@ const G_SMOOTH_NEED_VAULT = [
     { n: "BODY CALL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FBODY%20CALL%20G.%20SMOOTH.mp3?alt=media&token=d992ce3e-aea7-4e3e-aac1-4deafae04a00" },
     { n: "SPECIAL TO A G", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FSPECIAL%20TO%20A%20_G_.mp3?alt=media&token=bff92c51-b516-4f76-ac5a-86e69beec014" },
     { n: "A GOOD WOMAN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FA%20GOOD%20WOMAN.mp3?alt=media&token=bcdcd768-4dea-4d5d-a679-63655e6f2d01" },
-    { n: "HOW WAS YOUR DAY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%F0%9F%8E%B5%20G.%20SMOOTH%20%E2%80%93%20%E2%80%9CHOW%20WAS%20YOUR%20DAY%E2%80%9D.mp3?alt=media&token=4fc208c9-7d7a-4479-a7db-df5b52678ab9" },
+    { n: "HOW WAS YOUR DAY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%F0%9F%8E%B5%20G.%20SMOOTH%20%E2%80%9–%20%E2%80%9CHOW%20WAS%20YOUR%20DAY%E2%80%9D.mp3?alt=media&token=4fc208c9-7d7a-4479-a7db-df5b52678ab9" },
     { n: "JUICY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FJUICY%20LOVE%20G.%20SMOOTH.mp3?alt=media&token=cfc384bf-82ef-4dee-9a39-c46b473a3c54" },
     { n: "CANDY LAND", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CCANDY%20LAND%E2%80%9D.mp3?alt=media&token=fe8be134-a952-4ed9-9723-3c001e5e7aa5" },
     { n: "HONEY LOVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2F%E2%80%9CHONEY%20LOVE%E2%80%9D.mp3?alt=media&token=8d335ccd-ef09-4d54-babf-5e1376994ec2" },
@@ -48,10 +44,72 @@ const G_SMOOTH_NEED_VAULT = [
     { n: "BABY DON'T CRY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FBABY%20DON'T%20CRY.mp3?alt=media&token=089ef8b4-1351-4e4a-8ded-44eb7898a7ec" }
 ];
 
+const J_MARIE_VAULT = [
+    { n: "HOW MUCH IS TOO MUCH", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHOW%20MUCH%20IS%20TOO%20MUCH.mp3?alt=media&token=1ea79626-ee09-4ac0-8554-95a4814df1e3" },
+    { n: "LIQUID PASSION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2F%E2%80%9CLIQUID%20PASSION%E2%80%9D.mp3?alt=media&token=f5b8647c-29bb-447a-88be-7deba3ee5a24" },
+    { n: "PLAYGROUND", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FPLAYGROUND-J.%20MARIE.mp3?alt=media&token=91f0bf15-95ed-4623-9d70-89671bac8ad3" },
+    { n: "BITTER SWEET", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FBITTER%20SWEET.mp3?alt=media&token=b0d768b1-cf71-478e-b81f-bf227c42fec4" },
+    { n: "WHO FOOLING WHO", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FWHO%20FOOLING%20WHO%20SPOTIFY.mp3?alt=media&token=4dcdf4d0-b32d-4519-bf88-41fa3b0eaa0e" },
+    { n: "QUEEN BEE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FQUEEN%20BEE%20(1).mp3?alt=media&token=b9330051-df22-4122-a69f-b0b703052b6d" },
+    { n: "ZODIAC SIGN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FZODIAC%20SIGN.mp3?alt=media&token=cb1a41b0-6b02-4a07-83e7-2a7a2dc8f775" },
+    { n: "CAN'T FOLLOW THROUGH", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FCAN'T%20FOLLOW%20THROUGH.mp3?alt=media&token=20698162-f940-4501-91a4-650d05672807" },
+    { n: "ECSTASY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FJ.%20MARIE%20%E2%80%9–%20%E2%80%9CECSTASY%E2%80%9D.mp3?alt=media&token=6d2166b2-3c8d-4930-be72-11c23c2104da" },
+    { n: "KICK ROCKS BOO", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FJ.%20MARIE%20KICK%20ROCKS%20BOO%20(2).mp3?alt=media&token=81069a4f-55e8-4189-8d68-8f5512071852" },
+    { n: "SCENE BY SCENE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FSCENE%20BY%20SCENE.mp3?alt=media&token=68f6c6c4-ac59-4d91-9aa9-1b535ad6efa9" },
+    { n: "HE'S GOT STYLE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHE'S%20GOT%20STYLE.mp3?alt=media&token=b53cece4-6dc5-469e-8e34-3fb137a9b840" }
+];
+
+const ROSELYN_REYNOLDS_VAULT = [
+    { n: "SILENT CRIES NOBODY HEARS (MKT)", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FSILENT%20CRIES%20NOBODY%20HEARS%20SONGSHARE.mp3?alt=media&token=d3d85868-1e4b-408d-96f9-e1ad89390fb1" },
+    { n: "WHEN THE JOY RETURNS", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FWHEN%20JOY%20RETURNS%20(2).mp3?alt=media&token=63a95582-1b5a-4c0b-b4cf-0562f2ce1e1d" },
+    { n: "THROUGH THE RAIN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FTHROUGH%20THE%20RAIN%20SONGSHARE.mp3?alt=media&token=c2e6e982-7ac9-474c-958a-75a2a2ed0048" },
+    { n: "SPREAD MY WINGS", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FSPREAD%20MY%20WINGS%20SONGSHARE%2C%20(1).mp3?alt=media&token=c859cce0-1c6f-490d-905a-a3c94abe52b3" },
+    { n: "I HAVE DECIDED", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FI%20HAVE%20DECIDED%20SONGSHARE.mp3?alt=media&token=378d653b-0665-4737-8a0a-f29acc969088" },
+    { n: "GONE BUT NOT FORGOTTEN", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FGONE%20BUT%20NOT%20FORGOTTEN%20SONGSHARE.mp3?alt=media&token=f36ebf59-5c21-4284-aded-9a236fe5b1b6" },
+    { n: "SILENT CRIES NOBODY HEARS (ENTRY)", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2FSILENT%20CRIES%20NOBODY%20HEARS%20SONGETRY%20(1).mp3?alt=media&token=0887cf61-68dc-4fba-97ea-ddd22d3d3169" }
+];
+
 const config = {
-    0: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", buyIn: 10.00, sellOut: 80.00, maxGross: 130.00, vault: QUEEN_BUTTA_VAULT },
-    1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, sellOut: 160.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT },
-    2: { name: "G. SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=ca2f5e98-f2e1-4863-8aa1-12ea5ea8af5c", buyIn: 30.00, sellOut: 240.00, maxGross: 390.00, vault: G_SMOOTH_NEED_VAULT }
+    0: {
+        name: "QUEEN BUTTA",
+        art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982",
+        buyIn: 10.00,
+        sellOut: 80.00,
+        maxGross: 130.00,
+        vault: QUEEN_BUTTA_VAULT
+    },
+    1: {
+        name: "GANSTA SMOOTH",
+        art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081",
+        buyIn: 20.00,
+        sellOut: 160.00,
+        maxGross: 260.00,
+        vault: GANSTA_SMOOTH_VAULT
+    },
+    2: {
+        name: "G. SMOOTH",
+        art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=ca2f5e98-f2e1-4863-8aa1-12ea5ea8af5c",
+        buyIn: 30.00,
+        sellOut: 240.00,
+        maxGross: 390.00,
+        vault: G_SMOOTH_NEED_VAULT
+    },
+    3: {
+        name: "J. MARIE",
+        art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHOW%20MUCH%20IS%20TOO%20MUCH%20IMG.png?alt=media&token=ffe28bfe-910f-4b0e-b6c7-52bf472d3c7d",
+        buyIn: 40.00, // Part of the $10-$50 tier logic
+        sellOut: 320.00,
+        maxGross: 520.00,
+        vault: J_MARIE_VAULT
+    },
+    4: {
+        name: "ROSELYN REYNOLDS",
+        art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2Fa-gospel-album-cover-design-featuring-el_4wCp3CJ8SEa8_DnYX2VYSA_WYYliBC6Qjeva_cw-WFGMA_cover.png?alt=media&token=cd3a52f2-461e-4c97-a74b-c41b59c10c82",
+        buyIn: 50.00, // Complete $50 tier ceiling
+        sellOut: 400.00,
+        maxGross: 650.00,
+        vault: ROSELYN_REYNOLDS_VAULT
+    }
 };
 
 let state = {
@@ -62,6 +120,7 @@ let state = {
     totalRegisteredBuyers: 0,
     engineStarted: false
 };
+
 state.player.preload = "auto";
 
 const LEDGER_API_URL = "https://script.google.com/macros/s/AKfycbwv3L4wzki_imUUOxqR0fKxfRpg5GSU6n2vtX0s7o0Kj3-hbj3XAhSC2lJYi8zR7Nz3/exec";
@@ -73,164 +132,10 @@ function populateTrackMatrixUI() {
     const currentVault = config[state.currentPortal].vault;
     currentVault.forEach((track, idx) => {
         html += `
-            <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 transition-all duration-150">
-                <span class="font-mono text-emerald-400/80">${idx + 1}. ${track.n}</span>
-                <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black transition-all cursor-pointer" id="play-btn-${idx}" onclick="playT(${idx})"> PLAY </button>
-            </div>`;
+        <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 transition-all duration-150">
+            <span class="font-mono text-emerald-400/80">${idx + 1}. ${track.n}</span>
+            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black transition-all cursor-pointer" id="play-btn-${idx}" onclick="playT(${idx})"> PLAY </button>
+        </div>`;
     });
     container.innerHTML = html;
 }
-
-window.switchPortal = function(portalId) {
-    if (!config[portalId]) return;
-    document.querySelectorAll('.portal-btn').forEach(btn => {
-        btn.className = "portal-btn border border-white/5 bg-white/5 p-2 text-center rounded-lg hover:bg-white/10 transition-all group cursor-pointer text-[10px] text-white/70 font-mono";
-    });
-    const activeBtn = document.getElementById(`p-${portalId}`);
-    if (activeBtn) activeBtn.className = "portal-btn active border p-2 text-center rounded-lg text-emerald-400 font-bold font-mono text-[10px]";
-    
-    state.currentPortal = portalId;
-    const currentConf = config[portalId];
-    
-    document.getElementById('album-cover-img').src = currentConf.art;
-    document.getElementById('display-active-album-name').innerText = currentConf.name;
-    document.getElementById('asset-label-header').innerText = `${currentConf.name} ASSET TRACKER`;
-    document.getElementById('buy-label-header').innerText = `INVEST IN ${currentConf.name}: $${currentConf.buyIn}`;
-    
-    const buyBtn = document.getElementById('btn-song-buy');
-    if (buyBtn) buyBtn.innerHTML = `💰 BUY ASSET NOW ($${currentConf.buyIn})`;
-
-    state.currentMarketPrice = currentConf.buyIn;
-    state.activeTrackIndex = null;
-    populateTrackMatrixUI();
-    if (state.engineStarted) { playT(0); }
-};
-
-window.playT = function(i) {
-    const currentVault = config[state.currentPortal].vault;
-    const targetBtn = document.getElementById(`play-btn-${i}`);
-    if (state.activeTrackIndex === i) {
-        if (!state.player.paused) { state.player.pause(); if (targetBtn) targetBtn.innerText = "PLAY"; }
-        else { state.player.play().catch(() => {}); if (targetBtn) targetBtn.innerText = "PAUSE"; }
-        return;
-    }
-    currentVault.forEach((_, idx) => { const btn = document.getElementById(`play-btn-${idx}`); if (btn) btn.innerText = "PLAY"; });
-    state.activeTrackIndex = i;
-    state.player.src = currentVault[i].src;
-    state.player.play()
-        .then(() => {
-            if (targetBtn) targetBtn.innerText = "PAUSE";
-            document.getElementById('display-active-album-name').innerText = `${config[state.currentPortal].name} // ${currentVault[i].n}`;
-        })
-        .catch(err => console.log("Interactivity tracking catch loaded."));
-};
-
-state.player.onended = () => {
-    const currentVault = config[state.currentPortal].vault;
-    let nextIndex = (state.activeTrackIndex + 1) % currentVault.length;
-    window.playT(nextIndex);
-};
-
-function executeMarketOscillator() {
-    const mainOsc = document.getElementById('main-osc');
-    const priceArrow = document.getElementById('price-arrow');
-    if (!mainOsc) return;
-    const currentConf = config[state.currentPortal];
-    const driftDir = Math.random() > 0.47 ? 1 : -1;
-    const priceShift = (Math.random() * (currentConf.buyIn * 0.8)) + 1.10;
-    if (driftDir === 1) { state.currentMarketPrice = Math.min(currentConf.maxGross, state.currentMarketPrice + priceShift); }
-    else { state.currentMarketPrice = Math.max(currentConf.buyIn, state.currentMarketPrice - priceShift); }
-    if (state.currentMarketPrice >= currentConf.sellOut && state.currentMarketPrice < (currentConf.maxGross * 0.85)) { mainOsc.style.color = "#fbbf24"; }
-    else if (state.currentMarketPrice >= (currentConf.maxGross * 0.85)) { mainOsc.style.color = "#34d399"; }
-    else { mainOsc.style.color = "#10b981"; }
-    mainOsc.innerText = `$${state.currentMarketPrice.toFixed(2)}`;
-    if (priceArrow) {
-        priceArrow.innerText = `KINETIC SHIFT // ${driftDir === 1 ? "▲ +" : "▼ -"}${priceShift.toFixed(2)}`;
-        priceArrow.className = `text-[9px] font-mono uppercase tracking-widest mt-1 font-bold ${driftDir === 1 ? 'text-emerald-400' : 'text-red-500'}`;
-    }
-}
-
-// SECURE WHATSAPP CREDENTIAL VALIDATION PASSTHROUGH
-window.startEngine = function() {
-    if (state.engineStarted) return;
-    
-    const emailInput = document.getElementById('reseller-email')?.value || "";
-    const whatsappInput = document.getElementById('reseller-password')?.value || ""; 
-    const nameInput = document.getElementById('reseller-name')?.value || "ANONYMOUS TRADER";
-    const cashappInput = document.getElementById('reseller-cashapp')?.value || "NO CASH APP PROVIDED";
-    
-    const cleanEmail = emailInput.trim().toLowerCase();
-    const cleanWhatsapp = whatsappInput.trim().replace(/[^0-9+]/g, "");
-    const errorDisplay = document.getElementById('password-error');
-    
-    if (!cleanEmail || !cleanWhatsapp) {
-        if (errorDisplay) {
-            errorDisplay.innerText = "⚠️ EMAIL AND WHATSAPP NUMBER CANNOT BE EMPTY";
-            errorDisplay.classList.remove('hidden');
-        }
-        return;
-    }
-
-    // Live network lookup matching Tab 1 database rows
-    fetch(`${LEDGER_API_URL}?action=verify_password&email=${encodeURIComponent(cleanEmail)}&password=${encodeURIComponent(cleanWhatsapp)}`)
-        .then(response => response.json())
-        .then(res => {
-            if (res.status === "SUCCESS") {
-                if (errorDisplay) errorDisplay.classList.add('hidden');
-                
-                const currentVault = config[state.currentPortal].vault;
-                state.player.src = currentVault[0].src;
-                state.player.load();
-
-                const overlay = document.getElementById('prospectus-overlay');
-                if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
-                state.engineStarted = true;
-
-                populateTrackMatrixUI();
-                setInterval(executeMarketOscillator, 1100);
-                window.switchPortal(state.currentPortal);
-            } else {
-                // If profile data is unrecognized, create an active row profile automatically on Tab 1
-                fetch(`${LEDGER_API_URL}?action=register&name=${encodeURIComponent(nameInput)}&email=${encodeURIComponent(cleanEmail)}&cashapp=${encodeURIComponent(cashappInput)}&password=${encodeURIComponent(cleanWhatsapp)}`, { mode: 'no-cors' })
-                    .then(() => {
-                        if (errorDisplay) errorDisplay.classList.add('hidden');
-                        
-                        const currentVault = config[state.currentPortal].vault;
-                        state.player.src = currentVault[0].src;
-                        state.player.load();
-
-                        const overlay = document.getElementById('prospectus-overlay');
-                        if (overlay) { overlay.style.setProperty('display', 'none', 'important'); }
-                        state.engineStarted = true;
-
-                        populateTrackMatrixUI();
-                        setInterval(executeMarketOscillator, 1100);
-                        window.switchPortal(state.currentPortal);
-                    })
-                    .catch(err => console.log("Registration routing failed"));
-            }
-        })
-        .catch(err => {
-            if (errorDisplay) {
-                errorDisplay.innerText = "⚠️ NETWORK LEDGER OFFLINE RE-DEPLOY SERVICE ROUTE";
-                errorDisplay.classList.remove('hidden');
-            }
-        });
-};
-
-window.executeAssetPurchase = function() {
-    state.totalRegisteredBuyers++;
-    const nodeTarget = document.getElementById('router-target');
-    const nodeCount = document.getElementById('router-count');
-    const matrixVis = document.getElementById('matrix-visualizer');
-    const currentCount = state.totalRegisteredBuyers % 5;
-    let strategyLabel = state.totalRegisteredBuyers <= 5 ? "BUY MARKET DIRECT" : "BUY RESELLER DIRECT";
-    
-    if (nodeTarget) nodeTarget.innerText = `BUYER #${String(state.totalRegisteredBuyers).padStart(2, '0')} EXECUTED`;
-    if (nodeCount) nodeCount.innerText = `${currentCount} / 5 MATRIX POSITION`;
-    if (matrixVis) matrixVis.innerText = `CURRENT SYSTEM ROUTING PROTOCOL: [${strategyLabel}]`;
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-    populateTrackMatrixUI();
-});
