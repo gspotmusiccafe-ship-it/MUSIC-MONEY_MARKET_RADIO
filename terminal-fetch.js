@@ -70,11 +70,11 @@ const ROSELYN_REYNOLDS_VAULT = [
 ];
 
 const config = {
-    0: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", buyIn: 10.00, vault: QUEEN_BUTTA_VAULT },
-    1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, vault: GANSTA_SMOOTH_VAULT },
-    2: { name: "G. SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=ca2f5e98-f2e1-4863-8aa1-12ea5ea8af5c", buyIn: 30.00, vault: G_SMOOTH_NEED_VAULT },
-    3: { name: "J. MARIE", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHOW%20MUCH%20IS%20TOO%20MUCH%20IMG.png?alt=media&token=ffe28bfe-910f-4b0e-b6c7-52bf472d3c7d", buyIn: 40.00, vault: J_MARIE_VAULT },
-    4: { name: "ROSELYN REYNOLDS", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2Fa-gospel-album-cover-design-featuring-el_4wCp3CJ8SEa8_DnYX2VYSA_WYYliBC6Qjeva_cw-WFGMA_cover.png?alt=media&token=cd3a52f2-461e-4c97-a74b-c41b59c10c82", buyIn: 50.00, vault: ROSELYN_REYNOLDS_VAULT }
+    0: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982", buyIn: 10.00, maxGross: 130.00, vault: QUEEN_BUTTA_VAULT },
+    1: { name: "GANSTA SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FGANSTA%20LYFE%20IMAGE.jpeg?alt=media&token=bd8fadb8-8133-4177-8ca5-4d72a70cd081", buyIn: 20.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT },
+    2: { name: "G. SMOOTH", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20%22I%20GOT%20WHAT%20YOU%20NEED%22%2FI%20GOT%20WHAT%20YOU%20NEED%20COVER.png?alt=media&token=ca2f5e98-f2e1-4863-8aa1-12ea5ea8af5c", buyIn: 30.00, maxGross: 390.00, vault: G_SMOOTH_NEED_VAULT },
+    3: { name: "J. MARIE", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FHOW%20MUCH%20IS%20TOO%20MUCH%20IMG.png?alt=media&token=ffe28bfe-910f-4b0e-b6c7-52bf472d3c7d", buyIn: 40.00, maxGross: 520.00, vault: J_MARIE_VAULT },
+    4: { name: "ROSELYN REYNOLDS", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/J.%20MARIE%20%22HOW%20MUCH%20IS%20TOO%20MUCH%22%2FROSELYN%20REYNOLDS%20%22WHEN%20THE%20JOY%20RETURNS%22%2Fa-gospel-album-cover-design-featuring-el_4wCp3CJ8SEa8_DnYX2VYSA_WYYliBC6Qjeva_cw-WFGMA_cover.png?alt=media&token=cd3a52f2-461e-4c97-a74b-c41b59c10c82", buyIn: 50.00, maxGross: 650.00, vault: ROSELYN_REYNOLDS_VAULT }
 };
 
 let state = {
@@ -82,24 +82,41 @@ let state = {
     player: new Audio(),
     activeTrackIndex: null,
     engineStarted: false,
-    baseOscillation: 0
+    baseOscillation: 0,
+    lastPrice: 10.00
 };
 
-// Global pricing wave generator ($10 to $50 range bounds)
+// Foundational Price Oscillator (Resets on base price, bounces between bounds, triggers visual indicator signals)
 setInterval(() => {
-    state.baseOscillation += 0.05;
-    // Read the current price directly from the active configuration row
-    let basePrice = config[state.currentPortal] ? config[state.currentPortal].buyIn : 10.00;
-    
-    // Natural market ticker wave swing +/- $2.50
-    let dynamicSwing = Math.sin(state.baseOscillation) * 2.50;
-    let finalTickerPrice = Math.max(10.00, Math.min(55.00, basePrice + dynamicSwing));
-    
-    const tickerElement = document.getElementById('main-osc');
-    if (tickerElement) {
-        tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
+    state.baseOscillation += 0.08;
+    if (config[state.currentPortal]) {
+        let basePrice = config[state.currentPortal].buyIn;
+        let maxLimit = config[state.currentPortal].maxGross;
+        
+        // Generate a smooth continuous wave swing between buy-in floor and max valuation ceiling
+        let amplitude = (maxLimit - basePrice) / 2;
+        let midpoint = basePrice + amplitude;
+        let dynamicPrice = midpoint + Math.sin(state.baseOscillation) * amplitude;
+        let finalTickerPrice = Math.max(basePrice, Math.min(maxLimit, dynamicPrice));
+        
+        const tickerElement = document.getElementById('main-osc');
+        const syncNodeElement = document.querySelector('.text-emerald-400.animate-pulse'); // Find signaling bar block
+
+        if (tickerElement) {
+            tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
+            
+            // Render visual tracking indicators (+ Green / - Red signals)
+            if (syncNodeElement) {
+                if (finalTickerPrice >= state.lastPrice) {
+                    syncNodeElement.innerHTML = `<span class="text-emerald-400 font-bold">▲ +${(finalTickerPrice - basePrice).toFixed(2)} MARKET MOMENTUM GAIN</span>`;
+                } else {
+                    syncNodeElement.innerHTML = `<span class="text-rose-500 font-bold">▼ -${(midpoint - finalTickerPrice).toFixed(2)} MARKET FLUIDITY ADJUST</span>`;
+                }
+            }
+            state.lastPrice = finalTickerPrice;
+        }
     }
-}, 300);
+}, 250);
 
 window.startEngine = function() {
     const overlay = document.getElementById('prospectus-overlay');
@@ -112,18 +129,19 @@ window.switchPortal = function(idx) {
     if(!config[idx]) return;
     state.currentPortal = idx;
     
-    // Stop old audio channels completely
+    // Stop old music layout cleanly
     state.player.pause();
     state.activeTrackIndex = null;
+    state.baseOscillation = 0; // Reset oscillator foundation wave string on station jump
 
-    // UI Field Refresh
+    // UI Field Configuration Refresh
     document.getElementById('album-cover-img').src = config[idx].art;
     document.getElementById('display-active-album-name').innerText = `${config[idx].name} // PORTAL ACTIVE`;
     document.getElementById('asset-label-header').innerText = `${config[idx].name} ASSET TRACKER`;
     document.getElementById('buy-label-header').innerText = `INVEST IN ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
     document.getElementById('btn-song-buy').innerText = `BUY ASSET NOW ($${config[idx].buyIn})`;
 
-    // Re-highlight active button states on slider
+    // Re-highlight target slider tabs
     document.querySelectorAll('.portal-btn').forEach(btn => {
         btn.classList.remove('active', 'text-emerald-400', 'font-bold');
         btn.classList.add('text-white/70', 'bg-white/5');
@@ -137,7 +155,7 @@ window.switchPortal = function(idx) {
 
     populateTrackMatrixUI();
 
-    // Force Track 0 to Autoplay instantly on portal click
+    // Trigger explicit media autoplay across portal switches
     if(config[idx].vault && config[idx].vault.length > 0) {
         setTimeout(() => {
             window.playT(0);
@@ -151,18 +169,35 @@ function populateTrackMatrixUI() {
     let html = "";
     config[state.currentPortal].vault.forEach((track, idx) => {
         let activeStyle = (idx === state.activeTrackIndex) ? "bg-emerald-500/10 text-white font-bold" : "";
+        let isPlaying = (idx === state.activeTrackIndex && !state.player.paused);
+        let btnText = isPlaying ? "PAUSE" : "PLAY";
+
         html += `
         <div class="flex justify-between items-center border-b border-emerald-500/10 py-2 px-1 hover:bg-emerald-500/5 ${activeStyle}" id="track-row-${idx}">
             <span class="font-mono text-emerald-400/80 text-[11px]">${idx + 1}. ${track.n}</span>
-            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="window.playT(${idx})"> PLAY </button>
+            <button class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/40 border border-emerald-500/20 px-2 py-0.5 rounded hover:bg-emerald-500 hover:text-black cursor-pointer" onclick="window.toggleTrack(${idx})"> ${btnText} </button>
         </div>`;
     });
     container.innerHTML = html;
 }
 
+// Solid Play/Pause toggle matrix action execution
+window.toggleTrack = function(idx) {
+    if (state.activeTrackIndex === idx) {
+        if (!state.player.paused) {
+            state.player.pause();
+        } else {
+            state.player.play();
+        }
+        populateTrackMatrixUI(); // Re-render pause/play label button layout state instantly
+    } else {
+        window.playT(idx);
+    }
+};
+
 window.playT = function(idx) {
     const track = config[state.currentPortal].vault[idx];
-    if(!track || !track.src) return; 
+    if(!track || !track.src) return;
     
     state.activeTrackIndex = idx;
     state.player.src = track.src;
@@ -171,23 +206,19 @@ window.playT = function(idx) {
     let playPromise = state.player.play();
     if (playPromise !== undefined) {
         playPromise.then(() => {
-            // Update track row display state
-            document.querySelectorAll('[id^="track-row-"]').forEach(row => row.classList.remove('bg-emerald-500/10'));
-            const currentRow = document.getElementById(`track-row-${idx}`);
-            if(currentRow) currentRow.classList.add('bg-emerald-500/10');
+            populateTrackMatrixUI();
         }).catch(error => {
-            console.log("Autoplay restricted by browser interaction boundaries.");
+            console.log("Autoplay context initialization boundary caught.");
         });
     }
 };
 
-// Go to next song automatically when current track completes execution
 state.player.onended = function() {
     let nextIdx = state.activeTrackIndex + 1;
     if (nextIdx < config[state.currentPortal].vault.length) {
         window.playT(nextIdx);
     } else {
-        window.playT(0); // Loop back around to the first track
+        window.playT(0);
     }
 };
 
