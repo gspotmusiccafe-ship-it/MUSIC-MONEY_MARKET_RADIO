@@ -137,7 +137,7 @@ window.switchPortal = function(idx) {
 
     populateTrackMatrixUI();
 
-    // Fix 1: Auto-trigger track 0 play layout instantly on switch
+    // Force Track 0 to Autoplay instantly on portal click
     if(config[idx].vault && config[idx].vault.length > 0) {
         setTimeout(() => {
             window.playT(0);
