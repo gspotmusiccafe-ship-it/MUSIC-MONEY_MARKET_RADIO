@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AITITRADE // MASTER OPERATIONS CONTROL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .emerald-glow { text-shadow: 0 0 10px rgba(52, 211, 153, 0.4); }
+        .glass-panel { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(12px); border: 1px solid rgba(52, 211, 153, 0.1); }
+    </style>
+</head>
+<body class="bg-black text-gray-100 font-mono select-none min-h-screen p-4 md:p-8">
 
+    <header class="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row justify-between items-start md:items-center border-b border-emerald-500/20 pb-4 gap-4">
+        <div>
+            <h1 class="text-xl md:text-2xl font-bold text-emerald-400 tracking-wider emerald-glow">AITITRADE // EXECUTIVE ADMINISTRATIVE PORTAL</h1>
+            <p class="text-xs text-emerald-500/60 mt-1">SOVEREIGN NETWORK LEDGER SYSTEM // SYSTEM LIVE</p>
+        </div>
+        <div class="glass-panel px-4 py-2 rounded-lg text-right text-xs">
+            <span class="text-gray-500">GLOBAL ECOSYSTEM ESCROW VALUE:</span>
+            <div id="escrow-value" class="text-emerald-400 font-bold text-base mt-0.5">$0.00</div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <section class="lg:col-span-2 space-y-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <h2 class="text-sm font-bold text-emerald-400 uppercase tracking-widest border-b border-emerald-500/10 pb-2 mb-4">
+                    Active Portals & Partner Performance Ledger
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs border-collapse">
+                        <thead>
+                            <tr class="text-emerald-500/50 border-b border-emerald-500/20 font-bold uppercase">
+                                <th class="pb-3">Portal ID</th>
+                                <th class="pb-3">Partner / Artist</th>
+                                <th class="pb-3 text-center">Licenses Claimed</th>
+                                <th class="pb-3 text-right">Gross Derived</th>
+                                <th class="pb-3 text-right">Partner 50% Split</th>
+                                <th class="pb-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partner-ledger-rows" class="divide-y divide-emerald-500/5">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <h2 class="text-sm font-bold text-rose-400 uppercase tracking-widest border-b border-rose-500/20 pb-2 mb-4">
+                    Secure Settlement Node
+                </h2>
+                <form id="settlement-form" onsubmit="window.processPayout(event)" class="space-y-4 text-xs">
+                    <div>
+                        <label class="text-gray-500 block mb-1">TARGET PARTNER ENDPOINT</label>
+                        <input id="payee-name" type="text" readonly class="w-full bg-black/60 border border-emerald-500/20 rounded p-2.5 text-emerald-400 focus:outline-none focus:border-emerald-400" placeholder="Select a partner from ledger">
+                    </div>
+                    <div>
+                        <label class="text-gray-500 block mb-1">DISBURSEMENT SPLIT AMOUNT ($)</label>
+                        <input id="payee-amount" type="number" step="0.01" required class="w-full bg-black/60 border border-emerald-500/20 rounded p-2.5 text-emerald-400 focus:outline-none focus:border-emerald-400" placeholder="0.00">
+                    </div>
+                    <div>
+                        <label class="text-gray-500 block mb-1">SETTLEMENT METHOD GATEWAY</label>
+                        <select id="payout-gateway" class="w-full bg-black/60 border border-emerald-500/20 rounded p-2.5 text-emerald-400 focus:outline-none cursor-pointer">
+                            <option value="CASH_APP">CASH APP WIRE DISBURSEMENT</option>
+                            <option value="MANUAL_LEDGER">MANUAL OFFLINE BALANCE ADJUST</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-rose-950/40 border border-rose-500/30 text-rose-400 font-bold py-3 rounded-xl hover:bg-rose-500 hover:text-black transition-all uppercase tracking-wider mt-2 cursor-pointer">
+                        Authorize Settlement Release
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="admin-fetch.js"></script>
+</body>
+</html>
