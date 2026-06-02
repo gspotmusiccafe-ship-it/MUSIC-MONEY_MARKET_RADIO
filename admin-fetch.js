@@ -21,28 +21,36 @@ function renderAdminLedger() {
     if (!tableBody) return;
 
     let html = "";
-    let totalEcosystemEscrow = 0;
+    let totalBrokerageProfit = 0;
 
     Object.keys(adminPartnerConfig).forEach(portalId => {
         const partner = adminPartnerConfig[portalId];
         const telemetry = adminEcosystemState[portalId];
         
-        let grossDerived = telemetry.gross;
-        let partnerSplit = grossDerived * 0.50; // Core 50% split value logic
-        totalEcosystemEscrow += grossDerived;
+        let grossSales = telemetry.gross;
+        let artistRoyalty = grossSales * 0.10; 
+        let brokerageProfit = grossSales * 0.90;
+        
+        totalBrokerageProfit += brokerageProfit;
+
+        // Logic: Market Status detection
+        let marketStatus = telemetry.claimed < 8 ? "RETAIL PHASE" : "RESELLER DIRECT";
+        let statusColor = telemetry.claimed < 8 ? "text-emerald-400" : "text-amber-400";
 
         html += `
         <tr class="hover:bg-emerald-500/5 transition-all">
             <td class="py-4 font-bold text-emerald-500/60 font-mono">PORTAL 0${parseInt(portalId) + 1}</td>
-            <td class="py-4 font-bold">${partner.name}<span class="block text-[10px] text-gray-500">${partner.cashtag}</span></td>
+            <td class="py-4 font-bold">${partner.name}</td>
             <td class="py-4 text-center font-mono">${telemetry.claimed} / 8</td>
-            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${grossDerived.toFixed(2)}</td>
-            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${partnerSplit.toFixed(2)}</td>
-            <td class="py-4 text-center">
-                <button onclick="window.selectPartnerForSettlement('${partner.name}', ${partnerSplit})" class="bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded hover:bg-emerald-500 hover:text-black font-bold font-mono transition-all cursor-pointer">SELECT</button>
-            </td>
+            <td class="py-4 text-right font-mono ${statusColor} font-bold">${marketStatus}</td>
+            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${grossSales.toFixed(2)}</td>
+            <td class="py-4 text-right font-mono text-rose-400 font-bold">$${artistRoyalty.toFixed(2)}</td>
         </tr>`;
     });
+
+    tableBody.innerHTML = html;
+    document.getElementById('escrow-value').innerText = `$${totalBrokerageProfit.toFixed(2)}`;
+}
 
     tableBody.innerHTML = html;
     document.getElementById('escrow-value').innerText = `$${totalEcosystemEscrow.toFixed(2)}`;
