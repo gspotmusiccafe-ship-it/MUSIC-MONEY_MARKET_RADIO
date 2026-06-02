@@ -86,13 +86,12 @@ let state = {
     lastPrice: 10.00
 };
 
-// FIX 1: Ticker slowed down dramatically (Step value dropped from 0.08 to 0.008 for a smooth, relaxed crawl)
+// Foundational Price Ticker Oscillator Crawl
 setInterval(() => {
     state.baseOscillation += 0.008; 
     if (config[state.currentPortal]) {
         let basePrice = config[state.currentPortal].buyIn;
         let maxLimit = config[state.currentPortal].maxGross;
-        
         let amplitude = (maxLimit - basePrice) / 2;
         let midpoint = basePrice + amplitude;
         let dynamicPrice = midpoint + Math.sin(state.baseOscillation) * amplitude;
@@ -103,10 +102,9 @@ setInterval(() => {
 
         if (tickerElement) {
             tickerElement.innerText = `$${finalTickerPrice.toFixed(2)}`;
-            
             if (syncNodeElement) {
                 if (finalTickerPrice >= state.lastPrice) {
-                    syncNodeElement.innerHTML = `<span class="text-emerald-400 font-bold">▲ +${(finalTickerPrice - basePrice).toFixed(2)} MARKET MOMENTUM GAIN</span>`;
+                    syncNodeElement.innerHTML = `<span class="text-emerald-400 font-bold">▲ +${(finalTickerPrice - basePrice).toFixed(2)} VALUATION VALUE INCREASE</span>`;
                 } else {
                     syncNodeElement.innerHTML = `<span class="text-rose-500 font-bold">▼ -${(maxLimit - finalTickerPrice).toFixed(2)} MARKET FLUIDITY ADJUST</span>`;
                 }
@@ -131,11 +129,12 @@ window.switchPortal = function(idx) {
     state.activeTrackIndex = null;
     state.baseOscillation = 0; 
 
+    // UI Conversion: Shifting focus from basic investments to Commercial Media Rights Licenses
     document.getElementById('album-cover-img').src = config[idx].art;
     document.getElementById('display-active-album-name').innerText = `${config[idx].name} // PORTAL ACTIVE`;
-    document.getElementById('asset-label-header').innerText = `${config[idx].name} ASSET TRACKER`;
-    document.getElementById('buy-label-header').innerText = `INVEST IN ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
-    document.getElementById('btn-song-buy').innerText = `BUY ASSET NOW ($${config[idx].buyIn})`;
+    document.getElementById('asset-label-header').innerText = `${config[idx].name} LICENSE RIGHTS MATRIX`;
+    document.getElementById('buy-label-header').innerText = `LICENSE ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
+    document.getElementById('btn-song-buy').innerText = `BUY LICENSE NOW ($${config[idx].buyIn})`;
 
     document.querySelectorAll('.portal-btn').forEach(btn => {
         btn.classList.remove('active', 'text-emerald-400', 'font-bold');
@@ -150,11 +149,8 @@ window.switchPortal = function(idx) {
 
     populateTrackMatrixUI();
 
-    // FIX 2: Explicitly forces track 0 initialization with full audio playback on portal change
     if(config[idx].vault && config[idx].vault.length > 0) {
-        setTimeout(() => {
-            window.playT(0);
-        }, 200);
+        setTimeout(() => { window.playT(0); }, 200);
     }
 };
 
@@ -178,11 +174,7 @@ function populateTrackMatrixUI() {
 
 window.toggleTrack = function(idx) {
     if (state.activeTrackIndex === idx) {
-        if (!state.player.paused) {
-            state.player.pause();
-        } else {
-            state.player.play();
-        }
+        if (!state.player.paused) { state.player.pause(); } else { state.player.play(); }
         populateTrackMatrixUI();
     } else {
         window.playT(idx);
@@ -192,29 +184,18 @@ window.toggleTrack = function(idx) {
 window.playT = function(idx) {
     const track = config[state.currentPortal].vault[idx];
     if(!track || !track.src) return;
-    
     state.activeTrackIndex = idx;
     state.player.src = track.src;
     state.player.load();
-    
     let playPromise = state.player.play();
     if (playPromise !== undefined) {
-        playPromise.then(() => {
-            populateTrackMatrixUI();
-        }).catch(error => {
-            console.log("Autoplay bound intercepted successfully.");
-        });
+        playPromise.then(() => { populateTrackMatrixUI(); }).catch(e => {});
     }
 };
 
-// FIX 3: Unbroken sequence engine loop to continuously transition across tracks till manual pause command
 state.player.onended = function() {
     let nextIdx = state.activeTrackIndex + 1;
-    if (nextIdx < config[state.currentPortal].vault.length) {
-        window.playT(nextIdx);
-    } else {
-        window.playT(0); 
-    }
+    if (nextIdx < config[state.currentPortal].vault.length) { window.playT(nextIdx); } else { window.playT(0); }
 };
 
 window.onload = () => { populateTrackMatrixUI(); };
