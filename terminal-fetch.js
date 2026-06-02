@@ -86,9 +86,9 @@ let state = {
     lastPrice: 10.00
 };
 
-// Foundational Price Ticker Oscillator Crawl
+// Foundational Price Ticker Oscillator Crawl (Slipped to a relaxed 0.002 crawl for heavy asset weight)
 setInterval(() => {
-    state.baseOscillation += 0.008; 
+    state.baseOscillation += 0.002; 
     if (config[state.currentPortal]) {
         let basePrice = config[state.currentPortal].buyIn;
         let maxLimit = config[state.currentPortal].maxGross;
@@ -112,7 +112,7 @@ setInterval(() => {
             state.lastPrice = finalTickerPrice;
         }
     }
-}, 250);
+}, 400);
 
 window.startEngine = function() {
     const overlay = document.getElementById('prospectus-overlay');
