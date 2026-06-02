@@ -199,3 +199,50 @@ state.player.onended = function() {
 };
 
 window.onload = () => { populateTrackMatrixUI(); };
+// APPEND THIS ENTIRE SENTIMENT ENGINE BLOCK AT THE VERY BOTTOM OF THE FILE
+
+// Track separate data objects uniquely per song index
+state.trackRatings = {}; 
+
+window.castVote = function(type) {
+    if (state.activeTrackIndex === null) return;
+    let trackKey = `${state.currentPortal}_${state.activeTrackIndex}`;
+    
+    if (!state.trackRatings[trackKey]) {
+        state.trackRatings[trackKey] = { up: 0, down: 0, userVoted: null };
+    }
+    
+    let trackData = state.trackRatings[trackKey];
+    if (trackData.userVoted === type) return; // Prevent multiple click spamming
+    
+    if (type === 'up') {
+        trackData.up++;
+        if (trackData.userVoted === 'down') trackData.down = Math.max(0, trackData.down - 1);
+    } else {
+        trackData.down++;
+        if (trackData.userVoted === 'up') trackData.up = Math.max(0, trackData.up - 1);
+    }
+    
+    trackData.userVoted = type;
+    window.refreshVoteDisplay();
+};
+
+window.refreshVoteDisplay = function() {
+    let trackKey = `${state.currentPortal}_${state.activeTrackIndex}`;
+    let trackData = state.trackRatings[trackKey] || { up: 0, down: 0, userVoted: null };
+    
+    const upText = document.getElementById('count-up');
+    const downText = document.getElementById('count-down');
+    const upBtn = document.getElementById('btn-thumbs-up');
+    const downBtn = document.getElementById('btn-thumbs-down');
+    
+    if (upText && downText) {
+        upText.innerText = trackData.up;
+        downText.innerText = trackData.down;
+    }
+    
+    if (upBtn && downBtn) {
+        upBtn.className = `text-xs px-2 py-1 flex items-center gap-1 transition-all ${trackData.userVoted === 'up' ? 'text-emerald-400 font-bold' : 'text-gray-500 hover:text-emerald-400'}`;
+        downBtn.className = `text-xs px-2 py-1 flex items-center gap-1 transition-all ${trackData.userVoted === 'down' ? 'text-rose-500 font-bold' : 'text-gray-500 hover:text-rose-500'}`;
+    }
+};
