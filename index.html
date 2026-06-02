@@ -99,15 +99,21 @@
 
         <div class="emerald-glass rounded-2xl p-2 max-h-40 overflow-y-auto space-y-1 mb-4 text-left" id="terminal-track-matrix-container"></div>
 
-        <div class="grid grid-cols-2 gap-2 mt-2">
-            <button class="border border-white/5 bg-white/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-gray-400 hover:bg-white/10 transition-all uppercase tracking-wider font-bold cursor-not-allowed opacity-50">
-                📥 GATED DOWNLOAD
-            </button>
-            <a id="btn-song-buy" href="https://cash.app/$AITITRADEBROKERAGE" onclick="window.executeAssetPurchase()" target="_blank" class="border border-emerald-500/30 bg-emerald-500/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider font-bold block shadow-[0_0_15px_rgba(16,185,129,0.02)]">
-                💰 BUY ASSET NOW ($10)
-            </a>
-        </div>
+<div class="grid grid-cols-2 gap-2 mt-2">
+    <div class="emerald-glass bg-black/40 flex items-center justify-around rounded-xl border border-emerald-500/10 p-1 font-mono">
+        <button id="btn-thumbs-up" onclick="window.castVote('up')" class="text-xs text-gray-500 hover:text-emerald-400 transition-all px-2 py-1 flex items-center gap-1 cursor-pointer">
+            👍 <span id="count-up" class="text-[10px] text-emerald-400/60">0</span>
+        </button>
+        <div class="h-4 w-[1px] bg-emerald-500/10"></div>
+        <button id="btn-thumbs-down" onclick="window.castVote('down')" class="text-xs text-gray-500 hover:text-rose-500 transition-all px-2 py-1 flex items-center gap-1 cursor-pointer">
+            👎 <span id="count-down" class="text-[10px] text-rose-500/60">0</span>
+        </button>
     </div>
+
+    <a id="btn-song-buy" href="https://cash.app/$AITITRADEBROKERAGE" onclick="window.executeAssetPurchase()" target="_blank" class="border border-emerald-500/30 bg-emerald-500/5 py-2.5 px-2 text-center rounded-xl font-mono text-[11px] text-emerald-400 hover:bg-emerald-500/20 transition-all uppercase tracking-wider font-bold block shadow-[0_0_15px_rgba(16,185,129,0.02)]"> 
+        💰 BUY LICENSE NOW ($10) 
+    </a>
+</div>       
 
     <script src="terminal-fetch.js"></script>
 </body>
