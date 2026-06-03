@@ -246,3 +246,43 @@ window.refreshVoteDisplay = function() {
         downBtn.className = `text-xs px-2 py-1 flex items-center gap-1 transition-all ${trackData.userVoted === 'down' ? 'text-rose-500 font-bold' : 'text-gray-500 hover:text-rose-500'}`;
     }
 };
+// --- VAULT ASSETS (QUEEN BUTTA to G.SOUL) ---
+const QUEEN_BUTTA_VAULT = [{ n: "SUPERFLY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FSUPERFLY.mp3?alt=media&token=e260aa5d-a3c9-453e-8b80-a466a6328906" }, { n: "ADDICTION", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FYOU'RE%20MY%20ADDICTION.mp3?alt=media&token=ff95dd55-65a0-44c7-b9f4-9cd7ae2ce12c" }, { n: "TIMES UP", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTIMES%20UP.mp3?alt=media&token=b582fd58-9511-447a-8986-b3dd9f720f2a" }, { n: "LOVE MAKE OVER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLOVE%20MAKE%20OVER.mp3?alt=media&token=df587b6b-eed4-4f5b-b340-a5b5622efb31" }, { n: "I'M NOT HER", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI'M%20NOT%20HER.mp3?alt=media&token=e3ab1871-4af8-4e42-80e5-0e959a9647a1" }, { n: "GANSTA CHICK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FGANSTA%20CHICK.mp3?alt=media&token=2b1859c4-a43d-4cc3-b121-5e06897ea7af" }, { n: "FRIDAY NIGHT", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FIT'S%20FRIDAY%20NIGHT.mp3?alt=media&token=21b85403-a6dd-49d6-9a26-6514ed90eaa1" }, { n: "HEARTBREAK MOTEL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FHEARTBREAK%20MOTEL%20REMIX.mp3?alt=media&token=081a4e22-abb5-4045-a463-0f768dc9fb20" }, { n: "LET'S GO BACK", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FLET'S%20GO%20BACK.mp3?alt=media&token=744a2807-2f51-4f4b-bef2-8d79e3e56be6" }, { n: "I DESERVE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FI%20DESERVE.mp3?alt=media&token=0bed5d76-783b-4ea4-9b12-9085d96bbf9c" }, { n: "GHETTO GIRL", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FTHAT%20GIRL%20FROM%20THE%20GHETTO.mp3?alt=media&token=a9f526a4-2567-4225-a8c2-dbac509f03de" }, { n: "MIDNIGHT SMOKE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FMIDNIGHT%20SMOKE.mp3?alt=media&token=8ba90c94-61cf-4fce-84bc-6c8a0c6a0105" }, { n: "BETTER THAN GOOD", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FBETTER%20THAN%20GOOD%20(1).mp3?alt=media&token=5b6a259d-7c57-4f1e-9c2d-121f9d3ee15a" }];
+
+const GANSTA_SMOOTH_VAULT = [{ n: "A GANGSTA'S LIFE", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/GANSTA%20SMOOTH%2FA%20Gangsta's%20Life.mp3?alt=media&token=e7f31106-ec8e-4dee-bb5e-b29a75677d29" }]; // Add full list here
+const LADY_DAY_VAULT = [{ n: "ECSTASY", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FECSTASY.mp3?alt=media&token=0b0b6515-f781-4eb7-ad75-c849470cb389" }]; // Add full list here
+const G_SOUL_VAULT = [{ n: "I GOT WHAT YOU NEED", src: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FHOW%20WAS%20YOUR%20DAY%2FSILHOUETTS%2FG.%20SOUL%2FI%20GOT%20WHAT%20YOU%20NEED%201950'S%20VERSION.mp3?alt=media&token=6f720dcf-14bb-4b8f-89b5-95a9c5dc7b0b" }]; // Add full list here
+
+// --- PORTAL CONFIG MATRIX ---
+const config = {
+    0: { name: "QUEEN BUTTA", buyIn: 10.00, maxGross: 130.00, vault: QUEEN_BUTTA_VAULT },
+    1: { name: "GANSTA SMOOTH", buyIn: 20.00, maxGross: 260.00, vault: GANSTA_SMOOTH_VAULT },
+    2: { name: "G. SMOOTH", buyIn: 30.00, maxGross: 390.00, vault: GANSTA_SMOOTH_VAULT }, // Swap to correct vault
+    3: { name: "J. MARIE", buyIn: 40.00, maxGross: 520.00, vault: GANSTA_SMOOTH_VAULT },
+    4: { name: "ROSELYN REYNOLDS", buyIn: 50.00, maxGross: 650.00, vault: GANSTA_SMOOTH_VAULT },
+    5: { name: "BLOCK RUNNER", buyIn: 60.00, maxGross: 780.00, vault: GANSTA_SMOOTH_VAULT },
+    6: { name: "NEON HUSTLE", buyIn: 70.00, maxGross: 910.00, vault: GANSTA_SMOOTH_VAULT },
+    7: { name: "VIRTUAL VIBE", buyIn: 80.00, maxGross: 1040.00, vault: GANSTA_SMOOTH_VAULT },
+    8: { name: "FLAME KEEPER", buyIn: 1000.00, maxGross: 13000.00, vault: G_SOUL_VAULT }
+};
+
+let state = { currentPortal: 0, player: new Audio(), activeTrackIndex: null };
+
+// --- ENGINE LOGIC ---
+window.switchPortal = function(idx) {
+    state.currentPortal = idx;
+    // MATRIX LOGIC: $50 Brokerage + $5 Persona + $80 Reseller = $130 Block
+    console.log(`PORTAL ${idx} ACTIVE: Matrix Logic Applied.`);
+    // Add your UI update logic for images and headers here...
+    window.populateTrackMatrixUI();
+};
+
+function populateTrackMatrixUI() {
+    const container = document.getElementById('terminal-track-matrix-container');
+    if (!container) return;
+    let html = "";
+    config[state.currentPortal].vault.forEach((track, idx) => {
+        html += `<div class="p-2 border-b"> ${track.n} <button onclick="window.playT(${idx})">PLAY</button></div>`;
+    });
+    container.innerHTML = html;
+}
