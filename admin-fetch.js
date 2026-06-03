@@ -21,32 +21,44 @@ function renderAdminLedger() {
     if (!tableBody) return;
 
     let html = "";
-    let totalBrokerageProfit = 0;
+    let totalMarketSurplus = 0; // Your combined Brokerage + AI Royalty
 
     Object.keys(adminPartnerConfig).forEach(portalId => {
         const partner = adminPartnerConfig[portalId];
         const telemetry = adminEcosystemState[portalId];
         
         let grossSales = telemetry.gross;
-        let artistRoyalty = grossSales * 0.10; 
-        let brokerageProfit = grossSales * 0.90;
         
-        totalBrokerageProfit += brokerageProfit;
+        // 1. Brokerage Fee: Fixed $50 per $130 block
+        let marketFee = grossSales * (50 / 130);
+        
+        // 2. Reseller Profit: Fixed $80 per $130 block
+        let resellerProfit = grossSales * (80 / 130);
+        
+        // 3. AI Persona Royalty: 10% of the $50 Brokerage Fee
+        let artistRoyalty = marketFee * 0.10; 
+        
+        // Your Total Market Surplus = Brokerage Fee + AI Royalty
+        totalMarketSurplus += (marketFee + artistRoyalty);
 
-        // Logic: Market Status detection
-        let marketStatus = telemetry.claimed < 8 ? "RETAIL PHASE" : "RESELLER DIRECT";
-        let statusColor = telemetry.claimed < 8 ? "text-emerald-400" : "text-amber-400";
+        let cycleProgress = telemetry.claimed;
+        let marketStatus = cycleProgress < 5 ? "MARKET PHASE (Direct)" : "RESELLER PHASE (Active)";
+        let statusColor = cycleProgress < 5 ? "text-emerald-400" : "text-amber-400";
 
         html += `
         <tr class="hover:bg-emerald-500/5 transition-all">
             <td class="py-4 font-bold text-emerald-500/60 font-mono">PORTAL 0${parseInt(portalId) + 1}</td>
             <td class="py-4 font-bold">${partner.name}</td>
-            <td class="py-4 text-center font-mono">${telemetry.claimed} / 8</td>
+            <td class="py-4 text-center font-mono">${cycleProgress} / 13</td>
             <td class="py-4 text-right font-mono ${statusColor} font-bold">${marketStatus}</td>
             <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${grossSales.toFixed(2)}</td>
-            <td class="py-4 text-right font-mono text-rose-400 font-bold">$${artistRoyalty.toFixed(2)}</td>
+            <td class="py-4 text-right font-mono text-rose-400 font-bold">$${resellerProfit.toFixed(2)}</td>
         </tr>`;
     });
+
+    tableBody.innerHTML = html;
+    document.getElementById('escrow-value').innerText = `$${totalMarketSurplus.toFixed(2)}`;
+}
 
     tableBody.innerHTML = html;
     document.getElementById('escrow-value').innerText = `$${totalBrokerageProfit.toFixed(2)}`;
