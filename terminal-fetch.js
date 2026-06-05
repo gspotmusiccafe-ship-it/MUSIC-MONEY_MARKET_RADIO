@@ -30,6 +30,23 @@ const config = {
     14: { name: "G. SOUL", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FHOW%20WAS%20YOUR%20DAY%2FSILHOUETTS%2FG.%20SOUL%2FG.SOUL%201956%20IMG.png?alt=media&token=2c341143-4db4-446a-8e42-8a30d8933967", buyIn: 1000.00, maxGross: 13000.00, vault: G_SOUL_VAULT }
 };
 
+const config = {
+    1: { name: "QUEEN BUTTA", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FLADY%20DAY%20ECSTASY%20IMG.png?alt=media&token=9ac5783d-83f0-4ff3-b36b-54d5226ecff5", buyIn: 400.00, maxGross: 5200.00, vault: QUEEN_BUTTA_VAULT },
+    2: { name: "GANSTA SMOOTH", art: "", buyIn: 200.00, maxGross: 2600.00, vault: GANSTA_SMOOTH_VAULT },
+    3: { name: "G. SMOOTH", art: "", buyIn: 200.00, maxGross: 2600.00, vault: G_SMOOTH_VAULT },
+    4: { name: "J. MARIE", art: "", buyIn: 200.00, maxGross: 2600.00, vault: J_MARIE_VAULT },
+    5: { name: "ROSELYN REYNOLDS", art: "", buyIn: 200.00, maxGross: 2600.00, vault: ROSELYN_REYNOLDS_VAULT },
+    6: { name: "SCARLETT RYE", art: "", buyIn: 200.00, maxGross: 2600.00, vault: SCARLETT_RYE_VAULT },
+    7: { name: "BLACK NEON SAINTS", art: "", buyIn: 200.00, maxGross: 2600.00, vault: BLACK_NEON_SAINTS_VAULT },
+    8: { name: "PARLAY", art: "", buyIn: 200.00, maxGross: 2600.00, vault: PARLAY_VAULT },
+    9: { name: "HIS AND HERS", art: "", buyIn: 300.00, maxGross: 3900.00, vault: HIS_AND_HERS_VAULT },
+    10: { name: "BEDROOM ATTIRE", art: "", buyIn: 400.00, maxGross: 5200.00, vault: BEDROOM_ATTIRE_VAULT },
+    11: { name: "LADY DAY", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FLADY%20DAY%20ECSTASY%20IMG.png?alt=media&token=9ac5783d-83f0-4ff3-b36b-54d5226ecff5", buyIn: 500.00, maxGross: 6500.00, vault: LADY_DAY_VAULT },
+    12: { name: "STALLION RIDE", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FHOW%20WAS%20YOUR%20DAY%2Fstallion%20ride%20image.png?alt=media&token=4fd5f4e0-6980-43f8-8ec0-2a4f6f9466d0", buyIn: 600.00, maxGross: 7800.00, vault: STALLION_RIDE_VAULT },
+    13: { name: "SILHOUETTES", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FHOW%20WAS%20YOUR%20DAY%2FSILHOUETTS%2FSILHOUETTES_ALBUM_COVER.png?alt=media&token=0a87a7b8-11dd-450d-b454-d7fb139b2e46", buyIn: 800.00, maxGross: 10400.00, vault: SILHOUETTES_VAULT },
+    14: { name: "G. SOUL", art: "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/G.%20SMOOTH%20BED%20ROOM%20ATTIRE%2FLADY%20DAY%2FHOW%20WAS%20YOUR%20DAY%2FSILHOUETTS%2FG.%20SOUL%2FG.SOUL%201956%20IMG.png?alt=media&token=2c341143-4db4-446a-8e42-8a30d8933967", buyIn: 1000.00, maxGross: 13000.00, vault: G_SOUL_VAULT }
+};
+
 // --- ENGINE LOGIC ---
 window.switchPortal = function(idx) {
     state.currentPortal = idx;
