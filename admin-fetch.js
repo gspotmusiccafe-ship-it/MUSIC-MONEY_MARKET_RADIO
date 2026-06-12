@@ -1,4 +1,4 @@
-// AITITRADE ADMIN SYSTEM CONTROLLER FRAMEWORK
+// MUSIC MARKET ADMIN SYSTEM CONTROLLER FRAMEWORK
 const adminPartnerConfig = {
     0: { name: "QUEEN BUTTA", cashtag: "$QUEENBUTTAVALID", basePrice: 10.00 },
     1: { name: "GANSTA SMOOTH", cashtag: "$GANSTASMOOTH", basePrice: 20.00 },
@@ -21,48 +21,28 @@ function renderAdminLedger() {
     if (!tableBody) return;
 
     let html = "";
-    let totalMarketSurplus = 0; // Your combined Brokerage + AI Royalty
+    let totalEcosystemEscrow = 0;
 
     Object.keys(adminPartnerConfig).forEach(portalId => {
         const partner = adminPartnerConfig[portalId];
         const telemetry = adminEcosystemState[portalId];
         
-        let grossSales = telemetry.gross;
-        
-        // 1. Brokerage Fee: Fixed $50 per $130 block
-        let marketFee = grossSales * (50 / 130);
-        
-        // 2. Reseller Profit: Fixed $80 per $130 block
-        let resellerProfit = grossSales * (80 / 130);
-        
-        // 3. AI Persona Royalty: 10% of the $50 Brokerage Fee
-        let artistRoyalty = marketFee * 0.10; 
-        
-        // Your Total Market Surplus = Brokerage Fee + AI Royalty
-        totalMarketSurplus += (marketFee + artistRoyalty);
-
-        let cycleProgress = telemetry.claimed;
-        let marketStatus = cycleProgress < 5 ? "MARKET PHASE (Direct)" : "RESELLER PHASE (Active)";
-        let statusColor = cycleProgress < 5 ? "text-emerald-400" : "text-amber-400";
+        let grossDerived = telemetry.gross;
+        let partnerSplit = grossDerived * 0.50; // Core 50% split value logic
+        totalEcosystemEscrow += grossDerived;
 
         html += `
         <tr class="hover:bg-emerald-500/5 transition-all">
             <td class="py-4 font-bold text-emerald-500/60 font-mono">PORTAL 0${parseInt(portalId) + 1}</td>
-            <td class="py-4 font-bold">${partner.name}</td>
-            <td class="py-4 text-center font-mono">${cycleProgress} / 13</td>
-            <td class="py-4 text-right font-mono ${statusColor} font-bold">${marketStatus}</td>
-            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${grossSales.toFixed(2)}</td>
-            <td class="py-4 text-right font-mono text-rose-400 font-bold">$${resellerProfit.toFixed(2)}</td>
+            <td class="py-4 font-bold">${partner.name}<span class="block text-[10px] text-gray-500">${partner.cashtag}</span></td>
+            <td class="py-4 text-center font-mono">${telemetry.claimed} / 8</td>
+            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${grossDerived.toFixed(2)}</td>
+            <td class="py-4 text-right font-mono text-emerald-400 font-bold">$${partnerSplit.toFixed(2)}</td>
+            <td class="py-4 text-center">
+                <button onclick="window.selectPartnerForSettlement('${partner.name}', ${partnerSplit})" class="bg-emerald-950/40 border border-emerald-500/20 text-emerald-400 text-[10px] px-2 py-1 rounded hover:bg-emerald-500 hover:text-black font-bold font-mono transition-all cursor-pointer">SELECT</button>
+            </td>
         </tr>`;
     });
-
-    tableBody.innerHTML = html;
-    document.getElementById('escrow-value').innerText = `$${totalMarketSurplus.toFixed(2)}`;
-}
-
-    tableBody.innerHTML = html;
-    document.getElementById('escrow-value').innerText = `$${totalBrokerageProfit.toFixed(2)}`;
-}
 
     tableBody.innerHTML = html;
     document.getElementById('escrow-value').innerText = `$${totalEcosystemEscrow.toFixed(2)}`;
