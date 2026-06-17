@@ -134,8 +134,8 @@ window.switchPortal = function(idx) {
     document.getElementById('album-cover-img').src = config[idx].art;
     document.getElementById('display-active-album-name').innerText = `${config[idx].name} // PORTAL ACTIVE`;
     document.getElementById('asset-label-header').innerText = `${config[idx].name} ASSET TRACKER`;
-    document.getElementById('buy-label-header').innerText = `INVEST IN ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
-    document.getElementById('btn-song-buy').innerText = `BUY ASSET NOW ($${config[idx].buyIn})`;
+    document.getElementById('buy-label-header').innerText = `License Queen Butta ${config[idx].name}: $${config[idx].buyIn.toFixed(2)}`;
+    document.getElementById('btn-song-buy').innerText = `Buy License Now ($${config[idx].buyIn})`;
 
     document.querySelectorAll('.portal-btn').forEach(btn => {
         btn.classList.remove('active', 'text-emerald-400', 'font-bold');
