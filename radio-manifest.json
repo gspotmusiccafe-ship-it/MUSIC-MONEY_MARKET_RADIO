@@ -1,9 +1,10 @@
 {
   "artist": "QUEEN BUTTA",
-  "genre": "R&B / SOUL",
-  "albumArt": "https://firebasestorage.googleapis.com/.../artwork.jpg",
+  "albumArt": "https://firebasestorage.googleapis.com/v0/b/aititrade-radio-97.firebasestorage.app/o/QUEEN%20BUTTA%2FQUEEN%20BUTTA%20PNG.jpeg?alt=media&token=57a0801b-1e48-41f6-9f93-b72964881982",
   "playlist": [
-    { "title": "SUPERFLY", "src": "https://firebasestorage.googleapis.com/.../song1.mp3" },
-    { "title": "ADDICTION", "src": "https://firebasestorage.googleapis.com/.../song2.mp3" }
+    {
+      "title": "QUEEN BUTTA TRACK",
+      "src": "YOUR_FIREBASE_AUDIO_LINK_HERE"
+    }
   ]
 }
