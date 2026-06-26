@@ -1,12 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ROYALTY CHECK RADIO</title>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #000; font-family: 'Lato', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .chassis { background: #E0E0E0; border-radius: 40px; box-shadow: 10px 10px 30px #000; width: 360px; height: 600px; padding: 20px; display: flex; flex-direction: column; align-items: center; border: 4px solid #CCC; }
+      body { 
+    background-color: #000; 
+    font-family: 'Lato', sans-serif; 
+    margin: 0; 
+    padding: 0;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* This kills the slider */
+}
+
+.chassis { 
+    background: #E0E0E0; 
+    border-radius: 40px; 
+    box-shadow: 0 10px 30px #000; 
+    width: 95vw;    /* Takes 95% of phone width */
+    max-width: 360px; 
+    height: 90vh;   /* Takes 90% of phone height */
+    max-height: 600px;
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    border: 4px solid #CCC; 
+    box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
+}
         
         /* Static Header */
         .brand-header { text-align: center; margin-bottom: 5px; }
