@@ -6,25 +6,58 @@
     <title>SONGSHARE RADIO 97.7 THE FLAME</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* ... Your CSS rules here ... */
+        body { background-color: #000; color: #fff; font-family: 'Courier New', monospace; }
+        .panel { border: 2px solid #333; border-radius: 12px; background: #111; }
+        .btn-buy { background: #065f46; border: 1px solid #10b981; padding: 10px 20px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
-<body class="bg-black text-white p-4">
+<body class="flex flex-col items-center justify-center min-h-screen">
 
-    <div class="panel p-8 max-w-sm mx-auto mt-20">
-        <div id="vault-display" class="mb-6 text-center text-xl">SONGSHARE RADIO</div>
-        <img id="album-art" class="w-full mb-6 border-4 border-[#333]" src="" alt="Album Art">
-        <div class="flex justify-between items-center px-4">
-            <div class="knob"></div>
-            <button id="play-btn" class="btn-buy px-8 py-3 font-bold">PLAY</button>
-            <div class="knob"></div>
+    <div class="panel p-8 max-w-sm w-full text-center">
+        <h1 id="vault-display" class="mb-6 text-2xl font-bold text-emerald-400">SONGSHARE RADIO</h1>
+        <img id="album-art" class="w-full h-64 object-cover mb-6 border-4 border-gray-800" src="" alt="Album Art">
+        
+        <div class="flex flex-col gap-4">
+            <button id="play-btn" class="btn-buy hover:bg-emerald-700">PLAY</button>
+            <a id="btn-purchase" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0" class="text-emerald-500 underline text-sm">BUY LICENSE</a>
         </div>
-        <a id="btn-purchase" href="https://cash.app/$AITITRADEBROKERAGE" class="block mt-4 text-center">BUY LICENSE</a>
     </div>
 
     <audio id="main-audio"></audio>
+
     <script>
-        // ... Your Script logic here ...
+        let radio = { manifest: null, currentTrack: 0, isLocked: false };
+
+        async function initRadio() {
+            try {
+                const response = await fetch('radio-manifest.json');
+                radio.manifest = await response.json();
+                document.getElementById('vault-display').innerText = radio.manifest.artist;
+                document.getElementById('album-art').src = radio.manifest.albumArt;
+                document.getElementById('main-audio').src = radio.manifest.playlist[0].src;
+            } catch(e) { console.log("Manifest error"); }
+        }
+
+        document.getElementById('play-btn').onclick = () => {
+            if(!radio.isLocked) {
+                document.getElementById('main-audio').play();
+                document.getElementById('play-btn').innerText = "PLAYING...";
+            }
+        };
+
+        document.getElementById('main-audio').onended = () => {
+            radio.currentTrack++;
+            if (radio.currentTrack < radio.manifest.playlist.length) {
+                document.getElementById('main-audio').src = radio.manifest.playlist[radio.currentTrack].src;
+                document.getElementById('main-audio').play();
+            } else {
+                radio.isLocked = true;
+                document.getElementById('play-btn').disabled = true;
+                document.getElementById('play-btn').innerText = "LOCKED // PURCHASE REQUIRED";
+            }
+        };
+
+        initRadio();
     </script>
 </body>
 </html>
