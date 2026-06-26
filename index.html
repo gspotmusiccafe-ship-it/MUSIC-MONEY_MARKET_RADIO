@@ -30,25 +30,33 @@
     let radio = { manifest: null, currentTrack: 0 };
 
     async function initRadio() {
-        const response = await fetch('radio-manifest.json');
-        radio.manifest = await response.json();
-        
-        // Load UI
-        document.getElementById('vault-display').innerText = radio.manifest.artist;
-        document.getElementById('album-art').src = radio.manifest.albumArt;
-        
-        // Setup Audio
-        const audio = document.getElementById('main-audio');
-        audio.src = radio.manifest.playlist[0].src;
+        try {
+            const response = await fetch('radio-manifest.json');
+            if (!response.ok) throw new Error("Could not find radio-manifest.json");
+            
+            radio.manifest = await response.json();
+            
+            // UI Update
+            document.getElementById('vault-display').innerText = radio.manifest.artist;
+            document.getElementById('album-art').src = radio.manifest.albumArt;
+            
+            // Audio Setup
+            const audio = document.getElementById('main-audio');
+            audio.src = radio.manifest.playlist[0].src;
+            console.log("Radio Initialized successfully");
+        } catch(e) {
+            console.error("RADIO ERROR:", e.message);
+            document.getElementById('vault-display').innerText = "MANIFEST ERROR";
+        }
     }
 
     document.getElementById('play-btn').onclick = () => {
         const audio = document.getElementById('main-audio');
-        audio.play();
-        document.getElementById('play-btn').innerText = "PLAYING...";
+        audio.play().then(() => {
+            document.getElementById('play-btn').innerText = "PLAYING...";
+        }).catch(err => console.error("Playback failed", err));
     };
 
     initRadio();
 </script>
-</body>
 </html>
