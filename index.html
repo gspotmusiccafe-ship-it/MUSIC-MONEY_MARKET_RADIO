@@ -90,6 +90,57 @@
             }
         };
         initRadio();
+   <script>
+        // 1. SET UP RADIO OBJECT
+        let radio = { manifest: null, currentTrack: 0 };
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-pause-btn');
+        const albumArt = document.getElementById('album-art');
+        const lockIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+
+        // 2. AFFILIATE LINK TRACKING LOGIC
+        const params = new URLSearchParams(window.location.search);
+        const ref = params.get('ref') || 'direct';
+        const rightsBtn = document.getElementById('btn-rights');
+        rightsBtn.href += `&ref=${ref}`; // Appends the affiliate ID to your link
+
+        // 3. INITIALIZE RADIO
+        async function initRadio() {
+            const response = await fetch('radio-manifest.json');
+            radio.manifest = await response.json();
+            albumArt.src = radio.manifest.albumArt;
+            audio.src = radio.manifest.playlist[0].src;
+        }
+
+        // 4. PLAY/PAUSE LOGIC
+        playBtn.onclick = () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = "❚❚";
+                albumArt.classList.add('pulse');
+            } else {
+                audio.pause();
+                playBtn.innerText = "▶";
+                albumArt.classList.remove('pulse');
+            }
+        };
+
+        // 5. LOCKOUT LOGIC
+        audio.onended = () => {
+            radio.currentTrack++;
+            if (radio.currentTrack < radio.manifest.playlist.length) {
+                audio.src = radio.manifest.playlist[radio.currentTrack].src;
+                document.getElementById('track-info').innerText = "NOW PLAYING: " + radio.manifest.playlist[radio.currentTrack].title;
+                audio.play();
+            } else {
+                audio.pause();
+                playBtn.innerHTML = lockIcon; // Swaps to Lock Icon
+                playBtn.disabled = true;
+                albumArt.classList.remove('pulse');
+                document.getElementById('track-info').innerText = "ACCESS LOCKED. BUY RIGHTS.";
+            }
+        };
+        initRadio();
     </script>
 </body>
 </html>
