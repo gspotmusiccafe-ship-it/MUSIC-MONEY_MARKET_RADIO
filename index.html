@@ -26,37 +26,36 @@
 
     <audio id="main-audio"></audio>
 
- <script>
+<script>
     let radio = { manifest: null, currentTrack: 0 };
+    const audio = document.getElementById('main-audio');
+    const playBtn = document.getElementById('play-btn');
 
     async function initRadio() {
-        try {
-            const response = await fetch('radio-manifest.json');
-            if (!response.ok) throw new Error("Could not find radio-manifest.json");
-            
-            radio.manifest = await response.json();
-            
-            // UI Update
-            document.getElementById('vault-display').innerText = radio.manifest.artist;
-            document.getElementById('album-art').src = radio.manifest.albumArt;
-            
-            // Audio Setup
-            const audio = document.getElementById('main-audio');
-            audio.src = radio.manifest.playlist[0].src;
-            console.log("Radio Initialized successfully");
-        } catch(e) {
-            console.error("RADIO ERROR:", e.message);
-            document.getElementById('vault-display').innerText = "MANIFEST ERROR";
-        }
+        const response = await fetch('radio-manifest.json');
+        radio.manifest = await response.json();
+        document.getElementById('vault-display').innerText = radio.manifest.artist;
+        document.getElementById('album-art').src = radio.manifest.albumArt;
+        audio.src = radio.manifest.playlist[0].src;
     }
 
-    document.getElementById('play-btn').onclick = () => {
-        const audio = document.getElementById('main-audio');
-        audio.play().then(() => {
-            document.getElementById('play-btn').innerText = "PLAYING...";
-        }).catch(err => console.error("Playback failed", err));
+    playBtn.onclick = () => {
+        audio.play();
+        playBtn.innerText = "PLAYING...";
+    };
+
+    audio.onended = () => {
+        radio.currentTrack++;
+        if (radio.currentTrack < radio.manifest.playlist.length) {
+            audio.src = radio.manifest.playlist[radio.currentTrack].src;
+            audio.play();
+        } else {
+            playBtn.disabled = true;
+            playBtn.innerText = "ACCESS LOCKED // BUY LICENSE";
+            playBtn.style.opacity = "0.5";
+            playBtn.style.cursor = "not-allowed";
+        }
     };
 
     initRadio();
 </script>
-</html>
