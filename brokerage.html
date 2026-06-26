@@ -5,144 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONGSHARE RADIO 97.7 THE FLAME</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
-        :root {
-            --neon: #00ff41;
-            --gold: #ffd700;
+   
+<style>
+    /* ... all your CSS rules ... */
+    /* ... make sure your CSS is inside these style tags ... */
+</style>
+
+<script>
+    // 1. Dynamic manifest loader
+    let radio = { manifest: null, currentTrack: 0, isLocked: false };
+
+    async function initRadio() {
+        try {
+            const response = await fetch('radio-manifest.json');
+            radio.manifest = await response.json();
+            document.getElementById('vault-display').innerText = radio.manifest.artist;
+            document.getElementById('album-art').src = radio.manifest.albumArt;
+            const audio = document.getElementById('main-audio');
+            audio.src = radio.manifest.playlist[0].src;
+        } catch(e) { console.log("Manifest not found, check radio-manifest.json"); }
+    }
+
+    // 2. Play/Pause/Lock logic
+    const audio = document.getElementById('main-audio');
+    const playBtn = document.getElementById('play-btn');
+
+    playBtn.onclick = () => {
+        if(!radio.isLocked) {
+            audio.play();
+            playBtn.innerText = "PLAYING...";
         }
-        body { font-family: 'JetBrains+Mono', monospace; background-color: #0a0a0a; color: var(--neon); }
-        .ticker-wrap { background: #111; border-bottom: 2px solid #333; overflow: hidden; }
-        .ticker-move { display: flex; animation: ticker 30s linear infinite; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-        .panel { border: 1px solid #333; background: #161616; border-radius: 4px; box-shadow: 0 0 15px rgba(0,255,65,0.05); }
-        .btn-buy { background: #008000; color: white; transition: 0.3s; }
-        .btn-buy:hover { background: #00a500; box-shadow: 0 0 10px #00ff41; }
-        input { background: #222; border: 1px solid #444; color: var(--neon); padding: 8px; border-radius: 4px; }
-   /* 80s Boombox Aesthetic */
-:root {
-    --plastic-dark: #1a1a1a;
-    --plastic-light: #2d2d2d;
-    --knob-bg: #333;
-    --display-glow: #00ff41;
-}
+    };
 
-body {
-    background: #111;
-    font-family: 'Courier New', Courier, monospace; /* Dot-matrix feel */
-}
-
-/* 3D Panel Bevel */
-.panel {
-    background: var(--plastic-dark);
-    border: 3px solid #444;
-    border-top-color: #666;
-    border-left-color: #666;
-    box-shadow: 10px 10px 20px rgba(0,0,0,0.8), inset 2px 2px 5px #444;
-    border-radius: 8px;
-}
-
-/* The Tape Display */
-#vault-display {
-    background: #000;
-    border: 4px inset #333;
-    color: var(--display-glow);
-    text-shadow: 0 0 8px var(--display-glow);
-    padding: 10px;
-    letter-spacing: 4px;
-}
-
-/* Tactile Knobs */
-.knob {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #666, #222);
-    box-shadow: 3px 3px 6px #000, inset 1px 1px 2px #999;
-    cursor: pointer;
-}
-
-/* Analog Switch */
-.switch {
-    width: 20px;
-    height: 40px;
-    background: #444;
-    border: 2px solid #222;
-    margin: 5px;
-    display: inline-block;
-}
-
-/* Vintage Button Feel */
-.btn-buy {
-    background: linear-gradient(180deg, #333, #111);
-    border: 2px solid #555;
-    text-shadow: 1px 1px 1px #000;
-    transition: transform 0.1s;
-}
-
-.btn-buy:active {
-    transform: translateY(2px);
-    border-style: inset;
-}
-
-/* Dot-matrix Ticker */
-.ticker-wrap {
-    background: #000;
-    border: 4px ridge #555;
-}
-    <script>
-        // 1. Dynamic manifest loader
-        let radio = { manifest: null, currentTrack: 0, isLocked: false };
-
-        async function initRadio() {
-            try {
-                const response = await fetch('radio-manifest.json');
-                radio.manifest = await response.json();
-                
-                document.getElementById('vault-display').innerText = radio.manifest.artist;
-                document.getElementById('album-art').src = radio.manifest.albumArt;
-                
-                // Setup Player
-                const audio = document.getElementById('main-audio');
-                audio.src = radio.manifest.playlist[0].src;
-            } catch(e) {
-                console.log("Manifest not found, check radio-manifest.json");
-            }
+    audio.onended = () => {
+        radio.currentTrack++;
+        if (radio.currentTrack < radio.manifest.playlist.length) {
+            audio.src = radio.manifest.playlist[radio.currentTrack].src;
+            audio.play();
+        } else {
+            lockRadio();
         }
+    };
 
-        // 2. Play/Pause/Lock logic
-        const audio = document.getElementById('main-audio');
-        const playBtn = document.getElementById('play-btn');
+    function lockRadio() {
+        radio.isLocked = true;
+        playBtn.disabled = true;
+        playBtn.innerText = "LOCKED // PURCHASE REQUIRED";
+    }
 
-        playBtn.onclick = () => {
-            if(!radio.isLocked) {
-                audio.play();
-                playBtn.innerText = "PLAYING...";
-            }
-        };
+    // 3. Affiliate tracking
+    const ref = new URLSearchParams(window.location.search).get('ref') || 'DIRECT';
+    const buyBtn = document.getElementById('btn-purchase');
+    if (buyBtn) buyBtn.href += `?ref=${ref}`;
 
-        audio.onended = () => {
-            radio.currentTrack++;
-            if (radio.currentTrack < radio.manifest.playlist.length) {
-                audio.src = radio.manifest.playlist[radio.currentTrack].src;
-                audio.play();
-            } else {
-                lockRadio();
-            }
-        };
-
-        function lockRadio() {
-            radio.isLocked = true;
-            playBtn.disabled = true;
-            playBtn.innerText = "LOCKED // PURCHASE REQUIRED";
-        }
-
-        // 3. Affiliate tracking
-        const ref = new URLSearchParams(window.location.search).get('ref') || 'DIRECT';
-        const buyBtn = document.getElementById('btn-purchase');
-        if (buyBtn) buyBtn.href += `?ref=${ref}`;
-
-        initRadio();
-    </script>
-</body>
-</html>
+    initRadio();
+</script>
