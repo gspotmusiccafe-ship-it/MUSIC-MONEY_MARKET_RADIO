@@ -3,170 +3,64 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ROYALTY CHECK RADIO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      body { 
-    background-color: #000; 
-    font-family: 'Lato', sans-serif; 
-    margin: 0; 
-    padding: 0;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    min-height: 100vh;
-    width: 100vw;
-    overflow: hidden; /* This kills the slider */
-}
-
-.chassis { 
-    background: #E0E0E0; 
-    border-radius: 40px; 
-    box-shadow: 0 10px 30px #000; 
-    width: 95vw;    /* Takes 95% of phone width */
-    max-width: 360px; 
-    height: 90vh;   /* Takes 90% of phone height */
-    max-height: 600px;
-    padding: 15px; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    border: 4px solid #CCC; 
-    box-sizing: border-box; /* Ensures padding doesn't push it off-screen */
-}
-        
-        /* Static Header */
-        .brand-header { text-align: center; margin-bottom: 5px; }
-        .brand-name { font-size: 26px; font-weight: 800; color: #000; margin: 0; }
-        .tagline { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
-
-        .screen { background: #FFF; width: 320px; height: 280px; border-radius: 10px; border: 6px solid #333; margin-top: 5px; overflow: hidden; position: relative; }
-        #album-art { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
-        
-        .pulse { animation: pulse-anim 1.5s infinite ease-in-out; }
-        @keyframes pulse-anim { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        .ticker-wrap { width: 320px; overflow: hidden; background: #000; color: #00ff41; margin-top: 10px; font-size: 13px; padding: 4px 0; border-radius: 4px; }
-        .ticker { white-space: nowrap; animation: scroll-left 15s linear infinite; }
-        @keyframes scroll-left { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
-
-        .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
-        .btn-circle { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #333; background: #FFF; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #333; font-size: 20px; }
-        
-        #btn-rights { margin-top: 25px; color: #008000; font-weight: bold; text-decoration: none; border-bottom: 2px solid #008000; }
+        body { background-color: #000; font-family: sans-serif; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; }
+        .chassis { background: #E0E0E0; border-radius: 40px; width: 95vw; max-width: 360px; height: 90vh; max-height: 600px; padding: 20px; display: flex; flex-direction: column; align-items: center; border: 4px solid #CCC; box-sizing: border-box; }
+        .brand-name { font-size: 24px; font-weight: 800; color: #000; margin: 0; text-align: center; }
+        .screen { background: #111; width: 300px; height: 200px; border-radius: 10px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; padding: 10px; margin-top: 20px; }
+        .bar { width: 15px; background: #00ff41; height: 10px; transition: height 0.1s ease; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 40px; }
+        .btn-circle { width: 80px; height: 80px; border-radius: 50%; border: 4px solid #333; background: #FFF; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 30px; }
+        #btn-rights { margin-top: 40px; color: #008000; font-weight: bold; text-decoration: none; border-bottom: 2px solid #008000; }
     </style>
 </head>
 <body>
     <div class="chassis">
-        <div class="brand-header">
-            <h1 class="brand-name">ROYALTY CHECK RADIO</h1>
-            <p class="tagline">MUSIC MADE TO MONETIZE</p>
+        <h1 class="brand-name">ROYALTY CHECK RADIO</h1>
+        <div class="screen" id="oscillator">
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            <div class="bar"></div><div class="bar"></div><div class="bar"></div>
         </div>
-        <div class="ticker-wrap"><div class="ticker" id="announcement">!!! EXCLUSIVE SONGSHARE VAULT RELEASE: QUEEN BUTTA - MUSIC MADE TO MONETIZE !!!</div></div>
-        <div class="screen">
-            <img id="album-art" src="" alt="Album Art">
-        </div>
-        <div id="track-info" style="margin-top:10px; color:#555; font-size:12px; font-weight:bold;">PRESS PLAY TO START</div>
-        <div class="controls">
-            <div class="btn-circle" style="color:#AAA;">◀</div>
-            <button id="play-pause-btn" class="btn-circle">▶</button>
-            <div class="btn-circle" style="color:#AAA;">▶</div>
-        </div>
+        <button id="play-pause-btn" class="btn-circle">▶</button>
         <a id="btn-rights" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0">RIGHTS & ROYALTIES</a>
     </div>
     <audio id="main-audio"></audio>
-
     <script>
-        let radio = { manifest: null, currentTrack: 0 };
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-pause-btn');
-        const albumArt = document.getElementById('album-art');
-        const lockIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
+        const bars = document.querySelectorAll('.bar');
 
-        async function initRadio() {
-            const response = await fetch('radio-manifest.json');
-            radio.manifest = await response.json();
-            albumArt.src = radio.manifest.albumArt;
-            audio.src = radio.manifest.playlist[0].src;
-        }
-
-        playBtn.onclick = () => {
-            if (audio.paused) {
-                audio.play();
-                playBtn.innerText = "❚❚";
-                albumArt.classList.add('pulse');
-            } else {
-                audio.pause();
-                playBtn.innerText = "▶";
-                albumArt.classList.remove('pulse');
-            }
-        };
-
-        audio.onended = () => {
-            radio.currentTrack++;
-            if (radio.currentTrack < radio.manifest.playlist.length) {
-                audio.src = radio.manifest.playlist[radio.currentTrack].src;
-                document.getElementById('track-info').innerText = "NOW PLAYING: " + radio.manifest.playlist[radio.currentTrack].title;
-                audio.play();
-            } else {
-                audio.pause();
-                playBtn.innerHTML = lockIcon;
-                playBtn.disabled = true;
-                albumArt.classList.remove('pulse');
-                document.getElementById('track-info').innerText = "ACCESS LOCKED. BUY RIGHTS.";
-            }
-        };
-        initRadio();
-   <script>
-        // 1. SET UP RADIO OBJECT
-        let radio = { manifest: null, currentTrack: 0 };
-        const audio = document.getElementById('main-audio');
-        const playBtn = document.getElementById('play-pause-btn');
-        const albumArt = document.getElementById('album-art');
-        const lockIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
-
-        // 2. AFFILIATE LINK TRACKING LOGIC
+        // Affiliate logic
         const params = new URLSearchParams(window.location.search);
         const ref = params.get('ref') || 'direct';
-        const rightsBtn = document.getElementById('btn-rights');
-        rightsBtn.href += `&ref=${ref}`; // Appends the affiliate ID to your link
+        document.getElementById('btn-rights').href += `&ref=${ref}`;
 
-        // 3. INITIALIZE RADIO
-        async function initRadio() {
-            const response = await fetch('radio-manifest.json');
-            radio.manifest = await response.json();
-            albumArt.src = radio.manifest.albumArt;
-            audio.src = radio.manifest.playlist[0].src;
+        async function init() {
+            const res = await fetch('radio-manifest.json');
+            const data = await res.json();
+            audio.src = data.playlist[0].src;
         }
 
-        // 4. PLAY/PAUSE LOGIC
-        playBtn.onclick = () => {
-            if (audio.paused) {
-                audio.play();
-                playBtn.innerText = "❚❚";
-                albumArt.classList.add('pulse');
-            } else {
-                audio.pause();
-                playBtn.innerText = "▶";
-                albumArt.classList.remove('pulse');
+        function animate() {
+            if (!audio.paused) {
+                bars.forEach(b => b.style.height = (Math.random() * 150 + 20) + 'px');
             }
+            requestAnimationFrame(animate);
+        }
+
+        playBtn.onclick = () => {
+            if (audio.paused) { audio.play(); playBtn.innerText = "❚❚"; }
+            else { audio.pause(); playBtn.innerText = "▶"; }
         };
 
-        // 5. LOCKOUT LOGIC
-        audio.onended = () => {
-            radio.currentTrack++;
-            if (radio.currentTrack < radio.manifest.playlist.length) {
-                audio.src = radio.manifest.playlist[radio.currentTrack].src;
-                document.getElementById('track-info').innerText = "NOW PLAYING: " + radio.manifest.playlist[radio.currentTrack].title;
-                audio.play();
-            } else {
-                audio.pause();
-                playBtn.innerHTML = lockIcon; // Swaps to Lock Icon
-                playBtn.disabled = true;
-                albumArt.classList.remove('pulse');
-                document.getElementById('track-info').innerText = "ACCESS LOCKED. BUY RIGHTS.";
-            }
+        audio.onended = () => { 
+            audio.pause(); 
+            playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>'; 
+            playBtn.disabled = true; 
         };
-        initRadio();
+
+        init();
+        animate();
     </script>
 </body>
 </html>
