@@ -19,89 +19,77 @@
         .btn-buy { background: #008000; color: white; transition: 0.3s; }
         .btn-buy:hover { background: #00a500; box-shadow: 0 0 10px #00ff41; }
         input { background: #222; border: 1px solid #444; color: var(--neon); padding: 8px; border-radius: 4px; }
-    </style>
-</head>
-<body class="p-4">
+   /* 80s Boombox Aesthetic */
+:root {
+    --plastic-dark: #1a1a1a;
+    --plastic-light: #2d2d2d;
+    --knob-bg: #333;
+    --display-glow: #00ff41;
+}
 
-    <div class="ticker-wrap p-2 mb-6">
-        <div id="ticker-content" class="ticker-move text-sm font-bold uppercase">
-            <span>INITIALIZING CONNECTION TO CENTRAL BANK...</span>
-        </div>
-    </div>
+body {
+    background: #111;
+    font-family: 'Courier New', Courier, monospace; /* Dot-matrix feel */
+}
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        
-        <div class="md:col-span-2 space-y-6">
-            <div class="panel p-4">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
-                    <h2 class="text-xl font-bold italic text-white">LIVE TRADING FLOOR</h2>
-                    <span class="text-xs animate-pulse text-gray-500">● LIVE MARKET DATA</span>
-                </div>
-                <table class="w-full text-left text-sm">
-                    <thead class="text-gray-500 uppercase text-xs">
-                        <tr>
-                            <th class="p-2">Asset Ticker</th>
-                            <th>Current Price</th>
-                            <th>ROI</th>
-                            <th>Volume</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="market-body">
-                        </tbody>
-                </table>
-            </div>
+/* 3D Panel Bevel */
+.panel {
+    background: var(--plastic-dark);
+    border: 3px solid #444;
+    border-top-color: #666;
+    border-left-color: #666;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.8), inset 2px 2px 5px #444;
+    border-radius: 8px;
+}
 
-            <div class="panel p-4">
-                <h2 class="text-xl font-bold mb-4 border-b border-gray-700 pb-2 text-white">MARKET ACTIVITY</h2>
-                <div class="h-48 overflow-y-auto text-xs space-y-2 font-mono" id="ledger-output">
-                    <p class="text-gray-600">[SYSTEM] Terminal initialized. Awaiting block settlement...</p>
-                </div>
-            </div>
-        </div>
+/* The Tape Display */
+#vault-display {
+    background: #000;
+    border: 4px inset #333;
+    color: var(--display-glow);
+    text-shadow: 0 0 8px var(--display-glow);
+    padding: 10px;
+    letter-spacing: 4px;
+}
 
-        <div class="space-y-6">
-            <div class="panel p-6 border-l-4 border-green-600">
-                <h2 class="text-xl font-bold mb-4 text-white">BANKER'S DESK</h2>
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs uppercase text-gray-400">Current Liquidity Vault</label>
-                        <div class="text-3xl font-bold text-white tracking-tighter" id="vault-display">$124,500.00</div>
-                    </div>
-                    <hr class="border-gray-800">
-                    <div class="flex flex-col gap-2">
-                        <button class="w-full py-3 font-bold btn-buy rounded text-sm uppercase">Execute Settlement</button>
-                        <button class="w-full py-3 font-bold border border-gray-600 rounded text-sm uppercase hover:bg-gray-800">Manage Trusts</button>
-                    </div>
-                </div>
-            </div>
+/* Tactile Knobs */
+.knob {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #666, #222);
+    box-shadow: 3px 3px 6px #000, inset 1px 1px 2px #999;
+    cursor: pointer;
+}
 
-            <div class="panel p-6 border-l-4 border-yellow-500">
-                <h2 class="text-lg font-bold mb-2 text-white">KINETIC CALCULATOR</h2>
-                <div class="flex flex-col gap-3">
-                    <input type="number" id="calc-buyin" placeholder="Enter Buy-In Amount">
-                    <input type="number" id="calc-roi" placeholder="Current ROI %">
-                    <div class="mt-2 text-xs text-gray-400 uppercase">
-                        Projected Payout: <span class="text-white font-bold text-lg block" id="calc-result">$0.00</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+/* Analog Switch */
+.switch {
+    width: 20px;
+    height: 40px;
+    background: #444;
+    border: 2px solid #222;
+    margin: 5px;
+    display: inline-block;
+}
 
-    <script>
-        const SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycby5Ecd_jJ1HEAUnZPeiXsEcBqJXigrkmb3oY38ioc-4d_bQKyc8Qy_INL3hwMxLeg/exec';
+/* Vintage Button Feel */
+.btn-buy {
+    background: linear-gradient(180deg, #333, #111);
+    border: 2px solid #555;
+    text-shadow: 1px 1px 1px #000;
+    transition: transform 0.1s;
+}
 
-        async function fetchMarketData() {
-            try {
-                const response = await fetch(SHEETS_API_URL);
-                const data = await response.json();
-                if (!data || data.length === 0) return;
-                updateTradingFloor(data);
-                updateTicker(data);
-            } catch (error) {
-                console.error("Brokerage Sync Error:", error);
-            }
+.btn-buy:active {
+    transform: translateY(2px);
+    border-style: inset;
+}
+
+/* Dot-matrix Ticker */
+.ticker-wrap {
+    background: #000;
+    border: 4px ridge #555;
+}
         }
 
         function updateTradingFloor(assets) {
