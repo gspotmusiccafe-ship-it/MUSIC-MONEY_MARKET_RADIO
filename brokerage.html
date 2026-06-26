@@ -92,37 +92,7 @@ body {
 }
         }
 
-        function updateTradingFloor(assets) {
-            const tbody = document.getElementById('market-body');
-            tbody.innerHTML = ''; 
-            assets.forEach(asset => {
-                const row = `
-                    <tr class="border-b border-gray-800 hover:bg-black transition">
-                        <td class="p-3 font-bold text-white">${asset.name || 'Asset'} (${asset.ticker || '???'})</td>
-                        <td class="font-bold">$${parseFloat(asset.price || 0).toFixed(2)}</td>
-                        <td class="${parseFloat(asset.roi) >= 0 ? 'text-green-500' : 'text-red-500'} font-bold">${asset.roi || 0}%</td>
-                        <td class="text-gray-400">${asset.volume || 0}</td>
-                        <td><button class="px-4 py-1 btn-buy rounded text-[10px] font-bold">BUY</button></td>
-                    </tr>`;
-                tbody.innerHTML += row;
-            });
-        }
-
-        function updateTicker(assets) {
-            const ticker = document.getElementById('ticker-content');
-            let content = '';
-            assets.forEach(asset => {
-                content += `<span class="mx-8">$${asset.ticker || '???'} ${asset.roi || 0}% ▲</span>`;
-            });
-            ticker.innerHTML = content;
-        }
-
-        // Kinetic Calculator
-        document.addEventListener('input', () => {
-            const buyIn = parseFloat(document.getElementById('calc-buyin').value) || 0;
-            const roi = parseFloat(document.getElementById('calc-roi').value) || 0;
-            const result = buyIn + (buyIn * (roi / 100));
-            document.getElementById('calc-result').innerText = `$${result.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+       
         });
 
         <script>
