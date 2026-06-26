@@ -5,58 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SONGSHARE RADIO 97.7 THE FLAME</title>
     <script src="https://cdn.tailwindcss.com"></script>
-   
-<style>
-    /* ... all your CSS rules ... */
-    /* ... make sure your CSS is inside these style tags ... */
-</style>
+    <style>
+        /* ... Your CSS rules here ... */
+    </style>
+</head>
+<body class="bg-black text-white p-4">
 
-<script>
-    // 1. Dynamic manifest loader
-    let radio = { manifest: null, currentTrack: 0, isLocked: false };
+    <div class="panel p-8 max-w-sm mx-auto mt-20">
+        <div id="vault-display" class="mb-6 text-center text-xl">SONGSHARE RADIO</div>
+        <img id="album-art" class="w-full mb-6 border-4 border-[#333]" src="" alt="Album Art">
+        <div class="flex justify-between items-center px-4">
+            <div class="knob"></div>
+            <button id="play-btn" class="btn-buy px-8 py-3 font-bold">PLAY</button>
+            <div class="knob"></div>
+        </div>
+        <a id="btn-purchase" href="https://cash.app/$AITITRADEBROKERAGE" class="block mt-4 text-center">BUY LICENSE</a>
+    </div>
 
-    async function initRadio() {
-        try {
-            const response = await fetch('radio-manifest.json');
-            radio.manifest = await response.json();
-            document.getElementById('vault-display').innerText = radio.manifest.artist;
-            document.getElementById('album-art').src = radio.manifest.albumArt;
-            const audio = document.getElementById('main-audio');
-            audio.src = radio.manifest.playlist[0].src;
-        } catch(e) { console.log("Manifest not found, check radio-manifest.json"); }
-    }
-
-    // 2. Play/Pause/Lock logic
-    const audio = document.getElementById('main-audio');
-    const playBtn = document.getElementById('play-btn');
-
-    playBtn.onclick = () => {
-        if(!radio.isLocked) {
-            audio.play();
-            playBtn.innerText = "PLAYING...";
-        }
-    };
-
-    audio.onended = () => {
-        radio.currentTrack++;
-        if (radio.currentTrack < radio.manifest.playlist.length) {
-            audio.src = radio.manifest.playlist[radio.currentTrack].src;
-            audio.play();
-        } else {
-            lockRadio();
-        }
-    };
-
-    function lockRadio() {
-        radio.isLocked = true;
-        playBtn.disabled = true;
-        playBtn.innerText = "LOCKED // PURCHASE REQUIRED";
-    }
-
-    // 3. Affiliate tracking
-    const ref = new URLSearchParams(window.location.search).get('ref') || 'DIRECT';
-    const buyBtn = document.getElementById('btn-purchase');
-    if (buyBtn) buyBtn.href += `?ref=${ref}`;
-
-    initRadio();
-</script>
+    <audio id="main-audio"></audio>
+    <script>
+        // ... Your Script logic here ...
+    </script>
+</body>
+</html>
