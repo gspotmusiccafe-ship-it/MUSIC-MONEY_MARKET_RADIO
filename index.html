@@ -3,60 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SONGSHARE RADIO 97.7 THE FLAME</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { background-color: #000; color: #00ff41; font-family: 'Courier New', Courier, monospace; }
-    .panel { background: #1a1a1a; border: 4px solid #444; border-radius: 8px; box-shadow: 10px 10px 20px #000; }
-    .btn-buy { background: #065f46; border: 2px solid #10b981; padding: 15px 30px; font-weight: bold; cursor: pointer; color: #fff; }
-    #album-art { border: 4px inset #333; }
-</style> 
+    <title>ROYALTY CHECK RADIO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #000; font-family: 'Lato', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .chassis { background: #E0E0E0; border-radius: 40px; box-shadow: 10px 10px 30px #000; width: 360px; height: 600px; padding: 20px; display: flex; flex-direction: column; align-items: center; border: 4px solid #CCC; }
+        .screen { background: #FFF; width: 320px; height: 280px; border-radius: 10px; border: 6px solid #333; margin-top: 15px; display: flex; flex-direction: column; overflow: hidden; }
+        .header { text-align: center; color: #000; padding: 10px 5px; border-bottom: 2px solid #EEE; }
+        #vault-display { font-size: 20px; font-weight: 700; text-transform: uppercase; margin: 0; }
+        #tagline { font-size: 10px; font-weight: 400; text-transform: uppercase; margin: 2px 0 0; color: #555; }
+        #album-art { width: 100%; height: 180px; object-fit: cover; }
+        .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 40px; }
+        .btn-circle { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #333; background: #FFF; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #333; font-size: 20px; }
+        .non-functional { color: #AAA; border-color: #AAA; cursor: not-allowed; }
+        #play-pause-btn { font-size: 24px; }
+        #btn-rights { margin-top: 40px; text-decoration: none; color: #008000; font-weight: bold; border-bottom: 2px solid #008000; }
+    </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen">
-
-    <div class="panel p-8 max-w-sm w-full text-center">
-        <h1 id="vault-display" class="mb-6 text-2xl font-bold text-emerald-400">SONGSHARE RADIO</h1>
-        <img id="album-art" class="w-full h-64 object-cover mb-6 border-4 border-gray-800" src="" alt="Album Art">
-        
-        <div class="flex flex-col gap-4">
-            <button id="play-btn" class="btn-buy hover:bg-emerald-700">PLAY</button>
-<a id="btn-purchase" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0" 
-   onclick="this.href += '&tracked=true'" class="...">BUY LICENSE</a>
+<body>
+    <div class="chassis">
+        <div class="screen">
+            <div class="header">
+                <h1 id="vault-display">ROYALTY CHECK RADIO</h1>
+                <p id="tagline">MUSIC MADE TO MONETIZE</p>
+            </div>
+            <img id="album-art" src="" alt="Album Art">
         </div>
+        <div class="controls">
+            <div class="btn-circle non-functional">◀</div>
+            <button id="play-pause-btn" class="btn-circle">▶</button>
+            <div class="btn-circle non-functional">▶</div>
+        </div>
+        <a id="btn-rights" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0">RIGHTS & ROYALTIES</a>
     </div>
-
     <audio id="main-audio"></audio>
 
-<script>
-    let radio = { manifest: null, currentTrack: 0 };
-    const audio = document.getElementById('main-audio');
-    const playBtn = document.getElementById('play-btn');
+    <script>
+        let radio = { manifest: null, currentTrack: 0 };
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-pause-btn');
 
-    async function initRadio() {
-        const response = await fetch('radio-manifest.json');
-        radio.manifest = await response.json();
-        document.getElementById('vault-display').innerText = radio.manifest.artist;
-        document.getElementById('album-art').src = radio.manifest.albumArt;
-        audio.src = radio.manifest.playlist[0].src;
-    }
-
-    playBtn.onclick = () => {
-        audio.play();
-        playBtn.innerText = "PLAYING...";
-    };
-
-    audio.onended = () => {
-        radio.currentTrack++;
-        if (radio.currentTrack < radio.manifest.playlist.length) {
-            audio.src = radio.manifest.playlist[radio.currentTrack].src;
-            audio.play();
-        } else {
-            playBtn.disabled = true;
-            playBtn.innerText = "ACCESS LOCKED // BUY LICENSE";
-            playBtn.style.opacity = "0.5";
-            playBtn.style.cursor = "not-allowed";
+        async function initRadio() {
+            const response = await fetch('radio-manifest.json');
+            radio.manifest = await response.json();
+            document.getElementById('album-art').src = radio.manifest.albumArt;
+            audio.src = radio.manifest.playlist[0].src;
         }
-    };
 
-    initRadio();
-</script>
+        playBtn.onclick = () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = "❚❚";
+            } else {
+                audio.pause();
+                playBtn.innerText = "▶";
+            }
+        };
+
+        audio.onended = () => {
+            radio.currentTrack++;
+            if (radio.currentTrack < radio.manifest.playlist.length) {
+                audio.src = radio.manifest.playlist[radio.currentTrack].src;
+                audio.play();
+            } else {
+                audio.pause();
+                playBtn.innerText = "LOCKED";
+                playBtn.disabled = true;
+                playBtn.style.borderColor = "red";
+                playBtn.style.color = "red";
+            }
+        };
+
+        initRadio();
+    </script>
+</body>
+</html>
