@@ -8,26 +8,33 @@
         body { background-color: #000; font-family: 'Lato', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .chassis { background: #E0E0E0; border-radius: 40px; box-shadow: 10px 10px 30px #000; width: 360px; height: 600px; padding: 20px; display: flex; flex-direction: column; align-items: center; border: 4px solid #CCC; }
         
-        .screen { background: #FFF; width: 320px; height: 280px; border-radius: 10px; border: 6px solid #333; margin-top: 15px; overflow: hidden; position: relative; }
+        /* Static Header */
+        .brand-header { text-align: center; margin-bottom: 5px; }
+        .brand-name { font-size: 26px; font-weight: 800; color: #000; margin: 0; }
+        .tagline { font-size: 11px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+
+        .screen { background: #FFF; width: 320px; height: 280px; border-radius: 10px; border: 6px solid #333; margin-top: 5px; overflow: hidden; position: relative; }
         #album-art { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
         
-        /* Pulse Animation */
         .pulse { animation: pulse-anim 1.5s infinite ease-in-out; }
         @keyframes pulse-anim { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        /* Announcement Ticker */
-        .ticker-wrap { width: 320px; overflow: hidden; background: #000; color: #00ff41; margin-top: 10px; font-size: 14px; padding: 5px 0; border-radius: 4px; }
+        .ticker-wrap { width: 320px; overflow: hidden; background: #000; color: #00ff41; margin-top: 10px; font-size: 13px; padding: 4px 0; border-radius: 4px; }
         .ticker { white-space: nowrap; animation: scroll-left 15s linear infinite; }
         @keyframes scroll-left { from { transform: translateX(100%); } to { transform: translateX(-100%); } }
 
         .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 20px; }
         .btn-circle { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #333; background: #FFF; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #333; font-size: 20px; }
         
-        #btn-rights { margin-top: 30px; color: #008000; font-weight: bold; text-decoration: none; border-bottom: 2px solid #008000; }
+        #btn-rights { margin-top: 25px; color: #008000; font-weight: bold; text-decoration: none; border-bottom: 2px solid #008000; }
     </style>
 </head>
 <body>
     <div class="chassis">
+        <div class="brand-header">
+            <h1 class="brand-name">ROYALTY CHECK RADIO</h1>
+            <p class="tagline">MUSIC MADE TO MONETIZE</p>
+        </div>
         <div class="ticker-wrap"><div class="ticker" id="announcement">!!! EXCLUSIVE SONGSHARE VAULT RELEASE: QUEEN BUTTA - MUSIC MADE TO MONETIZE !!!</div></div>
         <div class="screen">
             <img id="album-art" src="" alt="Album Art">
@@ -47,7 +54,6 @@
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-pause-btn');
         const albumArt = document.getElementById('album-art');
-        
         const lockIcon = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>`;
 
         async function initRadio() {
