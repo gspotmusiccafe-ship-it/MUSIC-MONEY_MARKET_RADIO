@@ -1,1 +1,9 @@
-
+{
+  "artist": "QUEEN BUTTA",
+  "genre": "R&B / SOUL",
+  "albumArt": "https://firebasestorage.googleapis.com/.../artwork.jpg",
+  "playlist": [
+    { "title": "SUPERFLY", "src": "https://firebasestorage.googleapis.com/.../song1.mp3" },
+    { "title": "ADDICTION", "src": "https://firebasestorage.googleapis.com/.../song2.mp3" }
+  ]
+}
