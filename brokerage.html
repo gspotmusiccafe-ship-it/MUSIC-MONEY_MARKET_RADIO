@@ -90,64 +90,59 @@ body {
     background: #000;
     border: 4px ridge #555;
 }
+    <script>
+        // 1. Dynamic manifest loader
+        let radio = { manifest: null, currentTrack: 0, isLocked: false };
+
+        async function initRadio() {
+            try {
+                const response = await fetch('radio-manifest.json');
+                radio.manifest = await response.json();
+                
+                document.getElementById('vault-display').innerText = radio.manifest.artist;
+                document.getElementById('album-art').src = radio.manifest.albumArt;
+                
+                // Setup Player
+                const audio = document.getElementById('main-audio');
+                audio.src = radio.manifest.playlist[0].src;
+            } catch(e) {
+                console.log("Manifest not found, check radio-manifest.json");
+            }
         }
 
-       
-        });
+        // 2. Play/Pause/Lock logic
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-btn');
 
-        <script>
-        // PASTE YOUR RADIO LOGIC HERE
-        // 1. Your Dynamic manifest loader
-        // 2. Your play/pause/lock logic
-        // 3. Your affiliate tracking
-        
-        // Example:
-        console.log("Radio Engine Initialized");
-   <script>
-    // 1. Dynamic manifest loader
-    let radio = { manifest: null, currentTrack: 0, isLocked: false };
+        playBtn.onclick = () => {
+            if(!radio.isLocked) {
+                audio.play();
+                playBtn.innerText = "PLAYING...";
+            }
+        };
 
-    async function initRadio() {
-        try {
-            const response = await fetch('radio-manifest.json');
-            radio.manifest = await response.json();
-            document.getElementById('vault-display').innerText = radio.manifest.artist;
-            document.getElementById('album-art').src = radio.manifest.albumArt;
-            
-            // Setup Player
-            const audio = document.getElementById('main-audio');
-            audio.src = radio.manifest.playlist[0].src;
-        } catch(e) { console.log("Manifest not found, check radio-manifest.json"); }
-    }
+        audio.onended = () => {
+            radio.currentTrack++;
+            if (radio.currentTrack < radio.manifest.playlist.length) {
+                audio.src = radio.manifest.playlist[radio.currentTrack].src;
+                audio.play();
+            } else {
+                lockRadio();
+            }
+        };
 
-    // 2. Play/Pause/Lock logic
-    const audio = document.getElementById('main-audio');
-    document.getElementById('play-btn').onclick = () => {
-        if(!radio.isLocked) audio.play();
-    };
-
-    audio.onended = () => {
-        radio.currentTrack++;
-        if (radio.currentTrack < radio.manifest.playlist.length) {
-            audio.src = radio.manifest.playlist[radio.currentTrack].src;
-            audio.play();
-        } else {
-            lockRadio();
+        function lockRadio() {
+            radio.isLocked = true;
+            playBtn.disabled = true;
+            playBtn.innerText = "LOCKED // PURCHASE REQUIRED";
         }
-    };
 
-    function lockRadio() {
-        radio.isLocked = true;
-        const btn = document.getElementById('play-btn');
-        btn.disabled = true;
-        btn.innerText = "LOCKED // PURCHASE REQUIRED";
-    }
+        // 3. Affiliate tracking
+        const ref = new URLSearchParams(window.location.search).get('ref') || 'DIRECT';
+        const buyBtn = document.getElementById('btn-purchase');
+        if (buyBtn) buyBtn.href += `?ref=${ref}`;
 
-    // 3. Affiliate tracking
-    const ref = new URLSearchParams(window.location.search).get('ref') || 'DIRECT';
-    document.getElementById('btn-purchase').href += `?ref=${ref}`;
-
-    initRadio();
-</script>
+        initRadio();
+    </script>
 </body>
 </html>
