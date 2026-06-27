@@ -6,95 +6,71 @@
     <title>ROYALTY CHECK RADIO</title>
     <style>
         body { background: #000; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Courier New', monospace; overflow: hidden; }
-        .main-chassis { display: grid; grid-template-rows: 2fr 1fr; width: 95vw; max-width: 400px; height: 95vh; max-height: 650px; border-radius: 10px; overflow: hidden; border: 4px solid #AAA; }
+        .main-chassis { display: grid; grid-template-rows: 1fr 1fr; width: 95vw; max-width: 400px; height: 90vh; max-height: 650px; border-radius: 10px; overflow: hidden; border: 4px solid #AAA; }
         
-        /* 1. THE CHECK PART (TOP) */
-        .check-chassis { background: #EED; padding: 15px; display: flex; flex-direction: column; position: relative; border-bottom: 3px dashed #777; /* Perforation */ }
-        .check-header { display: flex; justify-content: space-between; align-items: start; }
-        #check-logo { width: 50px; height: 50px; background: #CCC; border-radius: 5px; /* LOGO PLACEHOLDER */ }
-        #check-id { font-weight: bold; }
-        #check-headline { text-align: center; color: #000; font-weight: 900; letter-spacing: 2px; margin: 10px 0 0; font-size: 18px; }
+        /* CHECK TOP */
+        .check-chassis { background: #EED; padding: 15px; display: flex; flex-direction: column; border-bottom: 3px dashed #777; }
+        .brand-name { font-size: 18px; font-weight: 900; color: #000; margin: 5px 0; text-align: center; }
+        .amount-box { border: 2px solid #000; padding: 5px 15px; font-weight: bold; font-size: 16px; margin-left: auto; width: 80px; text-align: center; }
         
-        .check-row { display: flex; gap: 10px; align-items: end; margin-top: 15px; }
-        .check-field { flex-grow: 1; border-bottom: 2px solid #000; }
-        .field-label { font-size: 10px; color: #555; text-transform: uppercase; margin-right: 5px; }
-        
-        .amount-box { border: 2px solid #000; background: #FFF; padding: 5px 15px; font-weight: bold; font-size: 16px; margin-left: auto; width: 80px; text-align: center; }
-
-        /* 2. THE RADIO PART (DETACHED STUB) */
-        .radio-stub-chassis { background: #CCC; padding: 20px; display: flex; flex-direction: column; gap: 10px; border-top: 2px solid #FFF; }
-        .stub-field { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #AAA; }
-        .stub-label { font-size: 12px; color: #333; text-transform: uppercase; font-weight: bold; }
-        .stub-value { font-size: 14px; font-weight: bold; color: #000; text-align: right; }
-        
-        #btn-rights { background: #008000; color: #FFF; font-weight: bold; padding: 15px; text-decoration: none; text-align: center; border-radius: 8px; margin-top: auto; cursor: pointer; text-transform: uppercase;}
-        #btn-rights:hover { background: #00A000; }
-
+        /* RADIO BOTTOM */
+        .radio-stub { background: #CCC; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .screen { background: #111; width: 100%; height: 100px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; padding: 5px; border-radius: 5px; }
+        .bar { width: 10px; background: #00ff41; height: 10px; transition: height 0.1s; }
+        .btn-circle { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #333; background: #FFF; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 24px; }
+        #btn-rights { background: #008000; color: #FFF; font-weight: bold; padding: 12px; width: 100%; text-align: center; border-radius: 5px; text-decoration: none; text-transform: uppercase; }
     </style>
 </head>
 <body>
     <div class="main-chassis">
         <div class="check-chassis">
-            <div class="check-header">
-                <div id="check-logo">LOGO</div> <p id="check-id">CK-01-SFL</p>
-            </div>
-            <h1 id="check-headline">ROYALTY CHECK RADIO</h1> <div class="check-row">
-                <p class="field-label">PAY TO:</p>
-                <div class="check-field">LICENSEE</div> </div>
-            
-            <div class="check-row">
-                <div class="amount-box">$ <span id="oscillating-amount">100.00</span></div> </div>
-            
-            <div class="check-row">
-                <p class="field-label">MEMO:</p>
-                <div class="check-field">QUEEN BUTTA</div> </div>
+            <h1 class="brand-name">ROYALTY CHECK RADIO</h1>
+            <div style="margin-top:20px;">PAY TO: LICENSEE</div>
+            <div class="amount-box">$30.00</div>
+            <div style="margin-top:10px;">MEMO: QUEEN BUTTA</div>
         </div>
-
-        <div class="radio-stub-chassis">
-            <div class="stub-field"><p class="stub-label">ARTIST:</p><div class="stub-value">QUEEN BUTTA</div></div>
-            <div class="stub-field"><p class="stub-label">TITLE:</p><div class="stub-value" id="track-title">SUPERFLY</div></div>
-            <div class="stub-field"><p class="stub-label">GENRE:</p><div class="stub-value">R&B / SOUL</div></div>
-            
-            <div class="stub-field" style="margin-top: 15px;"><p class="stub-label">LICENSE FEE:</p><div class="stub-value">$10.22 / MP</div></div>
-            
-            <audio id="main-audio"></audio>
+        <div class="radio-stub">
+            <div class="screen" id="oscillator">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <button id="play-pause-btn" class="btn-circle">▶</button>
             <a id="btn-rights" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0">RIGHTS & ROYALTIES</a>
         </div>
     </div>
-
+    <audio id="main-audio"></audio>
     <script>
-        let radio = { manifest: null, currentTrack: 0 };
         const audio = document.getElementById('main-audio');
-        const rightsBtn = document.getElementById('btn-rights');
+        const playBtn = document.getElementById('play-pause-btn');
+        const bars = document.querySelectorAll('.bar');
         
-        // --- 1. AFFILIATE LINK LOGIC ---
+        // Affliate
         const params = new URLSearchParams(window.location.search);
-        const ref = params.get('ref') || 'direct';
-        rightsBtn.href += `&ref=${ref}`;
+        document.getElementById('btn-rights').href += `&ref=${params.get('ref') || 'direct'}`;
 
-        // --- 2. THE OSCILLATING DOLLAR SCRIPT ($100-$1K) ---
-        function startOscillation() {
-            const amountSpan = document.getElementById('oscillating-amount');
-            setInterval(() => {
-                // Generate random value between 100 and 1000
-                const newValue = Math.floor(Math.random() * 900) + 100;
-                amountSpan.innerText = newValue.toFixed(2);
-            }, 80); // Update speed
+        async function init() {
+            const res = await fetch('radio-manifest.json');
+            const data = await res.json();
+            audio.src = data.playlist[0].src;
         }
 
-        async function initRadio() {
-            try {
-                const response = await fetch('radio-manifest.json');
-                radio.manifest = await response.json();
-                audio.src = radio.manifest.playlist[0].src;
-                // Once data loads, start the amount flicker
-                startOscillation();
-            } catch(e) { console.error("Data error:", e); }
+        function animate() {
+            if (!audio.paused) bars.forEach(b => b.style.height = (Math.random() * 100 + 10) + 'px');
+            requestAnimationFrame(animate);
         }
 
-        // Logic for continuous play is not present in this simplified view,
-        // but can be added back if needed for user testing.
-        initRadio();
+        playBtn.onclick = () => {
+            if (audio.paused) { audio.play(); playBtn.innerText = "❚❚"; }
+            else { audio.pause(); playBtn.innerText = "▶"; }
+        };
+
+        audio.onended = () => {
+            audio.pause();
+            playBtn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
+            playBtn.disabled = true;
+        };
+
+        init(); animate();
     </script>
 </body>
 </html>
