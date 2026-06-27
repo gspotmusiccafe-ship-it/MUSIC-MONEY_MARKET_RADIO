@@ -6,24 +6,16 @@
     <title>ROYALTY CHECK RADIO</title>
     <style>
         body { background: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Courier New', monospace; }
-        .check-container { background: #fdfaf0; width: 95vw; max-width: 450px; height: 80vh; max-height: 550px; border: 2px solid #555; position: relative; display: flex; flex-direction: column; box-shadow: 0 10px 30px #000; }
-        
-        /* LOGO & HEADER */
+        .check-container { background: #fdfaf0; width: 95vw; max-width: 450px; height: 80vh; max-height: 550px; border: 2px solid #555; display: flex; flex-direction: column; box-shadow: 0 10px 30px #000; }
         .header-section { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #ccc; }
-        .logo-box { width: 60px; height: 60px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: bold; }
+        .logo-box { width: 60px; height: 60px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
         .title-box { font-size: 20px; font-weight: 900; }
-
-        /* CHECK FIELDS */
         .field-area { padding: 20px; flex-grow: 1; }
         .row { margin-bottom: 25px; border-bottom: 1px solid #000; padding-bottom: 5px; }
         .amount-box { border: 2px solid #000; width: 100px; padding: 5px; font-weight: bold; float: right; }
-
-        /* DETACHED STUB (RADIO) */
         .stub-area { background: #e0e0e0; padding: 20px; border-top: 3px dashed #777; display: flex; flex-direction: column; align-items: center; }
-        .screen { background: #111; width: 100%; height: 60px; display: flex; align-items: flex-end; justify-content: center; gap: 3px; padding: 5px; border-radius: 3px; }
-        .bar { width: 8px; background: #00ff41; height: 10px; transition: height 0.1s; }
-        .play-btn { width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 2px solid #000; cursor: pointer; margin: 10px 0; font-size: 20px; }
-        #btn-rights { background: #008000; color: #fff; width: 100%; text-align: center; padding: 10px; text-decoration: none; font-weight: bold; border-radius: 4px; }
+        .play-btn { width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 2px solid #000; cursor: pointer; font-size: 20px; }
+        #btn-rights { background: #008000; color: #fff; width: 100%; text-align: center; padding: 10px; text-decoration: none; font-weight: bold; border-radius: 4px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -37,35 +29,25 @@
             <div class="amount-box">$30.00</div>
             <div class="row" style="margin-top:40px;">MEMO: QUEEN BUTTA</div>
         </div>
-
         <div class="stub-area">
-            <div class="screen" id="oscillator">
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-            </div>
             <button class="play-btn" id="play-pause-btn">▶</button>
             <a id="btn-rights" href="https://the-music-market-exchange-746485168146.us-west2.run.app/?ref=aititrade2026&portal=0">RIGHTS & ROYALTIES</a>
         </div>
     </div>
-
     <audio id="main-audio"></audio>
     <script>
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-pause-btn');
-        const bars = document.querySelectorAll('.bar');
         
         const params = new URLSearchParams(window.location.search);
         document.getElementById('btn-rights').href += `&ref=${params.get('ref') || 'direct'}`;
 
         async function init() {
-            const res = await fetch('radio-manifest.json');
-            const data = await res.json();
-            audio.src = data.playlist[0].src;
-        }
-
-        function animate() {
-            if (!audio.paused) bars.forEach(b => b.style.height = (Math.random() * 50 + 10) + 'px');
-            requestAnimationFrame(animate);
+            try {
+                const res = await fetch('radio-manifest.json');
+                const data = await res.json();
+                audio.src = data.playlist[0].src;
+            } catch(e) { console.log("Load error"); }
         }
 
         playBtn.onclick = () => {
@@ -78,8 +60,7 @@
             playBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="red" stroke-width="3"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
             playBtn.disabled = true;
         };
-
-        init(); animate();
+        init();
     </script>
 </body>
 </html>
