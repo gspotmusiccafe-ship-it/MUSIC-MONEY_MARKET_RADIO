@@ -6,14 +6,21 @@
     <title>ROYALTY CHECK RADIO</title>
     <style>
         body { background: #1a1a1a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Courier New', monospace; }
-        .check-container { background: #fdfaf0; width: 95vw; max-width: 450px; height: 80vh; max-height: 550px; border: 2px solid #555; display: flex; flex-direction: column; box-shadow: 0 10px 30px #000; }
-        .header-section { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #ccc; }
-        .logo-box { width: 60px; height: 60px; background: #333; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
-        .title-box { font-size: 20px; font-weight: 900; }
-        .field-area { padding: 20px; flex-grow: 1; }
-        .row { margin-bottom: 25px; border-bottom: 1px solid #000; padding-bottom: 5px; }
-        .amount-box { border: 2px solid #000; width: 100px; padding: 5px; font-weight: bold; float: right; }
-        .stub-area { background: #e0e0e0; padding: 20px; border-top: 3px dashed #777; display: flex; flex-direction: column; align-items: center; }
+        .check-container { background: #fdfaf0; width: 95vw; max-width: 450px; height: 85vh; border: 2px solid #555; display: flex; flex-direction: column; box-shadow: 0 10px 30px #000; overflow: hidden; }
+        
+        /* TOP HALF - CHECK */
+        .header-section { padding: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #000; }
+        .logo-box { width: 50px; height: 50px; background: #333; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+        .title-box { font-size: 18px; font-weight: 900; }
+        .field-area { padding: 15px; flex-grow: 1; }
+        .data-row { margin-bottom: 15px; border-bottom: 1px dotted #000; padding-bottom: 2px; font-weight: bold; }
+        
+        /* ALBUM ART AREA */
+        .art-box { width: 100px; height: 100px; border: 2px solid #000; float: right; margin-left: 10px; background: #ddd; }
+        #album-art { width: 100%; height: 100%; object-fit: cover; }
+
+        /* BOTTOM HALF - STUB */
+        .stub-area { background: #e0e0e0; padding: 15px; border-top: 3px dashed #777; display: flex; flex-direction: column; align-items: center; }
         .play-btn { width: 50px; height: 50px; border-radius: 50%; background: #fff; border: 2px solid #000; cursor: pointer; font-size: 20px; }
         #btn-rights { background: #008000; color: #fff; width: 100%; text-align: center; padding: 10px; text-decoration: none; font-weight: bold; border-radius: 4px; margin-top: 10px; }
     </style>
@@ -25,9 +32,12 @@
             <div class="title-box">ROYALTY CHECK RADIO</div>
         </div>
         <div class="field-area">
-            <div class="row">PAY TO: LICENSEE</div>
-            <div class="amount-box">$30.00</div>
-            <div class="row" style="margin-top:40px;">MEMO: QUEEN BUTTA</div>
+            <div class="art-box"><img id="album-art" src="" alt="Album Art"></div>
+            <div class="data-row">PAY TO: LICENSEE</div>
+            <div class="data-row">ARTIST: QUEEN BUTTA</div>
+            <div class="data-row">SONG: SUPERFLY</div>
+            <div class="data-row">GENRE: R&B / SOUL</div>
+            <div style="font-weight:bold; margin-top:20px;">MEMO: QUEEN BUTTA ................... $30.00</div>
         </div>
         <div class="stub-area">
             <button class="play-btn" id="play-pause-btn">▶</button>
@@ -38,15 +48,14 @@
     <script>
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-pause-btn');
+        const albumArt = document.getElementById('album-art');
         
-        const params = new URLSearchParams(window.location.search);
-        document.getElementById('btn-rights').href += `&ref=${params.get('ref') || 'direct'}`;
-
         async function init() {
             try {
                 const res = await fetch('radio-manifest.json');
                 const data = await res.json();
                 audio.src = data.playlist[0].src;
+                albumArt.src = data.albumArt;
             } catch(e) { console.log("Load error"); }
         }
 
